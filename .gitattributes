@@ -7,3 +7,4 @@ fixtures/**           -text
 ontology/**           -text
 spec/prompt-template-*.txt  -text
 review/proposals/**/files/**  -text
+schemas/**  -text

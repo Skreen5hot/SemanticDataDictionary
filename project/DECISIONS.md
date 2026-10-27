@@ -112,7 +112,13 @@ configurable** per attribute in the SDD and are never inferred.
 proposed by the enterprise LLM through a manual relay:
 
 1. The tool **generates a prompt**: the structural skeleton (from the schema), the pinned list of permitted
-   BFO/CCO terms, the required output format (a JSON Schema), and the mapping rules (ADR-001 to ADR-003).
+   BFO/CCO terms, the required output format, and the mapping rules (ADR-001 to ADR-003).
+   **Amended 2026-10-27 (registrar Decision A, cycle 2):** the output format has two forms with different roles.
+   (a) The **authoritative validation schema** is a pinned, versioned JSON Schema (`schemas/proposal-v1.schema.json`)
+   that the deterministic checker MUST apply (SDD R-S13). (b) The **prompt** carries a concise, unambiguous output
+   contract (the fields required for each kind) and a representative example; it need not reproduce the schema text.
+   Leaving the schema text out of the prompt MUST NOT weaken validation or change the accepted output contract:
+   whatever the prompt says, the checker enforces the schema.
 2. The user **pastes the prompt into the secure enterprise LLM**, then **pastes the LLM's output back** into the tool.
 3. The tool **checks the output deterministically**: format, full coverage (every object type, attribute and
    reference mapped exactly once), only permitted terms, BFO category checks, and the mapping rules. Every error

@@ -1,0 +1,58 @@
+{
+  "@context": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld",
+  "@type": "Inventory",
+  "source": {
+    "format": "jira-assets-import/2021_09_15",
+    "sha256": "e86ef883322aa194ed10bda51118d02a9b0ddc51892d09d781514e9b11f5373b",
+    "schemaName": "Minimal Organization",
+    "identification": "name"
+  },
+  "objectTypes": [
+    {
+      "key": "ot:Organization",
+      "name": "Organization",
+      "externalId": null,
+      "description": "An organizational unit that people belong to",
+      "parent": null,
+      "label": "at:Organization/Name",
+      "identity": [
+        "at:Organization/Name"
+      ],
+      "selectors": [
+        "organizations"
+      ]
+    }
+  ],
+  "attributes": [
+    {
+      "key": "at:Organization/Name",
+      "name": "Name",
+      "externalId": null,
+      "owner": "ot:Organization",
+      "description": "Organization name",
+      "type": "text",
+      "target": null,
+      "isLabel": true,
+      "isIdentityPart": true,
+      "locators": [
+        "name"
+      ]
+    },
+    {
+      "key": "at:Organization/Cost Center",
+      "name": "Cost Center",
+      "externalId": null,
+      "owner": "ot:Organization",
+      "description": "Finance code",
+      "type": "text",
+      "target": null,
+      "isLabel": false,
+      "isIdentityPart": false,
+      "locators": [
+        "costCenter"
+      ]
+    }
+  ],
+  "flags": [],
+  "errors": []
+}
