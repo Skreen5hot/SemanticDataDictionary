@@ -121,3 +121,17 @@ acceptance like every other finding.
 
 **Register state after cycle 1:** 24 findings (SDD-F01–F24), 0 dispositioned. One contested knockout (P5) awaits the
 registrar.
+
+## Registrar ruling: cycle 1 (2026-10-27, appended; sections above unamended)
+
+- **Contested knockout P5:** the registrar (Aaron Damiano, author of record) adopts **rater B's score, P5 = 0**.
+  Basis: the §6.1 zero anchor "examples naming no rule" is literally met, because the spec's rules carry no
+  identifiers an example could cite.
+- **Adjudicated vector:** P1 0 · P2 1 · P3 0 · P4 1 · **P5 0** · P6 0 · P7 0 · P8 0 · P9 0 · P10 0 = **2/20**.
+  Knockouts: P1, P3, P5, P6, P7, P8, P9, P10. No caps. `provisional: false` (dual-rated, adjudicated).
+
+`Disposition: D-0 Describes, doesn't define`
+`Acceptance readiness: BLOCKED`: no acceptance gates; no falsifier validated; P5 halts at SDD-F01, SDD-F02.
+
+**Register state:** 24 findings open, 0 dispositioned. Disposition of findings is deferred to the SDD Service spec
+(method §4 form), which supersedes this document's normative role; SDD v2.0 remains as rationale.
