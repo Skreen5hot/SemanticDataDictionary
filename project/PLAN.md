@@ -63,12 +63,9 @@ spec's register.
 
 Draft journeys: **J1** first dictionary (C1→C6) · **J2** repair loop (C4→C5→C4) · **J3** schema changed (C7→C3→…).
 
-## Open questions for the registrar
+## Status
 
-1. **ADR-003:** accept the proposed null rule as written, or amend it?
-2. **Pinned ontologies:** which BFO and CCO releases? Your Ontology-Template repo vendors pinned copies, so should
-   the term list be derived from it?
-3. **Output form:** plain JSON SDD, or JSON-LD (so it is directly RDF-readable)? I'd recommend JSON-LD with a
-   fixed context, so the SDD itself is checkable with SHACL from Ontology-Template.
-4. **Third individual?** ADR-001 leaves open whether the *act* of asserting (a process with time and agent) is
-   modeled separately from the record. Decide in Phase 2, with the pinned CCO in hand.
+- **Phase 0: complete** (2026-10-27). The registrar approved the plan and resolved all four open questions: ADR-003
+  accepted with amendment; ADR-005 (pinned ontologies from Ontology-Template); ADR-006 (JSON-LD canonical);
+  third individual deferred (ADR-001); boundary and scope fixed (ADR-007).
+- **Phase 1: authorized** (2026-10-27), in progress.
