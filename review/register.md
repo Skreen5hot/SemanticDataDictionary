@@ -46,3 +46,78 @@ deleted; later entries go in new appended sections.
 
 Dispositions: none yet. All findings are open, pending the planning of the SDD Service spec (method §4 form),
 which will cite this register.
+
+## Grade record: rater B (2026-10-27, appended; sections above unamended)
+
+- **Rater:** B (Claude subagent). **Isolated per SRS R-S1:** its context was exactly `{spec.md, method-v0.4.md}`.
+  Manifest sha256: spec `7954c405…f2cbf1` (byte-identical to `SDD-V2.0-SPEC.md` @ `c4d04b5`),
+  method `112b1274…cbf1e8c`. It was instructed not to read any other file and reported reading only those two.
+- **Status:** single rater, therefore provisional (§6.3). **P11:** not applicable (same reasoning as A), so ten
+  dimensions.
+
+| Dim | B | Evidence (spec lines) | Note |
+|---|---|---|---|
+| P1 | 0 *(borderline 1)* | 13, 59–70, 284, 293 | A parts list, not a composition; no terminal declaration. |
+| P2 | 1 *(borderline 0)* | 215–253; 0 BCP 14 keywords | Kept off 0 only because two worked examples exist. |
+| P3 | 0 | 13, 55, 277, 284 | Edges implied; no seam table or crossing example. |
+| P4 | 1 *(borderline 0)* | 76–209, 224–250, 277 | The SDD JSON is effectively a signature; projection surface has no behaviour. |
+| P5 | **0** | rules 78–81, 88–92, 202; witnesses 217–253 | Rules unwitnessed, examples name no rule, overlaps conflict, no protocol. |
+| P6 | 0 | 225, 244–249 | Instance-ID minting undeclared and unmasked. |
+| P7 | 0 | 268–277, 293 | Review topics, not gates; no report lines. |
+| P8 | 0 | absent | No journeys. |
+| P9 | 0 | 78–81, 95, 260, 264 | Unscoped universals. |
+| P10 | 0 | 1, 13 | No registry, versioning, supersession, or NG/NP absences. |
+
+**Total 2/20.** Knockouts: P1, P3, P5, P6, P7, P8, P9, P10.
+`Disposition: D-0 Describes, doesn't define` (provisional, single rater)
+`Acceptance readiness: BLOCKED`: no gates (P7 = 0); no falsifier validated; examples contradict rules.
+
+## Adjudication: cycle 1 (A vs B, per SRS R-S4)
+
+| Dim | A | B | Result |
+|---|---|---|---|
+| P1, P3, P6, P7, P8, P9, P10 | 0 | 0 | **Agreed knockouts** |
+| P2, P4 | 1 | 1 | Agreed (both borderline) |
+| **P5** | 1 | **0** | **Contested knockout** (either-rater zero), routed to the human queue (the registrar) |
+
+**Disposition line: WITHHELD** while P5 is contested (R-S4 / method §6.3). The outcome is **invariant to P5's
+resolution**: seven agreed knockouts already fix **D-0** under either reading.
+`Acceptance readiness: BLOCKED`: no acceptance gates; no falsifier validated; P5 halts (SDD-F01, F02).
+
+**Method observation (filed for SRS, not against this spec):** rater B notes that §6.2.6 defines READY as "every
+gate-consumed falsifier is validated", which a document with *no* gates satisfies vacuously. Both raters reported
+BLOCKED; the method text should exclude the vacuous READY.
+
+## Findings: rater B, merged into the register
+
+B's findings that duplicate A's are cross-referenced, not re-registered:
+B-F2 → SDD-F03; B-F3 and B-F10 → SDD-F01 (B-F10 adds that `participates_as` is not a BFO/RO relation);
+B-F4 → SDD-F02; B-F6 (`end_date` part) → SDD-F05; B-F13 → SDD-F06; B-F18 → SDD-F07. New findings:
+
+| Id | Src | Sev | Dim | Finding | Evidence |
+|---|---|---|---|---|---|
+| **SDD-F09** | B-F1 | **Critical** | P5 | **The example drops the assertion layer.** The rules say rows are assertions, not facts, but §4.2 renders the row directly as `ActOfOccupancy_1 (Process)`, with no assertion act, asserter or assertion time. That is the conflation the paper exists to prevent. | spec:51, 78–79, 157 vs 243–250 |
+| **SDD-F10** | B-F2 (ext.) | **Critical** | P1 | **The thesis has no implementable mapping.** Each row needs two individuals (an assertion act, and the occupancy it is about), but the SDD schema has one `maps_to_class` slot per table. Extends SDD-F03 from contradiction to structural impossibility. | spec:155–157 |
+| **SDD-F11** | B-F8 | Major | ontology | **Qualities are listed as realizable dependent continuants.** In BFO, qualities are not realizable; only roles, dispositions and functions are. | spec:44 |
+| **SDD-F12** | B-F9 | Major | ontology | **ICE/IBE concretization is misstated.** An ICE is concretized by an information quality entity that inheres in an IBE; the IBE is not the concretization. "Person_1 has ICE: PersonName" contradicts `about: cco:Person`: the ICE is *about* the person, not had by it. | spec:47, 111, 121, 226–227 |
+| **SDD-F13** | B-F11 | Major | ontology | **A house is treated as a site.** `has_site` / `is_site_of` target `cco:House`, a material entity, but a BFO site is immaterial. The relation needs a site the house bounds, or a different, pinned relation. | spec:171–173 |
+| **SDD-F14** | B-F12 | Minor | ontology | **`boundary_of: bfo:Occurrent` is wrong.** A temporal instant bounds a temporal interval, not a process. | spec:135 |
+| **SDD-F15** | B-F5 | Major | P5 / P2 | **A timestamp appears in a foreign-key column.** `start_date_id` is a foreign key to `time_dim.time_id`, but the example value is `2026-01-01T10:09`, which is not a valid `xsd:dateTime` (no seconds) and has no timezone. | spec:177–178 vs 239 |
+| **SDD-F16** | B-F6 | Major | undefined | **`house_dim` is referenced but never defined.** | spec:169 |
+| **SDD-F17** | B-F7 | Major | P5 / P9 | **The latent-role rule asserts what the null semantics forbid.** "Role exists independently of assertion" / `role_remains_latent` posits roles for persons no row mentions, which contradicts absence-of-assertion. Unscoped. | spec:88–95 vs 202, 208 |
+| **SDD-F18** | B-F14 | Minor | ontology | **The gap sentinel contradicts absence.** Instantiating `iao:information_gap` for a missing foreign key is itself a positive assertion, in tension with "absence_of_assertion". `is_disjoint_with_nonexistence` applies class disjointness to an interpretation flag. | spec:89–91 |
+| **SDD-F19** | B-F15 | Major | P9 / P4 | **Provenance is claimed but not modeled.** "Every fact is traceable to an assertion event", but there is no asserter, source, assertion time or load time anywhere in the schema. | spec:54, 260 |
+| **SDD-F20** | B-F16 | Major | P9 | **"No restructuring needed" is unscoped and already strained.** The assertion layer (F10) and interval derivation (F02) need information the warehouse lacks. | spec:13, 264, 284 |
+| **SDD-F21** | B-F17 | Major | P4 / P3 | **Advertised capabilities have no mechanism.** Belief-scoped reasoning, counterfactual projections and RDF/API/SHML projection have no mechanism, output or seam. "SHML" is undefined in this document. | spec:277, 288–289 |
+| **SDD-F22** | B-F19 | Minor | P10 | **No v1 baseline or changelog** for what v2.0 "introduces". | spec:13 |
+| **SDD-F23** | B-F20 | Minor | P9 | **"Temporal precision" means instant-vs-interval here**, not granularity. No granularity, timezone or calendar policy, and no bitemporality (valid time vs. assertion time) despite the assertion framing. | spec:13, 70, 261 |
+| **SDD-F24** | B-F21 | Minor | P5 | **The inverse-query paths disagree:** "House → Occupancy → Person" vs "House → Residents". | spec:190 vs 252 |
+
+**Verification note (rater A, appended):** every mechanically checkable claim in SDD-F11–F24 was confirmed against
+the spec text at the cited lines (`qualities` at 44; `boundary_of` at 135; timestamp at 239; no `house_dim`
+definition; latent-role text at 202, 208; differing query paths at 190, 252). The ontological judgments (F11–F14)
+are recorded as rater B's claims, consistent with BFO 2020 as rater A understands it, and are subject to registrar
+acceptance like every other finding.
+
+**Register state after cycle 1:** 24 findings (SDD-F01–F24), 0 dispositioned. One contested knockout (P5) awaits the
+registrar.
