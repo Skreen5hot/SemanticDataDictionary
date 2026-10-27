@@ -8,6 +8,8 @@
 
 const RDF_TYPE = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type';
 const SUBCLASS = 'http://www.w3.org/2000/01/rdf-schema#subClassOf';
+const DOMAIN = 'http://www.w3.org/2000/01/rdf-schema#domain';
+const RANGE = 'http://www.w3.org/2000/01/rdf-schema#range';
 
 function tokenize(text) {
   const tokens = [];
@@ -79,6 +81,9 @@ export function namedSubclassEdges(text) {
   let p = 0;
   let anonymousObjects = 0;
   const edges = [];
+  // Named rdfs:domain / rdfs:range edges (SDD OS-2), collected the same way; anonymous objects counted.
+  const domain = [], range = [];
+  let anonymousDomain = 0, anonymousRange = 0;
 
   const peek = () => tokens[p];
   const next = () => tokens[p++];
@@ -116,6 +121,12 @@ export function namedSubclassEdges(text) {
         if (subject && predicate === SUBCLASS) {
           if (o) edges.push([subject, o]);
           else if (isAnon) anonymousObjects++;
+        } else if (subject && predicate === DOMAIN) {
+          if (o) domain.push([subject, o]);
+          else if (isAnon) anonymousDomain++;
+        } else if (subject && predicate === RANGE) {
+          if (o) range.push([subject, o]);
+          else if (isAnon) anonymousRange++;
         }
         if (peek() && peek().t === ',') { next(); continue; }
         break;
@@ -150,5 +161,5 @@ export function namedSubclassEdges(text) {
     if (peek() && peek().t !== '.') predicateObjectList(subject);
     expect('.');
   }
-  return { edges, anonymousObjects };
+  return { edges, anonymousObjects, domain, range, anonymousDomain, anonymousRange };
 }

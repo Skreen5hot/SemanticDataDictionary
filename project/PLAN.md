@@ -76,7 +76,10 @@ Draft journeys: **J1** first dictionary (C1→C6) · **J2** repair loop (C4→C5
   files with computed hashes (`fixtures/witnesses/minimal/`). All 24 cycle-1 findings are dispositioned
   (`review/register.md`). Self-identified gaps: crossing examples S-S6 and S-S7 pending (OS-4); W-CS4-Δ5 literal
   pending (OS-2).
-- **Phase 3: next**: grade the pair (two isolated raters), awaiting the registrar's go-ahead.
+- **Phase 3: in progress.** Cycle 2 graded v0.1 at joint D-1; prop-001 was merged as v0.2 (Decisions A and B); OS-2
+  and OS-7 were completed as v0.3 (see `review/register.md`). **Cycle 3 awaits the registrar's authorization.**
+  Before any commit to `spec/`, run: `node tools/registry-check.mjs`, `node tools/citations.mjs`,
+  `node tools/build-term-list.mjs --check`.
 - **Publishing (registrar, 2026-10-27):** GitHub Actions is on for Pages; the HTML tool ships there (Phase 4).
 
 ### Phase 1 deliverables

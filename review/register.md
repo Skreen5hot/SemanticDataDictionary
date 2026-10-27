@@ -298,3 +298,23 @@ Audit: every registry hash recomputes from its file, and every prose prefix belo
 **Dispositions of cycle-2 findings (as proposed in prop-001; F45 completed by Decision A):** SDD-F25–F44 and
 F46–F49 **resolved**. SDD-F45 **resolved** (SHACL in OS-1; the prompt/schema roles fixed by the ADR-004.1
 amendment). SDD-F27 is resolved in content; its demonstration is OS-7, and CAP-2 stays active until then.
+
+## Pre-cycle-3 items OS-2 and OS-7: spec v0.3 (2026-10-27, appended; sections above unamended)
+
+- **OS-2 closed.** The term list carries named `rdfs:domain` / `rdfs:range` for every object property, from the same
+  pins. The reader matches rdflib 7.1.1 exactly on all six edge sets (CCO domain 148 named + 15 anonymous, range 149 + 15;
+  BFO 28 / 31). New `terms_sha256` `a9e01756`, which superseded every term-bearing witness; the version-2 files are
+  retained under `fixtures/witnesses/superseded/v2/` (files current at spec v0.2). **W-CS4-Δ5 is literal:** the
+  full-fixture proposal with Person→Manager = `bfo:BFO_0000056` *participates in* (range *process*) gives exactly one
+  E-CHK-RANGE. Its baseline W-CS4-Δ15 (minted) validates with one W-CHK-ICE-REFERENT. The reference computation
+  also confirms W-CS4-Δ10's 52 errors / 10 warnings.
+- **OS-7 closed.** `tools/citations.mjs` extracts every cross-document citation (explicit-identifier rule) and
+  checks that both documents carry the same reciprocal table and identical mirrored seam rows. Result: 59 citations,
+  6 seam rows, exit 0. It fails on a dropped table entry and on an unrecorded citation (both probed). **WV-1 gate 2
+  met; CAP-2 inactive** while the check passes.
+- **Hash checks kept and governed:** `tools/registry-check.mjs` (27 registry rows plus the term-list hash; prefix
+  resolution; probed with a 1-byte tamper) joins `build-term-list.mjs --check`, `citations.mjs`,
+  `communications.mjs` and `verify-hierarchy.py`.
+- **Remaining blockers (none pre-cycle-3):** OS-1 (remaining artifact schemas, the bundled context, SHACL shapes),
+  OS-3 (G1/K1 generators), OS-4 and OO-1 (build and execute every witness and scene), OS-6 (bench), OO-2 (G2/K2).
+  All are implementation work.

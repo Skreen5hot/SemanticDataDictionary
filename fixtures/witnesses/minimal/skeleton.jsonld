@@ -2,7 +2,7 @@
   "@context": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld",
   "@type": "Skeleton",
   "inventorySha256": "902ab965e1d220a172944d758f2cf3931e8541a8e1c3000a3d82b13487e630ed",
-  "termListSha256": "0965d5a4bf184696def722537148c8ed4a93dca9bee365ad8be052c3c91156f5",
+  "termListSha256": "a9e01756d749655a53088833bb97612791caf9a19220065848c826f99985cd39",
   "slots": [
     {
       "key": "ot:Organization",

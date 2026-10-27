@@ -10,7 +10,7 @@
     "inventorySha256": "902ab965e1d220a172944d758f2cf3931e8541a8e1c3000a3d82b13487e630ed"
   },
   "environment": {
-    "termListSha256": "0965d5a4bf184696def722537148c8ed4a93dca9bee365ad8be052c3c91156f5",
+    "termListSha256": "a9e01756d749655a53088833bb97612791caf9a19220065848c826f99985cd39",
     "ontologyTemplateCommit": "114f28db82adf727f5e31aab4872ed56550e84af",
     "contextIri": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld"
   },
@@ -35,9 +35,9 @@
       "provenance": {
         "round": 2,
         "batch": "1/1",
-        "promptSha256": "7b89ca1bd0a8cfdc3e46a52bab0829b425fe5e802f0e13ad3edfacdba7706127",
+        "promptSha256": "7ff9455dcb8d8915b59b4855376d9d7aefc84b9c226c38608f2d3e7e10b13648",
         "proposalSha256": "6eb7f5afb14cad25e38fad57eeea6118f78f433c1008698f01172bafacc28e9f",
-        "checkReportSha256": "f8bd453f2bf08c34e0a278be2aaaa77373cad7bbb015b8dd6cac586de7d47507"
+        "checkReportSha256": "2a83f393eb26b9f7956448257c1b3ba09dd89b04678aac68fdc4f0dec27665b5"
       },
       "acceptance": {
         "decision": "accepted",
@@ -63,9 +63,9 @@
       "provenance": {
         "round": 2,
         "batch": "1/1",
-        "promptSha256": "7b89ca1bd0a8cfdc3e46a52bab0829b425fe5e802f0e13ad3edfacdba7706127",
+        "promptSha256": "7ff9455dcb8d8915b59b4855376d9d7aefc84b9c226c38608f2d3e7e10b13648",
         "proposalSha256": "6eb7f5afb14cad25e38fad57eeea6118f78f433c1008698f01172bafacc28e9f",
-        "checkReportSha256": "f8bd453f2bf08c34e0a278be2aaaa77373cad7bbb015b8dd6cac586de7d47507"
+        "checkReportSha256": "2a83f393eb26b9f7956448257c1b3ba09dd89b04678aac68fdc4f0dec27665b5"
       },
       "acceptance": {
         "decision": "accepted",
@@ -91,9 +91,9 @@
       "provenance": {
         "round": 2,
         "batch": "1/1",
-        "promptSha256": "7b89ca1bd0a8cfdc3e46a52bab0829b425fe5e802f0e13ad3edfacdba7706127",
+        "promptSha256": "7ff9455dcb8d8915b59b4855376d9d7aefc84b9c226c38608f2d3e7e10b13648",
         "proposalSha256": "6eb7f5afb14cad25e38fad57eeea6118f78f433c1008698f01172bafacc28e9f",
-        "checkReportSha256": "f8bd453f2bf08c34e0a278be2aaaa77373cad7bbb015b8dd6cac586de7d47507"
+        "checkReportSha256": "2a83f393eb26b9f7956448257c1b3ba09dd89b04678aac68fdc4f0dec27665b5"
       },
       "acceptance": {
         "decision": "accepted",

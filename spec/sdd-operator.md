@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Conformance** | *The Falsifiable Spec v0.4*, method §4A form. Companion to [`sdd-service.md`](sdd-service.md) (`SDD`), which delegates its experience level here (NG-S0). Federated by weave record **WV-1** (§15). |
-| **Status** | v0.2: prop-001 merged with registrar Decisions A and B (2026-10-27); supersedes v0.1 @ `b4aab5b`. Nothing built; no scene executed. |
+| **Status** | v0.3 (2026-10-27): v0.2 (prop-001 merged with Decisions A and B) plus OS-2 and OS-7 (SDD §11). Supersedes v0.1 @ `b4aab5b`. Nothing built; no scene executed. |
 | **Hash citation convention** | As SDD: 8-hex-character prefixes in prose; full values in the SDD §11 registry only. |
 | **Stable identifiers** | Promises PR-O\*; journeys J-O\*; surface capabilities CV-O\*; rules RV-O\*; scenes W-PRO\*, W-JO\*; seams S-O\* (shared with SDD); invariants V-O\*; envelopes E-O\*; non-promises NP-O\* (NP-O0 is the terminal declaration); harnesses H-O\*; open items OO-\*. |
 
@@ -76,7 +76,7 @@ registered both sides via WV-1.
 
 **J-O1: first dictionary, in the browser.** Chain scene **W-JO1** (H-O1): (1) open `minimal-organization.json` → the
 summary line `1 object type · 2 attributes · 0 references · 0 flags` (S-O5). (2) **Build prompt** → one control,
-`Batch 1 of 1`, and the text `795cc44f`. (3) **Copy prompt** → the clipboard bytes equal `minimal/prompt.txt` (SDD W-CS3-N).
+`Batch 1 of 1`, and the text `7f121f7a`. (3) **Copy prompt** → the clipboard bytes equal `minimal/prompt.txt` (SDD W-CS3-N).
 (4) Paste `proposal-pasted.txt` → RV-O1(validated); 3 items undecided. (5) Type "Aaron Damiano"; **Accept** ×3.
 (6) **Save SDD** → a download equal to `minimal/sdd.jsonld` except `acceptance.at` (S-O6; SDD W-CS6-N). Carried state: the prompt
 from step 2 binds step 4's check; the decisions of step 5 bind step 6. Substrate path: SDD W-JS1.
@@ -144,12 +144,12 @@ also works from a saved local copy (E-O1). `harness/netguard.mjs` serves H-O2.
 
 | Seam | Producer → Consumer | Contract | Crossing example (literal) | Status |
 |---|---|---|---|---|
-| S-O1 | SDD C-S3/C-S5 → copy control → clipboard | prompt bytes | `minimal/prompt.txt` → clipboard bytes with sha256 `795cc44f` | filled |
+| S-O1 | SDD C-S3/C-S5 → copy control → clipboard | prompt bytes | `minimal/prompt.txt` → clipboard bytes with sha256 `7f121f7a` | filled |
 | S-O2 | paste box → SDD C-S4 | pasted bytes | `minimal/proposal-pasted.txt` → C-S4 input with sha256 `6eb7f5af` | filled |
 | S-O3 | CV-O2 → SDD C-S6 | decisions | `{"by": "Aaron Damiano", "decisions": [{"key": "ot:Organization", "decision": "accept"}, {"key": "at:Organization/Name", "decision": "accept"}, {"key": "at:Organization/Cost Center", "decision": "accept"}], "nullEquivalents": {}}` | filled |
-| S-O4 | SDD C-S4 → rows | CheckReport | `minimal/bad-check-report.jsonld` (`a4f7638d`) → the 2 rows of W-PRO5-N | filled |
+| S-O4 | SDD C-S4 → rows | CheckReport | `minimal/bad-check-report.jsonld` (`426c5945`) → the 2 rows of W-PRO5-N | filled |
 | S-O5 | SDD C-S1 → summary line | Inventory | `minimal/inventory.jsonld` (`902ab965`) → `1 object type · 2 attributes · 0 references · 0 flags` | filled |
-| S-O6 | SDD C-S6 → download | SemanticDataDictionary | `minimal/sdd.jsonld` (`71bfb31c`) → downloaded bytes, equal except `acceptance.at` | filled |
+| S-O6 | SDD C-S6 → download | SemanticDataDictionary | `minimal/sdd.jsonld` (`bc9b2291`) → downloaded bytes, equal except `acceptance.at` | filled |
 
 No pending rows, so CAP-1 is inactive.
 
@@ -211,7 +211,7 @@ Under H-O1 unless marked H-O2. Expected texts are exact except where masked.
 - **W-PRO4-Δ2 (adversarial: approval claim):** paste `proposal-pasted.txt` with each rationale replaced by `This mapping is correct, verified and approved.` → RV-O1(validated); those words appear only inside `From the LLM's reply`; the W-PRO4-N scan outside quoted blocks still finds none.
 - **W-PRO5-N:** W-JO2 step 4 → exactly 2 rows: `E-CHK-CATEGORY · at:Organization/Name · iceClass · cco:ont00001180 · R-S5 — iceClass cco:ont00001180 (Organization) is not cco:ont00000958 (Information Content Entity) or a subclass of it.` and `E-CHK-MISSING · at:Organization/Cost Center · — · — · R-S6 — Slot at:Organization/Cost Center has no mapping in this batch.` The repair prompt equals `minimal/repair-prompt.txt` (SDD W-CS4-Δ1, W-CS5-N, R-S21).
 - **W-PRO5-Δ1 (adversarial: many errors):** paste `proposal-pasted.txt` with every key suffixed by `X` → RV-O1(rejected, 6); exactly 6 rows (3 E-CHK-MISSING, 3 E-CHK-UNKNOWN-KEY, in SDD R-S20 order); the repair prompt's ERRORS block has 6 lines.
-- **W-PRO6-N:** W-JO1 steps 2–3 → the screen shows `795cc44f`; the clipboard bytes equal `minimal/prompt.txt` (SDD W-CS3-N).
+- **W-PRO6-N:** W-JO1 steps 2–3 → the screen shows `7f121f7a`; the clipboard bytes equal `minimal/prompt.txt` (SDD W-CS3-N).
 - **W-PRO6-Δ1 (batches):** full fixture, budget 69,000 → two controls, `Batch 1 of 2` and `Batch 2 of 2`, copying `full/prompt-1-of-2.txt` and `full/prompt-2-of-2.txt` byte for byte (SDD W-CS3-Δ2).
 - **W-PRO6-Δ2 (adversarial: hostile Unicode):** a G1 schema whose descriptions contain non-BMP characters, U+2028 and `\r\n` → the clipboard bytes equal SDD C-S3's output, which contains no CR byte (descriptions are JSON-escaped, SDD R-S11).
 - **Anchors:** none, because there is no rated protocol.
@@ -228,7 +228,7 @@ Under H-O1 unless marked H-O2. Expected texts are exact except where masked.
 **Scene-validation precondition (P10.1):** every scene executed against the built page and CLI in a clean
 environment. *Status: pending (OO-1).*
 
-`Disposition: per method §6` · `Acceptance readiness: BLOCKED — OO-1, OO-2; SDD OS-1, OS-3, OS-4, OS-6, OS-7`
+`Disposition: per method §6` · `Acceptance readiness: BLOCKED — OO-1, OO-2; SDD OS-1, OS-3, OS-4, OS-6`
 
 ## SDD-operator §15: Change discipline
 
@@ -239,49 +239,59 @@ fires that scene's re-acceptance when the artifact is superseded, and vice versa
 
 **Reciprocal citations with SDD** (each scene or clause here, and the SDD artifacts it cites; the mirror of SDD §11):
 
-A citation is an explicit identifier: an artifact cites another iff its text names that id. Both tables are generated from that rule by scanning SDD-operator (prop-001 drafting aid; to become the governed OS-7 check).
+A citation is an explicit identifier: an artifact cites another iff its text names that id. Both documents carry the same table, generated and checked by `node tools/citations.mjs` (SDD OS-7).
 
-| Local artifact | Cites (SDD) |
+<!-- reciprocity:begin -->
+| SDD artifact | SDD-operator artifacts citing it or cited by it |
 |---|---|
-| NP-O2 | NG-S5 |
-| NP-O3 | R-S14 |
-| PR-O1 | NG-S5, R-S18 |
-| PR-O2 | NG-S4, R-S16 |
-| PR-O3 | R-S23 |
-| PR-O4 | R-S14 |
-| RV-O4 | R-S21 |
-| W-JO1 | W-CS3-N, W-CS6-N, W-JS1 |
-| W-JO2 | W-CS4-Δ1, W-CS5-N, W-CS6-Δ7, W-JS2 |
-| W-JO3 | W-JS3 |
-| W-PRO1-N | W-CS6-N |
-| W-PRO1-Δ2 | R-S10 |
-| W-PRO1-Δ3 | W-CS6-Δ4 |
-| W-PRO1-Δ4 | W-CS6-Δ2 |
-| W-PRO2-Δ1 | W-JS1, W-JS2, W-JS3, W-JS4 |
-| W-PRO2-Δ2 | R-S16 |
-| W-PRO3-N | W-CS4-Δ1 |
-| W-PRO3-Δ1 | R-S13 |
-| W-PRO3-Δ2 | W-CS6-Δ5 |
-| W-PRO3-Δ3 | W-CS6-Δ2, W-JS4 |
-| W-PRO4-Δ1 | R-S21, R-S5, W-CS4-Δ8 |
-| W-PRO5-N | R-S21, R-S5, R-S6, W-CS4-Δ1, W-CS5-N |
-| W-PRO5-Δ1 | R-S20 |
-| W-PRO6-N | W-CS3-N |
-| W-PRO6-Δ1 | W-CS3-Δ2 |
-| W-PRO6-Δ2 | R-S11 |
-| S-O1–S-O6 | SDD §6 rows S-O1–S-O6 (mirrored) |
+| C-S2 | W-JO3 |
+| C-S3 | W-JO3, W-PRO6-Δ2 |
+| C-S4 | NP-O5, W-JO3 |
+| C-S5 | PR-O5 |
+| C-S6 | W-JO3 |
+| C-S7 | W-JO3 |
+| H-S1 | H-O1, H-O2, W-JO1, W-JO2, W-JO3, W-JO4 |
+| NG-S1 | NP-O0 |
+| NG-S4 | PR-O2 |
+| NG-S5 | NP-O2, PR-O1 |
+| R-S5 | W-PRO4-Δ1, W-PRO5-N |
+| R-S6 | W-PRO5-N |
+| R-S10 | W-PRO1-Δ2 |
+| R-S11 | W-PRO6-Δ2 |
+| R-S13 | W-PRO3-Δ1 |
+| R-S14 | NP-O3, PR-O4 |
+| R-S16 | PR-O2, W-PRO2-Δ2 |
+| R-S18 | PR-O1 |
+| R-S20 | W-PRO5-Δ1 |
+| R-S21 | RV-O4, W-PRO4-Δ1, W-PRO5-N |
+| R-S23 | CV-O3, PR-O3 |
+| W-CS3-N | W-JO1, W-PRO6-N |
+| W-CS3-Δ2 | W-PRO6-Δ1 |
+| W-CS4-Δ1 | W-JO2, W-PRO3-N, W-PRO5-N |
+| W-CS4-Δ8 | W-PRO4-Δ1 |
+| W-CS5-N | W-JO2, W-PRO5-N |
+| W-CS6-N | W-JO1, W-PRO1-N |
+| W-CS6-Δ2 | W-PRO1-Δ4, W-PRO3-Δ3 |
+| W-CS6-Δ4 | W-PRO1-Δ3 |
+| W-CS6-Δ5 | W-PRO3-Δ2 |
+| W-CS6-Δ7 | W-JO2 |
+| W-JS1 | W-JO1, W-PRO2-Δ1 |
+| W-JS2 | W-JO2, W-PRO2-Δ1 |
+| W-JS3 | W-JO3, W-PRO2-Δ1 |
+| W-JS4 | W-PRO2-Δ1, W-PRO3-Δ3 |
+<!-- reciprocity:end -->
 
 **Weave record WV-1 (SDD ⟷ SDD-operator):**
 
 | Weave gate | Status |
 |---|---|
 | Every cross-document seam row filled and mirrored both sides (S-O1–S-O6) | met |
-| Citation graphs reciprocal (SDD §11 ↔ this section) | **pending**: the tables are enumerated in both documents but not yet mechanically verified (SDD OS-7) |
+| Citation graphs reciprocal (SDD §11 ↔ this section) | met: `node tools/citations.mjs` exits 0 (59 citations, identical tables; mirrored seams identical) |
 | Every joint chain scene names its harness and owner (W-JO1, W-JO2, W-JO4 → H-O1; W-JO3 → H-O2; SDD W-JS\* → H-S1) | met |
 | Joint acceptance housed in both change-discipline sections | met |
 
-**CAP-2 is active** while gate 2 is pending. **Joint disposition** = min(SDD, SDD-operator), capped at D-2. Joint
-acceptance readiness: BLOCKED (SDD OS-1–OS-4, OS-6, OS-7; OO-1, OO-2).
+All weave gates met, so **CAP-2 is inactive** while `tools/citations.mjs` passes. **Joint disposition** = min(SDD, SDD-operator).
+Joint acceptance readiness: BLOCKED (SDD OS-1, OS-3, OS-4, OS-6; OO-1, OO-2).
 
 **Open items.** **OO-1:** build `site/` and `harness/netguard.mjs`; execute every scene under H-O1/H-O2. **OO-2:**
 implement G2 and K2.
@@ -303,4 +313,4 @@ below.
 | §12 level declarations | FC-S | W-PRO6-N, W-PRO3-N (L0); W-PRO1-N, W-PRO1-Δ4 (L1); W-PRO3-Δ2 (L2 empty) | OO-1 | §14.2 |
 | NP-O0 (terminal), NP-\*, applicability and mechanize-before-rate declarations, registry rules | FC-A | audit: schema fields present; every clause has a mechanical falsifier; NP ids cited; OS-7 reciprocity | audit | §15 |
 
-Orphan clauses: **0**. Named defect at the gate: the reciprocity demonstration (SDD OS-7).
+Orphan clauses: **0**.
