@@ -68,4 +68,33 @@ Draft journeys: **J1** first dictionary (C1→C6) · **J2** repair loop (C4→C5
 - **Phase 0: complete** (2026-10-27). The registrar approved the plan and resolved all four open questions: ADR-003
   accepted with amendment; ADR-005 (pinned ontologies from Ontology-Template); ADR-006 (JSON-LD canonical);
   third individual deferred (ADR-001); boundary and scope fixed (ADR-007).
-- **Phase 1: authorized** (2026-10-27), in progress.
+- **Phase 1: authorized** (2026-10-27). Deliverables in place, with **one blocking question** (below).
+
+### Phase 1 deliverables
+
+| Deliverable | Where | State |
+|---|---|---|
+| Pinned ontology artifacts | `vendor/ontology-template/` (Ontology-Template `114f28d`; every file hash-verified against its manifest) | Done |
+| Permitted-term list | `ontology/term-list.json`, built by `tools/build-term-list.mjs` (deterministic; `--check` mode). 2,071 terms, 1,697 permitted. `terms_sha256` `3c0a389a…6c323` | Done |
+| Atlassian format confirmed | `project/SOURCE-FORMAT.md`. 13 attribute types; ADR-002 corrected | Done |
+| Synthetic fixtures | `fixtures/jira-assets/`: main + externalId variant + 6 one-defect invalid fixtures, all checked against Atlassian's JSON Schema | Done |
+
+### Blocking question: BFO category checks need CCO's class hierarchy
+
+ADR-004 promises "BFO category checks" (for example, "a referent class must be a material entity", or rejecting
+"a house as a site", SDD-F13). That needs each CCO class's ancestry up to BFO. **Ontology-Template's pinned
+artifacts don't carry it:** the CCO register lists existence, labels and types only, and the CCO extract holds just
+the 2 terms Ontology-Template names. Options:
+
+- **A (recommended):** extend Ontology-Template's vendoring to also emit a **CCO hierarchy register** (each class's
+  superclass chain) from the *same* pinned file. It keeps one source of truth with the same hash discipline, and
+  your other ontology projects benefit too.
+- **B:** the SDD build fetches the pinned CCO merged file itself (same commit, verified against the same sha256
+  `e609db27…`) and derives the hierarchy. Same pin, but a second derivation path outside Ontology-Template.
+- **C:** v1 drops category checks for CCO terms (existence and kind only). Category errors then fall to human
+  acceptance.
+
+### Other open points
+
+From `SOURCE-FORMAT.md`: (1) does the enterprise schema use `externalId` fields? (2) may Atlassian's JSON Schema
+(no stated licence) be vendored for offline validation?

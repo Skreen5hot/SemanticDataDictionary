@@ -1,0 +1,7 @@
+# Hash-pinned and generated files must keep their exact bytes on every machine
+# (git's autocrlf would otherwise rewrite LF to CRLF on Windows checkouts and
+# break their sha256). Everything else is normalised to LF.
+*                     text=auto eol=lf
+vendor/**             -text
+fixtures/**           -text
+ontology/**           -text

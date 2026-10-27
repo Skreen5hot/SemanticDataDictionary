@@ -52,9 +52,12 @@ non-goal for v1 (an `NG-*` entry), and may become a second profile later.
 - **`objectTypes[].children` is type hierarchy, not containment.** It MUST NOT be turned into subclass or
   part-of relations without an explicit mapping decision. Containment evidence comes from import-mapping
   selectors (for example `hardDrives.files`) and is flagged for judgment, never inferred silently.
-- Attribute-type coverage (text, integer, boolean, date, datetime, select, status, user, URL, email,
-  referenced object, and so on) is enumerated in the spec and **confirmed against Atlassian's published import-schema
+- Attribute-type coverage is enumerated in the spec and **confirmed against Atlassian's published import-schema
   documentation** before it is treated as complete.
+  **Correction (Phase 1, 2026-10-27):** the draft list here was wrong. Atlassian's JSON Schema (`2021_09_15`, the
+  only published version) defines exactly 13 types: `text, integer, boolean, double, date, time, date_time, url,
+  email, textarea, select, ipaddress, referenced_object`. There is no `status` or `user` type. Evidence and hash:
+  [`SOURCE-FORMAT.md`](SOURCE-FORMAT.md).
 - Fixtures are **synthetic**. The enterprise schema is never shared, so the spec's witnesses use a synthetic
   schema that exercises every attribute type and edge case.
 
