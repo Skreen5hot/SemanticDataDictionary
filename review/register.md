@@ -318,3 +318,69 @@ amendment). SDD-F27 is resolved in content; its demonstration is OS-7, and CAP-2
 - **Remaining blockers (none pre-cycle-3):** OS-1 (remaining artifact schemas, the bundled context, SHACL shapes),
   OS-3 (G1/K1 generators), OS-4 and OO-1 (build and execute every witness and scene), OS-6 (bench), OO-2 (G2/K2).
   All are implementation work.
+
+---
+
+# Cycle 3: SDD Service spec pair v0.3 (2026-10-27, appended; everything above unamended)
+
+Subject: `spec/` @ `5e5b4cc912adf4ba873ec91df13b5fa758385cf7`. Raters A and B, Claude subagents, **isolated per SRS
+R-S1**: identical folders (manifest `28db59df…`) holding the method, `spec/`, `fixtures/`, `ontology/`, `schemas/`,
+`tools/` and `project/DECISIONS.md`. The register and plan were excluded; `vendor/` was absent by design. The author
+did not rate.
+
+## Grade vectors and adjudication
+
+| Dim | Service A | Service B | Operator A | Operator B |
+|---|---|---|---|---|
+| P1 | 2 | 2 | 2 | 2 |
+| P2 | 1 | 1 | 1 | 1 |
+| P3 | 1 | 1 | 2 | 2 |
+| P4 | 2 | 2 | 2 | 2 |
+| P5 | 1 | 1 | 1 | 1 |
+| P6 | 2 | 2 | 2 | 2 |
+| P7 | 2 | 2 | 2 | 2 |
+| **P8** | **1** | **2** | 2 | 2 |
+| P9 | 1 | 1 | 1 | 1 |
+| P10 | 1 | 1 | 1 | 1 |
+| P11 | n/a | n/a | 2 | 2 |
+| **Total** | 14/20 | 15/20 | 18/22 | 18/22 |
+
+- **Agreed:** 20 of 21 dimension scores; no zeros; **CAP-1 inactive; CAP-2 active.** Both raters: WV-1 gate 1 is
+  false, because the SDD's S-O1 row is corrupt (SDD-F51).
+- **Nonzero disagreement: service P8 (A 1, B 2)**, routed to the registrar. Source: J-S3 and J-S4 chains not fully
+  literal (SDD-F56).
+- **Invariance:** service D-2 at 14 or 15; operator 18/22 = D-2; joint **D-2**, also capped there by CAP-2.
+
+`Joint Disposition: D-2 Reconstruction required` (dual-rated; service P8 pending registrar; invariant)
+`Acceptance readiness: BLOCKED — SDD-F50, F51, F52 (P5 halts / weave defect); OS-1, OS-3, OS-4, OS-6; OO-1, OO-2`
+
+Progress against cycle 2: the operator document rose from D-1 (15/22) to D-2 (18/22); the joint result from D-1 to D-2.
+
+**Author verification:** SDD-F50, F51 and F52 recomputed and confirmed by the author before recording.
+
+## Findings: cycle 3 (A and B merged)
+
+| Id | Sev | Dim | Finding | Src |
+|---|---|---|---|---|
+| **SDD-F50** | **Critical** | P5/P10 | **The relay pastes name a superseded skeleton.** `proposal-pasted.txt` and `bad-proposal.txt` carry `skeletonSha256` `a250c034` (the v0.2 skeleton); the current skeleton and prompt are `e990dbb3`. Under R-S13 every check of them stops at E-CHK-SKELETON, so W-CS4-N, Δ1–Δ4, Δ6, Δ8, Δ11–Δ13 and every minimal chain and scene state wrong outcomes. Cause: the OS-2 supersession walk regenerated outputs but not inputs that *embed* the skeleton hash, and the registry check cannot see embedded hashes (method defect shape D-M1). | A-F1, A-F3, B-F1 |
+| **SDD-F51** | **Critical** | P3/P10 (CAP-2) | **The SDD's S-O1 seam row holds closure-report cells, and `tools/citations.mjs` reports it as identical.** Its seam pattern also matches the operator's closure row `S-O1–S-O6`; `--write` copied that row in and the check compared it with itself. WV-1 gate 1 is false. The author's probes covered citation drift, not seam drift. | A-F2, B-F3 |
+| **SDD-F52** | **Major** | P5 | **Error order conflicts with R-S20**, which puts coverage errors first. `bad-check-report.jsonld`, W-JS2, the repair prompt's ERRORS block and W-PRO5-N list E-CHK-CATEGORY before E-CHK-MISSING. **P5 halt.** | B-F2 |
+| **SDD-F53** | **Major** | P5/P9/P11 | **PR-O4(b) can be broken by ordinary input.** RV-O4 renders `key` and `value` verbatim (both LLM-controlled), and CV-O1 shows source names, so a reply key `approved` or a Jira attribute named "Verified" puts a forbidden word outside quoted blocks. K2 tests only `rationale`. RV-O1's "two per-item texts" claim is wrong. R-S14 is unscoped against quoted LLM text in `rationale`. | A-F5, B-F4, B-F15 |
+| **SDD-F54** | **Major** | P9/technical | **The DATA end marker can be forged:** `JSON.stringify` does not escape U+2028, which JS regexes and many renderers treat as a line break, so a description can produce a line reading `-----END DATA-----`. "Whole line" is undefined in R-S11 and V-S4. | B-F5 |
+| **SDD-F55** | **Major** | P4/P3 | **CLI surface inconsistencies.** `--out` is used by R-S23 and W-CS6-Δ5 but appears in no signature. `rerun` has two outputs and no destinations. S-S6 names consumers whose signatures take no RerunPlan. J-S3's "changed ∪ added" key list is computed by no capability. S-S1 lists `rerun` as an Inventory consumer, but rerun takes schema bytes. | A-F6, A-F9 |
+| **SDD-F56** | **Major** | P8 | **J-S3 and J-S4 are not fully literal** (no relay pastes, decisions or output files); H-S1 claims fixture files that do not exist. W-CS6-Δ2 and W-CS7-Δ1/Δ2 have no literal artifacts. | A-F4 |
+| **SDD-F57** | **Major** | P2 | **Orphan sub-clauses** contrary to "0": W-CHK-RANGE-UNRESOLVED; E-USAGE; R-S18's skeleton-mismatch branch and "highest round"; R-S14's CLI-message ban; R-S9's no-invention clause; R-S16 beyond `skeleton`; `{expected}` undefined in two templates; §12's claim about where BCP 14 clauses live; NP-O5's "tolerates CRLF". | A-F7, B-F6, B-F11 |
+| **SDD-F58** | **Major** | P9 | **Universals discharged by witnesses only:** R-S4, R-S12 (greedy fill), R-S14, R-S15, R-S16, R-S19, R-S23. Operator: `acceptorName` is outside V-O1; PR-O3(a) has no property; PR-O2(b) is witness-only. | A-F8, A-F11, B P9 |
+| **SDD-F59** | Minor | P10 | **Registry incomplete:** the synthetic fixtures, the 6 invalid fixtures and the full skeleton (`f203f691`, no file) are missing; retained v1 hashes are not recorded. `fixtures/jira-assets/README.md` gives the externalIds hash as `…40c750`; the real hash is `…1d59c750` (a spliced tail, F25's pattern). | A-F10, B-F7 |
+| **SDD-F60** | Minor | consistency | **Stale version markers:** "as-of registry v0.2" (NG-S0, NP-O0) and "Status at v0.2" in v0.3 documents; registry "Version 3" undefined. | A-F12, B-F9 |
+| **SDD-F61** | Minor | accuracy | **OS-2's counts describe the source file, not the term list:** CCO 148/149 are file edges; the term list holds 112/110 on object properties. "Every object property" is overstated (113 of 225 CCO properties have no domain). | A-F15, B-F10 |
+| **SDD-F62** | Minor | ontology | **The "valid" Δ15 baseline relates a Descriptive ICE by *located in*,** which BFO restricts to independent continuants. It passes only through NG-S9 (anonymous domain). §1's "category-wrong" promise is not scoped to NG-S9. | A-F16, B-F8 |
+| **SDD-F63** | Minor | ADR | **ADR-004 step 4 says repair lists "only the errors";** R-S22 resends the full DATA. No amendment is recorded. | A-F17, B-F13 |
+| **SDD-F64** | Minor | P10 | **The citation graph is narrower than the dependencies:** G1/K1 ids are not tracked; blocks without a bold local id (SDD §2 coverage, the §5 `html` row, §10) drop real citations. | A-F18, B-F12 |
+| **SDD-F65** | Minor | P11 | **Two scoping gaps in PR-O1:** PR-O1(c) is unfalsified for names pre-filled from an opened SDD; PR-O1(a) vs R-S17 carry-forward (mappings enter a new SDD without an act in that session) needs scoping. | A-F13, B-F14 |
+| **SDD-F66** | Minor | P6/P2 | **Operator scene precision:** W-PRO3-N's "same `at` by identity"; W-PRO2-Δ2's E-CTX-EXTERNAL row format is undefined by RV-O4/R-S21; W-PRO3-Δ1's "random bytes" is unseeded and not paste-able; RV-O3's source-schema block and CV-O3's "open a previous SDD" have no scene. | A-F14, A P2 |
+
+**Method observation (for SRS, separate):** a registry hash audit cannot see hashes *embedded inside* governed files
+(SDD-F50). The method's supersession walk (P10.3) needs embedded-digest dependencies in the citation graph.
+
+**Register state:** cycle 3 raised 17 findings (SDD-F50–F66), 0 dispositioned. Open routing: service P8.
