@@ -172,3 +172,89 @@ reason) · **deferred** (open item named) · **rejected** (reasons stated). None
 
 **Register state:** 24 findings, 24 dispositioned (22 resolved or resolved otherwise, 1 of them with its witness literal pending
 (F13 → OS-2); 1 partly deferred (F19); 1 deferred (F23); none rejected). Cycle 2 grades the spec pair.
+
+---
+
+# Cycle 2: SDD Service spec pair v0.1 (2026-10-27, appended; everything above unamended)
+
+Subject: `spec/sdd-service.md` + `spec/sdd-operator.md` @ `b4aab5bea1d71dcb74d6e2942ddd266d5ae00629`, woven by WV-1.
+Graded under *The Falsifiable Spec v0.4*.
+
+**Raters.** A and B, both Claude subagents, both **isolated per SRS R-S1**. Each was given an identical folder
+(manifest sha256 `2b6650a4…`) holding the method, `spec/`, `fixtures/`, `ontology/` and `project/DECISIONS.md` cut
+from `b4aab5b`. Excluded: this register, `project/PLAN.md` (which lists the author's self-identified gaps) and every
+prior grade. The author (the session that wrote the spec) did not rate.
+
+## Grade vectors
+
+| Dim | Service A | Service B | Operator A | Operator B |
+|---|---|---|---|---|
+| P1 | 2 | 2 | 1 | 1 |
+| P2 | 1 | 1 | 1 | 1 |
+| P3 | 1 | 1 | 1 | 1 |
+| P4 | 2 | 2 | 2 | 2 |
+| P5 | 1 | 1 | 1 | 1 |
+| P6 | 2 | 2 | 2 | 2 |
+| P7 | 2 | 2 | 2 | 2 |
+| **P8** | **2** | **1** | 2 | 2 |
+| P9 | 1 | 1 | 1 | 1 |
+| P10 | 1 | 1 | 1 | 1 |
+| P11 | n/a | n/a | 1 | 1 |
+| **Total** | 15/20 | 14/20 | 15/22 | 15/22 |
+
+Both raters: P11 not applicable to the service (it delegates through NG-S0) and applicable to the operator; no
+zeros; **CAP-1 inactive; CAP-2 active** (WV-1 gate 2, "citation graphs reciprocal", is marked met but is not, per
+SDD-F27).
+
+## Adjudication (SRS R-S4)
+
+- **Agreed:** 20 of 21 dimension scores. **No contested knockouts.**
+- **Nonzero disagreement: service P8 (A 2, B 1)**, routed to a third rater or the registrar. Both raters found the
+  same defect (C-S6 cannot derive `round` / `promptSha256`, SDD-F26); they differ only on whether to charge it to
+  P8 as well as to P2/P4.
+- **Invariance:** the service is D-2 at 14 or 15. The operator is 15/22 = D-1 (68.2 %, the §6.2 pin). The joint
+  result is min = **D-1**, under either resolution of P8. CAP-2 bounds the joint result at D-2 and does not bind below D-1.
+
+`Joint Disposition: D-1 Uniformly under-specified` (dual-rated; service P8 pending third rater/registrar; invariant)
+`Acceptance readiness: BLOCKED — SDD-F25 (wrong witness hashes); OS-1–OS-4, OS-6; OO-1, OO-2; CAP-2`
+
+Per document: service `D-2 Reconstruction required` (14 or 15/20) · operator `D-1 Uniformly under-specified` (15/22).
+
+**Author verification:** SDD-F25 was recomputed by the author against the committed files and confirmed.
+
+## Findings: cycle 2 (A and B merged; sources cited)
+
+| Id | Sev | Dim | Finding | Src |
+|---|---|---|---|---|
+| **SDD-F25** | **Major** | P10 | **Three abbreviated witness hashes are wrong:** prompt.txt printed `4082dfe5…facc28e9f` (true `…d04d2cafc`; the tail was spliced from the proposal hash) at service :40, :96, :280 and operator :72; proposal-pasted.txt `…c136` (true `…bafacc28e9f`) at :42, :281; bad-proposal.txt `…7909c` (true `…874909c`) at :283. The full hashes are correct, so the documents contradict themselves. | A-F1, B-F1 |
+| **SDD-F26** | **Major** | P8/P4/P2 | **C-S6 cannot derive `provenance.round` or `promptSha256`** from its declared inputs. Repair-round semantics are undefined (which slot set a repair reply is checked against, and how it merges). W-CS5-N claims "round 2" and "same header" although the template has no round field. W-JS2's outcome claim is wrong. | A-F2, A-F9, A-F8, B-F5 |
+| **SDD-F27** | **Major** | P10 (CAP-2) | **Reciprocity is incomplete.** The operator cites W-CS5-N, W-CS6-N, W-CS4-Δ8, W-CS3-Δ2, R-S10, R-S16, R-S18 and W-JS2–4, none recorded in service §11; the worked supersession misses W-PRO5-N, W-JO2, W-PRO6-Δ1. WV-1 gate 2 is overclaimed. | A-F3, B-F10 |
+| **SDD-F28** | **Major** | P3/P4 | **Contracts can't feed their consumers.** C-S3's DATA lines need names and descriptions that the skeleton lacks, so the inventory is an undeclared input. C-S7 needs per-item hashes, but the SDD stores only the whole-inventory hash. | A-F4 |
+| **SDD-F29** | **Major** | P5 | **Rule/witness conflict on error precedence.** R-S5 also fires E-CHK-CATEGORY for an unknown or non-class `iceClass`, so W-CS4-Δ3/Δ4's "exactly one error" can't hold. No precedence or ordering rule exists. W-CS4-Δ10's expected error set is underdetermined. **P5 halt.** | A-F5, B-F4, B-F20 |
+| **SDD-F30** | **Major** | P5/P11 | **RV-O1's rejected text "…Nothing was accepted."** contains "accepted" before any act, which violates PR-O4(b) and V-O3 by construction. It is also misleading in W-PRO3-N, where items are accepted. | A-F6, B-F3 |
+| **SDD-F31** | **Major** | P5/P2 | **Unpaired clauses and witnesses.** Witnesses with no rule: W-CHK-GENERIC (undefined), E-CHK-SKELETON, E-SKEL-ERRORED, E-REPAIR-NOTHING. Rules with no witness: E-SRC-MAP-TYPE, E-SRC-DUP-ATTR, W-CHK-ICE-REFERENT, W-PROMPT-OVERSIZE, E-CHK-RANGE-UNRESOLVED, CLI exit 2. Two invalid fixtures are cited by nothing. The closure report claims 0 orphans. | A-F7, A-F19, B-F6 |
+| **SDD-F32** | **Major** | P3/P11 | **Substrate→surface seams are missing** (CheckReport→screen, inventory→screen, SDD→download). W-PRO4-Δ1's warning text exists in no artifact, which breaks the "no free language" premise. Adding the SDD→download row honestly would be *pending* and activate CAP-1. | A-F11, B-F2, B-F9 |
+| **SDD-F33** | **Major** | P11/P2 | **Falsifiers that don't bear on their clauses.** PR-O2(b) ("passes with networking disabled" doesn't prove no request was attempted; H-O2 needs a request log). PR-O3(b) is mapped to W-JO2, in which nothing is accepted before the repair round, so it passes vacuously. | A-F12, B-F8 |
+| **SDD-F34** | **Major** | P9 | **V-S4's property is false:** descriptions feed the inventory hash, which feeds the skeleton hash, which is printed outside DATA. | A-F10 |
+| **SDD-F35** | **Major** | P5/P8 | **W-JO4 contradicts W-PRO1-Δ2:** it runs that scene after 3 acceptances, but the scene expects all items undecided and the name field empty. | A-F14 |
+| **SDD-F36** | **Major** | cross-doc | **`--out` refusal (exit 2, E-OUT-EXISTS) is defined only in the operator document.** The substrate CLI contract lacks it, yet the L2-empty claim rests on it. | A-F19, B-F11 |
+| **SDD-F37** | **Major** | P2/P3 | **W-CS6-N resolves to pending, elided S-S7.** The main output contract has no literal instance, and W-JO1, W-PRO1-N and W-PRO1-Δ1 inherit that. | B-F7 |
+| **SDD-F38** | Minor | P9 | **Mixed identification can collide:** `ot:`+externalId of one type can equal `ot:`+name of another. No rule covers it, yet V-S2 claims uniqueness. | A-F13 |
+| **SDD-F39** | Minor | P9 | **Property parameters missing or broken.** n is missing for V-S3, V-S5, V-S6, V-O2 and V-O3. V-S3's 50k budget is below the ~62.2k fixed overhead, an undefined R-S12 case. "Characters" is undefined for non-BMP text. | A-F17, B-F12 |
+| **SDD-F40** | Minor | P1 | **The operator has no terminal declaration.** Note: the method's own §5A specimen also lacks one (method observation). | A-F15, B-F17 |
+| **SDD-F41** | Minor | P5/ontology | **The conflict record is not a rule/witness conflict,** and its premise ("CCO models software as an ICE") is uncheckable: the pin has no Software class. | A-F16, B-F14 |
+| **SDD-F42** | Minor | various | **Small inconsistencies:** R-S9 claims "13 types, each with its row" (12 types, 8 rows; `referenced_object` has none). `terms_sha256` is over compact JSON, contradicting R-S1's "sha256 always means". A warning carries an E- code. J-S3's `unchanged` list is unsorted, and J-S3 skips C-S2. The service calls its companion "Part II". | A-F18, B-F5, B-F14, B-F17 |
+| **SDD-F43** | Minor | P7 | **Readiness lines omit blockers:** OO-1 (service), and OO-2, OS-3 and OS-6 (operator and joint). | A-F20, B-F18 |
+| **SDD-F44** | Minor | P11 | **PR-O4, PR-O5 and PR-O6 lack adversarial scenes.** | A, B-F13 |
+| **SDD-F45** | Minor | ADR | **Unrecorded deviations from ADRs:** no SHACL check (ADR-006), and no JSON Schema output format in the prompt (ADR-004.1). | A-F22, B-F15 |
+| **SDD-F46** | Minor | P11 | **PR-O6 is unscoped by platform:** clipboards may normalise LF to CRLF. | A-F21 |
+| **SDD-F47** | Minor | P8/P10 | **Harness and homing gaps:** H-O2 has no owner in its definition; J-O3 is homed to "CLI", which is not a CV capability; W-JS1's relay step names no harness. | B-F19 |
+| **SDD-F48** | Minor | P5 | **DATA-line formats for reference and containment slots are unspecified.** W-CS3-Δ2's "exactly 2 batches" is within ~300 characters of flipping. | B-F16 |
+| **SDD-F49** | Minor | P2 | **W-CS7-Δ1 is underspecified:** if the mapping still names Cost Center, E-SRC-MAP-ATTR fires first. | B-F20 |
+
+**Method observations (for Specification-Refinement-System, not against this spec):** (1) P1's closure rule requires
+a terminal declaration at the outermost level, but the §5A specimen has none (both raters noted it). (2) Repeated
+from cycle 1: the vacuous READY in §6.2.6.
+
+**Register state:** cycle 2 raised 25 findings (SDD-F25–F49), 0 dispositioned. One routing is open: service P8. Next:
+a proposal (`review/proposals/prop-001`), merged only on the registrar's command (no auto-merge).
