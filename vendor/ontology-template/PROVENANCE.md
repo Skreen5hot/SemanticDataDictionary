@@ -21,10 +21,10 @@ Per ADR-005, the permitted-term list is derived only from the pinned ontology ar
 `tools/build-term-list.mjs` re-verifies every hash against `upstream-extracts.json` before it reads anything, and
 refuses to run on a mismatch.
 
-**Known limit (open question for the registrar):** the CCO *register* records every term's existence, labels and
-OWL types, but **no class hierarchy**. The CCO *extract* carries only the 2 terms Ontology-Template itself names.
-These artifacts can therefore prove that a CCO term exists, but not which BFO category it falls under. BFO is
-vendored in full, hierarchy included. See `project/PLAN.md` → Phase 1 status.
+**Known limit:** the CCO *register* records every term's existence, labels and OWL types, but **no class
+hierarchy**, and the CCO *extract* carries only the 2 terms Ontology-Template itself names. Resolved for now by
+ADR-008 (hierarchy derived from the same pinned file, in `../cco-upstream/`) and requested upstream as
+`SDD-OT-2026-10-27-cco-class-hierarchy-register`.
 
 **Upgrading:** re-pin in Ontology-Template first, then re-copy these files at the new commit and regenerate the term
 list. Every accepted SDD citing the old term-list hash is then superseded (ADR-005).

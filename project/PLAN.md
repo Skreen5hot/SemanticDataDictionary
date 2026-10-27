@@ -68,18 +68,23 @@ Draft journeys: **J1** first dictionary (C1→C6) · **J2** repair loop (C4→C5
 - **Phase 0: complete** (2026-10-27). The registrar approved the plan and resolved all four open questions: ADR-003
   accepted with amendment; ADR-005 (pinned ontologies from Ontology-Template); ADR-006 (JSON-LD canonical);
   third individual deferred (ADR-001); boundary and scope fixed (ADR-007).
-- **Phase 1: authorized** (2026-10-27). Deliverables in place, with **one blocking question** (below).
+- **Phase 1: complete** (2026-10-27). The blocking question below was resolved by the registrar: Option B (ADR-008),
+  with a request sent to Ontology-Template. Both open points are answered (`SOURCE-FORMAT.md`).
+- **Phase 2: next** (author the spec pair). Awaiting the registrar's go-ahead.
 
 ### Phase 1 deliverables
 
 | Deliverable | Where | State |
 |---|---|---|
 | Pinned ontology artifacts | `vendor/ontology-template/` (Ontology-Template `114f28d`; every file hash-verified against its manifest) | Done |
-| Permitted-term list | `ontology/term-list.json`, built by `tools/build-term-list.mjs` (deterministic; `--check` mode). 2,071 terms, 1,697 permitted. `terms_sha256` `3c0a389a…6c323` | Done |
+| Permitted-term list | `ontology/term-list.json`, built by `tools/build-term-list.mjs` (deterministic; `--check` mode). 2,071 terms, 1,697 permitted; every class carries superclasses and BFO ancestors (ADR-008). `terms_sha256` `0965d5a4…1156f5` | Done |
+| CCO class hierarchy | `vendor/cco-upstream/` (same pin, hash-checked against Ontology-Template's register); reader validated against rdflib | Done (Option B) |
+| Atlassian JSON Schema | `vendor/atlassian/` (registrar-authorized) | Done |
+| Upstream request | `communications/OT/outgoing/2026-10-27-cco-class-hierarchy-register.md` | Sent (open) |
 | Atlassian format confirmed | `project/SOURCE-FORMAT.md`. 13 attribute types; ADR-002 corrected | Done |
 | Synthetic fixtures | `fixtures/jira-assets/`: main + externalId variant + 6 one-defect invalid fixtures, all checked against Atlassian's JSON Schema | Done |
 
-### Blocking question: BFO category checks need CCO's class hierarchy
+### Blocking question: BFO category checks need CCO's class hierarchy (resolved: Option B, ADR-008)
 
 ADR-004 promises "BFO category checks" (for example, "a referent class must be a material entity", or rejecting
 "a house as a site", SDD-F13). That needs each CCO class's ancestry up to BFO. **Ontology-Template's pinned
@@ -94,7 +99,7 @@ the 2 terms Ontology-Template names. Options:
 - **C:** v1 drops category checks for CCO terms (existence and kind only). Category errors then fall to human
   acceptance.
 
-### Other open points
+### Other open points (answered)
 
-From `SOURCE-FORMAT.md`: (1) does the enterprise schema use `externalId` fields? (2) may Atlassian's JSON Schema
-(no stated licence) be vendored for offline validation?
+From `SOURCE-FORMAT.md`: (1) the enterprise schema **does** use `externalId` fields, so they are a primary input form;
+(2) Atlassian's JSON Schema **may** be vendored (done).

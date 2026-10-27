@@ -174,6 +174,30 @@ SDD) are **JSON-LD**, with a **fixed, versioned, locally resolvable `@context`**
 
 ---
 
+## ADR-008: CCO class hierarchy derived from the same pin (Option B), pending Ontology-Template
+
+**Date:** 2026-10-27 · **Status:** Accepted (registrar)
+**Resolves:** the Phase 1 blocking question (BFO category checks need CCO ancestry). Enables mechanical checks for
+SDD-F11, SDD-F13, SDD-F14.
+
+**Decision.** SDD derives CCO's named class hierarchy itself, from the **same pinned file** Ontology-Template pins
+(CCO `v2.0-2024-11-06` @ `510dad76…`, sha256 `e609db27…`), vendored in `vendor/cco-upstream/`. The expected digest
+is read from Ontology-Template's CCO register, so the derivation cannot drift from the pin. In parallel, request
+`SDD-OT-2026-10-27-cco-class-hierarchy-register` asks Ontology-Template to ship the same information. **SDD does
+not wait** for the answer.
+
+**Consequences.**
+- `tools/turtle-subclass.mjs` (zero dependencies) reads named `rdfs:subClassOf` edges. It was validated against
+  rdflib 7.1.1 (`tools/verify-hierarchy.py`): an exact match, 1,421 CCO + 35 BFO edges.
+- Every class in `ontology/term-list.json` carries `superclasses` and `bfo_ancestors`. All 1,421 classes reach BFO.
+- Anonymous superclass expressions (111 in CCO) are counted and dropped. Category checks use named ancestry only,
+  which is a declared limit.
+- **Retirement:** when Ontology-Template ships its register, compare the two derivations, then delete
+  `vendor/cco-upstream/` and rebuild from Ontology-Template alone. Until then this is a **second derivation path**
+  from the same pin, recorded here as a known deviation from ADR-005's single-source intent.
+
+---
+
 ## ADR-007: v1 boundary: definitions not instances, fixed architecture, traceability, fixed scope
 
 **Date:** 2026-10-27 · **Status:** Accepted (registrar)

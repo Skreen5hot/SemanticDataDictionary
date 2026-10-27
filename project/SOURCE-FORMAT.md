@@ -10,8 +10,8 @@ Phase 1 ground truth for ADR-002. Facts below are taken from Atlassian's publish
   Declares itself JSON Schema draft 2019-09, `$id` `https://api.atlassian.com/jsm/insight/imports/external/schema/versions/2021_09_15`.
 - **Only version found.** Probes of other plausible version paths (2022–2024 dates, `latest`, a versions index)
   all returned 404.
-- **Not vendored.** The file carries no licence statement, so it is referenced by URL and hash rather than copied.
-  The registrar decides whether it may be vendored for offline validation (see Open points).
+- **Vendored** at `vendor/atlassian/assets-import-schema-2021_09_15.json` on the registrar's authorization
+  (2026-10-27), despite carrying no licence statement. See `vendor/atlassian/PROVENANCE.md`.
 
 ## Facts established
 
@@ -34,9 +34,11 @@ Atlassian's own example (the "Disk Analysis Tool" sample) uses `externalId`, `ob
 `additionalProperties: false`) but undocumented there. C1 therefore MUST accept both forms: name-based identification
 (documented) and externalId-based identification (observed in Atlassian's example). Both fixtures exist.
 
-## Open points for the registrar
+## Registrar answers (2026-10-27)
 
-1. **Which form does the enterprise schema use?** You can check without sharing it: does it contain `externalId`
-   fields? That decides which form is primary.
-2. **May the Atlassian JSON Schema be vendored** for offline validation in the HTML tool and CLI? It has no stated
-   licence. The alternative is to encode its constraints in the SDD's own input checks, citing its hash.
+1. **The enterprise schema contains `externalId` fields** (used by other systems). The externalId form is therefore
+   a **primary, required** input form, not an edge case. Where `externalId`s are present, C1 MUST use them as the
+   source identifiers in traceability (ADR-007.3), because they are the identifiers other systems rely on (names are
+recorded too).
+   Name-only schemas remain supported.
+2. **The Atlassian JSON Schema may be vendored.** Done; see above.
