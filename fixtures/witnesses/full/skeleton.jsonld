@@ -1,0 +1,392 @@
+{
+  "@context": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld",
+  "@type": "Skeleton",
+  "inventorySha256": "1db35f4f744fece9e4c018982b182cef3deaf5a7eaeb0274936ac95d16058fd8",
+  "termListSha256": "a9e01756d749655a53088833bb97612791caf9a19220065848c826f99985cd39",
+  "slots": [
+    {
+      "key": "ot:Organization",
+      "kind": "type",
+      "recordClass": null,
+      "referentClass": null
+    },
+    {
+      "key": "at:Organization/Name",
+      "kind": "attribute",
+      "jiraType": "text",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "at:Organization/Cost Center",
+      "kind": "attribute",
+      "jiraType": "text",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "ot:Person",
+      "kind": "type",
+      "recordClass": null,
+      "referentClass": null
+    },
+    {
+      "key": "at:Person/Full Name",
+      "kind": "attribute",
+      "jiraType": "text",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "at:Person/Employee Number",
+      "kind": "attribute",
+      "jiraType": "text",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "at:Person/Email",
+      "kind": "attribute",
+      "jiraType": "email",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "at:Person/Start Date",
+      "kind": "attribute",
+      "jiraType": "date",
+      "datatype": "xsd:date",
+      "valueProperty": "cco:ont00001771",
+      "iceClass": null
+    },
+    {
+      "key": "at:Person/Active",
+      "kind": "attribute",
+      "jiraType": "boolean",
+      "datatype": "xsd:boolean",
+      "valueProperty": "cco:ont00001772",
+      "iceClass": null
+    },
+    {
+      "key": "at:Person/Department",
+      "kind": "reference",
+      "target": "ot:Organization",
+      "relation": null
+    },
+    {
+      "key": "at:Person/Manager",
+      "kind": "reference",
+      "target": "ot:Person",
+      "relation": null
+    },
+    {
+      "key": "ot:Location",
+      "kind": "type",
+      "recordClass": null,
+      "referentClass": null
+    },
+    {
+      "key": "at:Location/Name",
+      "kind": "attribute",
+      "jiraType": "text",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "at:Location/Site Code",
+      "kind": "attribute",
+      "jiraType": "text",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "at:Location/Country",
+      "kind": "attribute",
+      "jiraType": "text",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "at:Location/Address",
+      "kind": "attribute",
+      "jiraType": "textarea",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "at:Location/Latitude",
+      "kind": "attribute",
+      "jiraType": "double",
+      "datatype": "xsd:double",
+      "valueProperty": "cco:ont00001770",
+      "iceClass": null
+    },
+    {
+      "key": "at:Location/Longitude",
+      "kind": "attribute",
+      "jiraType": "double",
+      "datatype": "xsd:double",
+      "valueProperty": "cco:ont00001770",
+      "iceClass": null
+    },
+    {
+      "key": "ot:Hardware",
+      "kind": "type",
+      "recordClass": null,
+      "referentClass": null
+    },
+    {
+      "key": "at:Hardware/Asset Tag",
+      "kind": "attribute",
+      "jiraType": "text",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "at:Hardware/Serial Number",
+      "kind": "attribute",
+      "jiraType": "text",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "at:Hardware/Purchase Date",
+      "kind": "attribute",
+      "jiraType": "date",
+      "datatype": "xsd:date",
+      "valueProperty": "cco:ont00001771",
+      "iceClass": null
+    },
+    {
+      "key": "at:Hardware/Purchase Cost",
+      "kind": "attribute",
+      "jiraType": "double",
+      "datatype": "xsd:double",
+      "valueProperty": "cco:ont00001770",
+      "iceClass": null
+    },
+    {
+      "key": "at:Hardware/Status",
+      "kind": "attribute",
+      "jiraType": "select",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "at:Hardware/Warranty URL",
+      "kind": "attribute",
+      "jiraType": "url",
+      "datatype": "xsd:anyURI",
+      "valueProperty": "cco:ont00001768",
+      "iceClass": null
+    },
+    {
+      "key": "at:Hardware/Owner",
+      "kind": "reference",
+      "target": "ot:Person",
+      "relation": null
+    },
+    {
+      "key": "at:Hardware/Location",
+      "kind": "reference",
+      "target": "ot:Location",
+      "relation": null
+    },
+    {
+      "key": "ot:Laptop",
+      "kind": "type",
+      "recordClass": null,
+      "referentClass": null
+    },
+    {
+      "key": "at:Laptop/Encrypted",
+      "kind": "attribute",
+      "jiraType": "boolean",
+      "datatype": "xsd:boolean",
+      "valueProperty": "cco:ont00001772",
+      "iceClass": null
+    },
+    {
+      "key": "at:Laptop/RAM GB",
+      "kind": "attribute",
+      "jiraType": "integer",
+      "datatype": "xsd:integer",
+      "valueProperty": "cco:ont00001773",
+      "iceClass": null
+    },
+    {
+      "key": "ot:Server",
+      "kind": "type",
+      "recordClass": null,
+      "referentClass": null
+    },
+    {
+      "key": "at:Server/Hostname",
+      "kind": "attribute",
+      "jiraType": "text",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "at:Server/IP Address",
+      "kind": "attribute",
+      "jiraType": "ipaddress",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "at:Server/Maintenance Window Start",
+      "kind": "attribute",
+      "jiraType": "time",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "at:Server/Rack Position",
+      "kind": "attribute",
+      "jiraType": "integer",
+      "datatype": "xsd:integer",
+      "valueProperty": "cco:ont00001773",
+      "iceClass": null
+    },
+    {
+      "key": "at:Server/Ports~1Protocols",
+      "kind": "attribute",
+      "jiraType": "textarea",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "ot:Blade Server",
+      "kind": "type",
+      "recordClass": null,
+      "referentClass": null
+    },
+    {
+      "key": "at:Blade Server/Chassis Slot",
+      "kind": "attribute",
+      "jiraType": "integer",
+      "datatype": "xsd:integer",
+      "valueProperty": "cco:ont00001773",
+      "iceClass": null
+    },
+    {
+      "key": "ct:ot:Blade Server",
+      "kind": "containment",
+      "child": "ot:Blade Server",
+      "container": "ot:Server",
+      "relation": null
+    },
+    {
+      "key": "ot:Hard Drive",
+      "kind": "type",
+      "recordClass": null,
+      "referentClass": null
+    },
+    {
+      "key": "at:Hard Drive/Capacity GB",
+      "kind": "attribute",
+      "jiraType": "integer",
+      "datatype": "xsd:integer",
+      "valueProperty": "cco:ont00001773",
+      "iceClass": null
+    },
+    {
+      "key": "ct:ot:Hard Drive",
+      "kind": "containment",
+      "child": "ot:Hard Drive",
+      "container": "ot:Server",
+      "relation": null
+    },
+    {
+      "key": "ot:Software",
+      "kind": "type",
+      "recordClass": null,
+      "referentClass": null
+    },
+    {
+      "key": "at:Software/Name",
+      "kind": "attribute",
+      "jiraType": "text",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "at:Software/Version",
+      "kind": "attribute",
+      "jiraType": "text",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "at:Software/Last Scanned",
+      "kind": "attribute",
+      "jiraType": "date_time",
+      "datatype": "xsd:dateTime",
+      "valueProperty": "cco:ont00001767",
+      "iceClass": null
+    },
+    {
+      "key": "at:Software/Vendor Site",
+      "kind": "attribute",
+      "jiraType": "url",
+      "datatype": "xsd:anyURI",
+      "valueProperty": "cco:ont00001768",
+      "iceClass": null
+    },
+    {
+      "key": "at:Software/Installed On",
+      "kind": "reference",
+      "target": "ot:Hardware",
+      "relation": null
+    },
+    {
+      "key": "at:Software/Notes",
+      "kind": "attribute",
+      "jiraType": "textarea",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "ot:Scan Event",
+      "kind": "type",
+      "recordClass": null,
+      "referentClass": null
+    },
+    {
+      "key": "at:Scan Event/Started",
+      "kind": "attribute",
+      "jiraType": "date_time",
+      "datatype": "xsd:dateTime",
+      "valueProperty": "cco:ont00001767",
+      "iceClass": null
+    },
+    {
+      "key": "at:Scan Event/Items Found",
+      "kind": "attribute",
+      "jiraType": "integer",
+      "datatype": "xsd:integer",
+      "valueProperty": "cco:ont00001773",
+      "iceClass": null
+    }
+  ]
+}

@@ -22,8 +22,8 @@ RULES
 
 ERRORS IN YOUR PREVIOUS REPLY
 Your previous reply for this batch was rejected for the reasons below. Return the complete corrected mapping set for every DATA line, not only the lines named here.
-{"code":"E-CHK-CATEGORY","key":"at:Organization/Name","field":"iceClass","value":"cco:ont00001180","rule":"R-S5","message":"iceClass cco:ont00001180 (Organization) is not cco:ont00000958 (Information Content Entity) or a subclass of it."}
 {"code":"E-CHK-MISSING","key":"at:Organization/Cost Center","field":null,"value":null,"rule":"R-S6","message":"Slot at:Organization/Cost Center has no mapping in this batch."}
+{"code":"E-CHK-CATEGORY","key":"at:Organization/Name","field":"iceClass","value":"cco:ont00001180","rule":"R-S5","message":"iceClass cco:ont00001180 (Organization) is not cco:ont00000958 (Information Content Entity) or a subclass of it."}
 
 ANSWER FORMAT
 Reply with exactly one JSON object and nothing else. It has the fields "skeletonSha256", "batch" and "mappings", and one mapping per DATA line, shaped by kind:

@@ -1,0 +1,11 @@
+{
+  "skeletonSha256": "60411c630940a686335e005622284427b07384650c4668721216a392d5196bef",
+  "batch": "1/1",
+  "mappings": [
+    {
+      "key": "at:Organization/Cost Center",
+      "iceClass": "cco:ont00000077",
+      "rationale": "A cost center is a code identifier assigned by finance."
+    }
+  ]
+}

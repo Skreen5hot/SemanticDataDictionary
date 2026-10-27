@@ -1,0 +1,16 @@
+{
+  "@context": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld",
+  "@type": "PromptSet",
+  "skeletonSha256": "e990dbb36831aa769a09a7d5df64d396698511482c3ba849064353500ff9de57",
+  "round": 1,
+  "budget": 200000,
+  "prompts": [
+    {
+      "batch": "1/1",
+      "file": "prompt-1-of-1.txt",
+      "bytes": 63399,
+      "sha256": "7f121f7a15ed3f67563c10d2038c2722c87e92fab7160eae37bdcc3e78cbcc3c"
+    }
+  ],
+  "warnings": []
+}

@@ -1,5 +1,5 @@
 {
-  "skeletonSha256": "f203f691eb6e59af46cd501bbfb8c774d14f644d1cbe3be8aa914f5b7a07b0d2",
+  "skeletonSha256": "2b309d2d0b201923ae3ce5057e0217d24e339881a963692671c3da206aa78616",
   "batch": "1/1",
   "mappings": [
     {
@@ -248,7 +248,7 @@
     },
     {
       "key": "at:Software/Installed On",
-      "relation": "bfo:BFO_0000171",
+      "relation": "bfo:BFO_0000084",
       "rationale": "Witness mapping."
     },
     {

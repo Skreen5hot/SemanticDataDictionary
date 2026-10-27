@@ -1,0 +1,276 @@
+{
+  "skeletonSha256": "f203f691eb6e59af46cd501bbfb8c774d14f644d1cbe3be8aa914f5b7a07b0d2",
+  "batch": "1/1",
+  "mappings": [
+    {
+      "key": "ot:Organization",
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00001180",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Organization/Name",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Organization/Cost Center",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "ot:Person",
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00001262",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Person/Full Name",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Person/Employee Number",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Person/Email",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Person/Start Date",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Person/Active",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Person/Department",
+      "relation": "cco:ont00001939",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Person/Manager",
+      "relation": "bfo:BFO_0000056",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "ot:Location",
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000192",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Location/Name",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Location/Site Code",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Location/Country",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Location/Address",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Location/Latitude",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Location/Longitude",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "ot:Hardware",
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000995",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Hardware/Asset Tag",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Hardware/Serial Number",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Hardware/Purchase Date",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Hardware/Purchase Cost",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Hardware/Status",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Hardware/Warranty URL",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Hardware/Owner",
+      "relation": "cco:ont00001925",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Hardware/Location",
+      "relation": "bfo:BFO_0000171",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "ot:Laptop",
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000420",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Laptop/Encrypted",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Laptop/RAM GB",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "ot:Server",
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000420",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Server/Hostname",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Server/IP Address",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Server/Maintenance Window Start",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Server/Rack Position",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Server/Ports~1Protocols",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "ot:Blade Server",
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000420",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Blade Server/Chassis Slot",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "ct:ot:Blade Server",
+      "relation": "bfo:BFO_0000176",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "ot:Hard Drive",
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000117",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Hard Drive/Capacity GB",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "ct:ot:Hard Drive",
+      "relation": "bfo:BFO_0000176",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "ot:Software",
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Software/Name",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Software/Version",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Software/Last Scanned",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Software/Vendor Site",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Software/Installed On",
+      "relation": "bfo:BFO_0000171",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Software/Notes",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "ot:Scan Event",
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000037",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Scan Event/Started",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Scan Event/Items Found",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    }
+  ]
+}

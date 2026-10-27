@@ -9,7 +9,7 @@ enterprise schema. All are written against Atlassian's **import schema `2021_09_
 | File | Purpose | Atlassian JSON Schema | sha256 |
 |---|---|---|---|
 | `synthetic-it-assets.json` | Main fixture: documented fields only (names, no externalIds) | valid | `2794d08c…b4eded` |
-| `synthetic-it-assets-externalids.json` | Same schema with `externalId` / `objectTypeExternalId` / `attributeExternalId`, as in Atlassian's own example (fields beyond the published JSON Schema) | valid | `b6692a95…40c750` |
+| `synthetic-it-assets-externalids.json` | Same schema with `externalId` / `objectTypeExternalId` / `attributeExternalId`, as in Atlassian's own example (fields beyond the published JSON Schema) | valid | `b6692a95…59c750` |
 | `invalid/missing-attribute-type.json` | Attribute without `type` | **invalid** | `fff2af59…7d7770` |
 | `invalid/unknown-attribute-type.json` | `type: "currency"` (not one of the 13) | **invalid** | `0f754ada…840304` |
 | `invalid/reference-without-target.json` | `referenced_object` with no `referenceObjectTypeName` | **invalid** | `a709d145…d969c` |

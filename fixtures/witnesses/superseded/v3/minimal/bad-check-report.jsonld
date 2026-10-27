@@ -1,0 +1,30 @@
+{
+  "@context": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld",
+  "@type": "CheckReport",
+  "skeletonSha256": "e990dbb36831aa769a09a7d5df64d396698511482c3ba849064353500ff9de57",
+  "batch": "1/1",
+  "round": 1,
+  "promptSha256": "7f121f7a15ed3f67563c10d2038c2722c87e92fab7160eae37bdcc3e78cbcc3c",
+  "proposalSha256": "68704680864a30fc0eab135889059fb304dcf54210388d6ac58d2dbc7874909c",
+  "termListSha256": "a9e01756d749655a53088833bb97612791caf9a19220065848c826f99985cd39",
+  "status": "rejected",
+  "errors": [
+    {
+      "code": "E-CHK-CATEGORY",
+      "key": "at:Organization/Name",
+      "field": "iceClass",
+      "value": "cco:ont00001180",
+      "rule": "R-S5",
+      "message": "iceClass cco:ont00001180 (Organization) is not cco:ont00000958 (Information Content Entity) or a subclass of it."
+    },
+    {
+      "code": "E-CHK-MISSING",
+      "key": "at:Organization/Cost Center",
+      "field": null,
+      "value": null,
+      "rule": "R-S6",
+      "message": "Slot at:Organization/Cost Center has no mapping in this batch."
+    }
+  ],
+  "warnings": []
+}

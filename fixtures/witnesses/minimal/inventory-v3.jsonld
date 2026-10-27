@@ -1,0 +1,44 @@
+{
+  "@context": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld",
+  "@type": "Inventory",
+  "source": {
+    "format": "jira-assets-import/2021_09_15",
+    "sha256": "0ced1f7e469fd90db9aaec1bd4cb317c871129341822836c84c90f8b16144ad7",
+    "schemaName": "Minimal Organization",
+    "identification": "name"
+  },
+  "objectTypes": [
+    {
+      "key": "ot:Organization",
+      "name": "Organization",
+      "externalId": null,
+      "description": "An organizational unit that people belong to",
+      "parent": null,
+      "label": "at:Organization/Name",
+      "identity": [
+        "at:Organization/Name"
+      ],
+      "selectors": [
+        "organizations"
+      ]
+    }
+  ],
+  "attributes": [
+    {
+      "key": "at:Organization/Name",
+      "name": "Name",
+      "externalId": null,
+      "owner": "ot:Organization",
+      "description": "Organization name",
+      "type": "text",
+      "target": null,
+      "isLabel": true,
+      "isIdentityPart": true,
+      "locators": [
+        "name"
+      ]
+    }
+  ],
+  "flags": [],
+  "errors": []
+}

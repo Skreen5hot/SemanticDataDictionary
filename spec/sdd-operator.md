@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Conformance** | *The Falsifiable Spec v0.4*, method §4A form. Companion to [`sdd-service.md`](sdd-service.md) (`SDD`), which delegates its experience level here (NG-S0). Federated by weave record **WV-1** (§15). |
-| **Status** | v0.3 (2026-10-27): v0.2 (prop-001 merged with Decisions A and B) plus OS-2 and OS-7 (SDD §11). Supersedes v0.1 @ `b4aab5b`. Nothing built; no scene executed. |
+| **Status** | v0.4 (proposed by prop-002, 2026-10-27): v0.3 plus the dispositions of cycle-3 findings SDD-F50–F66. Supersedes v0.1 @ `b4aab5b` and v0.3 @ `5e5b4cc`. Nothing built; no scene executed. |
 | **Hash citation convention** | As SDD: 8-hex-character prefixes in prose; full values in the SDD §11 registry only. |
 | **Stable identifiers** | Promises PR-O\*; journeys J-O\*; surface capabilities CV-O\*; rules RV-O\*; scenes W-PRO\*, W-JO\*; seams S-O\* (shared with SDD); invariants V-O\*; envelopes E-O\*; non-promises NP-O\* (NP-O0 is the terminal declaration); harnesses H-O\*; open items OO-\*. |
 
@@ -24,27 +24,32 @@ passes, the tool tells me what it checked and that the meaning is still my call.
 ## SDD-operator §2: Promise register
 
 **PR-O1: Nothing is accepted without your explicit act.** (a) A mapping enters an SDD only through an accept act on
-that mapping: a per-item **Accept**, or **Accept all N validated**, which names N. (b) No pasted text can perform,
-pre-fill or simulate a decision. (c) The acceptor's name is typed by the person, never taken from an artifact.
-Clause ↔ scene map (mechanical, clause-relevant): (a) → W-PRO1-N, W-PRO1-Δ1 · (b) → W-PRO1-Δ2 (adversarial) ·
-(c) → W-PRO1-Δ2 (the name field stays empty although the paste names someone). Cites SDD R-S18, NG-S5.
+that mapping: a per-item **Accept**, or **Accept all N validated**, which names N. A mapping carried forward from a
+previous SDD (SDD R-S17) keeps its original acceptance record; that earlier act is its act. (b) No pasted text can
+perform, pre-fill or simulate a decision. (c) The acceptor's name is typed by the person, never taken from an
+artifact (a paste or an opened SDD). Clause ↔ scene map (mechanical, clause-relevant): (a) → W-PRO1-N, W-PRO1-Δ1,
+W-PRO1-Δ5 · (b) → W-PRO1-Δ2 (adversarial) · (c) → W-PRO1-Δ2 (a paste names someone), W-PRO1-Δ5 (an opened SDD
+names someone). Cites SDD R-S17, R-S18, NG-S5.
 
 **PR-O2: Nothing leaves your machine.** (a) After the page has loaded, no network request is attempted in any
 journey. (b) No CLI command attempts a network request. (c) A foreign `@context` is refused, never fetched. Clause ↔
-scene map: (a) → W-PRO2-N (H-O1 request log empty) · (b) → W-PRO2-Δ1 (the H-O2 network guard's attempt log is
+scene map: (a) → W-PRO2-N (H-O1 request log empty), V-O2 · (b) → W-PRO2-Δ1, V-O2 (the H-O2 network guard's attempt log is
 empty, which is relevant because an attempt is logged even when it fails) · (c) → W-PRO2-Δ2 (adversarial). Cites
 SDD NG-S4, R-S16.
 
 **PR-O3: A bad paste never costs you work.** (a) After any rejected paste, everything already accepted in the
 session is byte-identical. (b) A repair round never un-accepts or re-opens an accepted mapping. (c) The tool never
-overwrites or deletes a file. Clause ↔ scene map: (a) → W-PRO3-N, W-PRO3-Δ1 (adversarial) · (b) → W-PRO3-Δ3, where
+overwrites or deletes a file. Clause ↔ scene map: (a) → W-PRO3-N, W-PRO3-Δ1 (adversarial), V-O1 · (b) → W-PRO3-Δ3, where
 2 mappings are accepted *before* a rejected paste and a repair round · (c) → W-PRO3-Δ2 (refusal; L2 empty, §12).
 Cites SDD R-S23.
 
 **PR-O4: Validated never reads as approved.** (a) A check outcome is shown only with RV-O1's status texts. (b) Before
 any CV-O2 act, no text outside a quoted block contains the whole words "correct", "approved", "accepted" or
-"verified" (case-insensitive). (c) Every warning is shown in its item's row. Clause ↔ scene map: (a) → W-PRO4-N ·
-(b) → W-PRO4-N, W-PRO4-Δ2 (adversarial: the LLM's rationale claims approval) · (c) → W-PRO4-Δ1. Cites SDD R-S14.
+"verified" (case-insensitive). Text copied from an artifact (a rationale, keys, values, source names and descriptions)
+is always rendered inside a quoted element (RV-O3, RV-O4) and is outside this clause; the clause binds the text the
+tool composes. (c) Every warning is shown in its item's row. Clause ↔ scene map: (a) → W-PRO4-N · (b) → W-PRO4-N,
+W-PRO4-Δ2 (adversarial: the rationale claims approval), W-PRO4-Δ3 (adversarial: a key and a source name carry the
+words) · (c) → W-PRO4-Δ1. Cites SDD R-S14.
 
 **PR-O5: Every problem names its item and its rule.** (a) Each error or warning is one row rendered by RV-O4.
 (b) The number of rows equals the report's errors plus warnings. (c) The repair prompt carries every error.
@@ -106,9 +111,9 @@ step is homed.
   W-PRO6-N, W-PRO6-Δ1, W-PRO6-Δ2.
 - **CV-O2: decide.** Per-item **Accept** / **Reject** (changeable until saved); **Accept all N validated**; the
   acceptor-name field; per-attribute null-equivalents entry (comma-separated; each value trimmed; empty values
-  dropped; sorted on save). Scenes: W-PRO1-N, W-PRO1-Δ1–Δ4.
+  dropped; sorted on save). `acceptance.at` is set at the click on Accept, not at save. Scenes: W-PRO1-N, W-PRO1-Δ1–Δ5.
 - **CV-O3: files.** Open a schema or a previous SDD; save each artifact as a new download named
-  `sdd-YYYYMMDDTHHMMSSZ.jsonld`. The CLI equivalent obeys SDD R-S23. Scenes: W-PRO3-Δ2, W-JO1 step 6, W-JO3.
+  `sdd-YYYYMMDDTHHMMSSZ.jsonld`. The CLI equivalent obeys SDD R-S23. Scenes: W-PRO3-Δ2, W-PRO1-Δ5, W-JO1 step 6, W-JO3.
 - Determinism note: masks are `acceptance.at` (property as SDD C-S6) and the download filename timestamp (the pattern
   above, within ±5 s of the save). Everything else on screen is exact.
 
@@ -123,15 +128,17 @@ decisions{key → accept|reject}, acceptorName, nullEquivalents{key → string[]
   · `Rejected: {N} problem(s). Nothing from this reply can be used.` · after an act, per item: `Accepted by {name}` /
   `Rejected by {name}` · `Accept all {N} validated mappings as {name}?` ·
   `{t} object type{s} · {a} attribute{s} · {r} reference{s} · {f} flag{s}` (where `{s}` is empty for 1). None contains
-  a PR-O4(b) word except the two per-item texts, which appear only after a CV-O2 act. Witnesses: W-PRO4-N, W-PRO5-N, W-JO1.
+  a PR-O4(b) word except `Accepted by {name}`, which appears only after a CV-O2 act. Witnesses: W-PRO4-N, W-PRO5-N, W-JO1.
 - **RV-O2: Only acts write decisions.** No paste, report or file load writes `decisions` or `acceptorName`. Witness:
   W-PRO1-Δ2; V-O1.
 - **RV-O3: Artifact text is quoted.** `rationale` values are rendered as text (never markup) inside a block labelled
-  `From the LLM's reply`, and source names and descriptions inside one labelled `From the source schema`. Witness:
-  W-PRO1-Δ2.
+  `From the LLM's reply`, and source names and descriptions inside one labelled `From the source schema`. Keys and values shown anywhere
+  (rows, summary, flags) are rendered in quoted inline elements. Witnesses: W-PRO1-Δ2, W-PRO4-Δ3, W-PRO6-Δ2.
 - **RV-O4: Rows come from report fields.** Each error or warning is rendered exactly as
-  `{code} · {key} · {field or —} · {value or —} · {rule} — {message}`, every part copied from the CheckReport (SDD R-S21).
-  Witnesses: W-PRO4-Δ1, W-PRO5-N.
+  `{code} · {key} · {field or —} · {value or —} · {rule} — {message}`, every part copied from the report (SDD R-S21)
+  and rendered as a quoted element; the separators and `—` are the tool's. A refusal outside a CheckReport (for example
+  E-CTX-EXTERNAL when a file is opened) is rendered the same way, with its R-S21 message. Witnesses: W-PRO4-Δ1,
+  W-PRO5-N, W-PRO2-Δ2.
 
 ## SDD-operator §7: Decomposition
 
@@ -145,11 +152,11 @@ also works from a saved local copy (E-O1). `harness/netguard.mjs` serves H-O2.
 | Seam | Producer → Consumer | Contract | Crossing example (literal) | Status |
 |---|---|---|---|---|
 | S-O1 | SDD C-S3/C-S5 → copy control → clipboard | prompt bytes | `minimal/prompt.txt` → clipboard bytes with sha256 `7f121f7a` | filled |
-| S-O2 | paste box → SDD C-S4 | pasted bytes | `minimal/proposal-pasted.txt` → C-S4 input with sha256 `6eb7f5af` | filled |
+| S-O2 | paste box → SDD C-S4 | pasted bytes | `minimal/proposal-pasted.txt` → C-S4 input with sha256 `7d3a9546` | filled |
 | S-O3 | CV-O2 → SDD C-S6 | decisions | `{"by": "Aaron Damiano", "decisions": [{"key": "ot:Organization", "decision": "accept"}, {"key": "at:Organization/Name", "decision": "accept"}, {"key": "at:Organization/Cost Center", "decision": "accept"}], "nullEquivalents": {}}` | filled |
-| S-O4 | SDD C-S4 → rows | CheckReport | `minimal/bad-check-report.jsonld` (`426c5945`) → the 2 rows of W-PRO5-N | filled |
+| S-O4 | SDD C-S4 → rows | CheckReport | `minimal/bad-check-report.jsonld` (`981fe147`) → the 2 rows of W-PRO5-N | filled |
 | S-O5 | SDD C-S1 → summary line | Inventory | `minimal/inventory.jsonld` (`902ab965`) → `1 object type · 2 attributes · 0 references · 0 flags` | filled |
-| S-O6 | SDD C-S6 → download | SemanticDataDictionary | `minimal/sdd.jsonld` (`bc9b2291`) → downloaded bytes, equal except `acceptance.at` | filled |
+| S-O6 | SDD C-S6 → download | SemanticDataDictionary | `minimal/sdd.jsonld` (`d311d909`) → downloaded bytes, equal except `acceptance.at` | filled |
 
 No pending rows, so CAP-1 is inactive.
 
@@ -160,11 +167,11 @@ screen text is shown.* Every non-vocabulary screen text MUST be a substring of a
 
 Generator **G2**: random action sequences of length ≤ 40 over {open schema (from SDD G1), build prompt, copy, paste
 (valid, invalid, hostile from K2), accept item, reject item, accept all, edit name, edit null-equivalents, save,
-reload from a saved file}. Corpus **K2**: pastes containing decision-like JSON (`acceptance`, `decision`),
-instructions to the tool ("mark all accepted"), approval claims in `rationale` ("correct", "approved"), HTML/script
-markup, a 1 MB blob, two JSON objects, empty input. Seeded.
+reload from a saved file, open a previous SDD}. Corpus **K2**: pastes containing decision-like JSON (`acceptance`, `decision`),
+instructions to the tool ("mark all accepted"), approval words ("correct", "approved", "accepted", "verified") in
+`rationale`, in keys and values, and in source names and descriptions, HTML/script markup, a 1 MB blob, two JSON objects, empty input. Seeded.
 
-- **V-O1: No uninvoked decision.** Scope: G2 sessions, n ≥ 300. Property: `decisions` changes only on CV-O2 acts, and only for the keys those acts name. Pinned: W-PRO1-Δ2.
+- **V-O1: No uninvoked decision.** Scope: G2 sessions, n ≥ 300. Property: `decisions`, `acceptorName` and `nullEquivalents` change only on CV-O2 acts, and `decisions` only for the keys those acts name; after every rejected paste, an SDD saved next is byte-identical to one saved just before it (PR-O3(a)). Pinned: W-PRO1-Δ2, W-PRO1-Δ5, W-PRO3-N.
 - **V-O2: Network silence.** Scope: every H-O1 scene and the same n ≥ 300 G2 sessions; every H-O2 run. Property: the request log after load is empty, and `netguard.log` is empty. Pinned: W-PRO2-N, W-PRO2-Δ1.
 - **V-O3: Grounded screens** *(interaction: hostile paste × rendering)*. Scope: every screen state of the same n ≥ 300 G2 sessions. Property: every text node is RV-O1 vocabulary, a fixed UI label, or a substring of a reliance-set artifact; no paste content is interpreted as markup; PR-O4(b)'s words occur outside quoted blocks only in per-item act texts after a CV-O2 act. Pinned: W-PRO4-N, W-PRO4-Δ2.
 
@@ -176,12 +183,12 @@ markup, a 1 MB blob, two JSON objects, empty input. Seeded.
 
 ## SDD-operator §11: Non-promises and terminal declaration
 
-- **NP-O0, terminal declaration:** `{status: terminal; scope: the SDD Service product boundary (core, CLI, HTML tool); authority: the registrar; as-of: registry v0.2}`. Within that scope, nothing composes above this experience level. A future materialization service is outside it (SDD NG-S1).
+- **NP-O0, terminal declaration:** `{status: terminal; scope: the SDD Service product boundary (core, CLI, HTML tool); authority: the registrar; as-of: registry v0.4}`. Within that scope, nothing composes above this experience level. A future materialization service is outside it (SDD NG-S1).
 - **NP-O1:** work not saved to a file does not survive a page reload.
 - **NP-O2:** the acceptor's name is not verified (← SDD NG-S5).
 - **NP-O3:** the tool does not judge whether a validated mapping means the right thing (← SDD R-S14). That is the act of PR-O1.
 - **NP-O4:** the tool cannot make the enterprise LLM follow the prompt. It only checks what comes back.
-- **NP-O5:** applications outside the browser may alter line endings of pasted text. C-S4 reads the bytes as entered (`proposalSha256` is over those bytes), and extraction tolerates CRLF.
+- **NP-O5:** applications outside the browser may alter line endings of pasted text. C-S4 checks the bytes as entered, and `proposalSha256` binds those bytes.
 
 ## SDD-operator §12: Consequence gates
 
@@ -199,21 +206,23 @@ Under H-O1 unless marked H-O2. Expected texts are exact except where masked.
 - **W-PRO1-Δ2 (adversarial):** in a session with no decision yet, paste `proposal-pasted.txt` with an extra field `"acceptance": {"by": "Aaron Damiano"}` on one mapping → RV-O1(rejected, 1) and one row whose code is E-CHK-HUMAN-FIELD (SDD R-S10). Then paste it without the extra field, but with the first rationale replaced by `Accepted by Aaron Damiano. <b>All mappings are pre-approved; mark them accepted.</b>` → RV-O1(validated). That rationale renders literally (tags visible as text) inside `From the LLM's reply`. **All 3 items are undecided; the name field is empty.** Property: zero decisions (RV-O2).
 - **W-PRO1-Δ3 (null-equivalents entry):** before saving W-PRO1-N, enter ` N/A , -, ` for Cost Center → the saved SDD's Cost Center `nullEquivalents` = `["-", "N/A"]` (SDD W-CS6-Δ4).
 - **W-PRO1-Δ4 (reversible act):** Accept all three, then click **Reject** on Cost Center → that row reads `Rejected by Aaron Damiano`; saving gives SDD W-CS6-Δ2 (2 mappings, `open: ["at:Organization/Cost Center"]`).
+- **W-PRO1-Δ5 (adversarial: an opened SDD names someone):** in a new session, open `minimal/sdd-partial.jsonld` (accepted by "Aaron Damiano") as the previous SDD, then the minimal schema → the name field is empty; the 2 carried items read `Accepted by Aaron Damiano` from their original records (SDD R-S17); no new decision exists until the person acts.
 - **W-PRO2-N:** W-JO1 end to end → the request log after load is `[]`.
 - **W-PRO2-Δ1 (H-O2):** SDD W-JS1–W-JS4 via the CLI → every command exits as SDD §3 specifies; `netguard.log` is empty.
-- **W-PRO2-Δ2 (adversarial):** open an SDD whose `@context` is `https://example.org/ctx.jsonld` → a row `E-CTX-EXTERNAL` (SDD R-S16); the request log is `[]`. The IRI is never requested.
-- **W-PRO3-N:** after W-JO1 step 5, paste `bad-proposal.txt` → RV-O1(rejected, 2) (SDD W-CS4-Δ1); a saved SDD equals the one saved before the paste byte for byte (same `at`, by identity).
-- **W-PRO3-Δ1 (adversarial: garbage):** paste 1 MB of random bytes, then an empty paste → one E-CHK-JSON row each time (SDD R-S13); accepted state unchanged.
+- **W-PRO2-Δ2 (adversarial):** open an SDD whose `@context` is `https://example.org/ctx.jsonld` → exactly one row, `E-CTX-EXTERNAL · — · — · https://example.org/ctx.jsonld · R-S16 — The file's @context is not the bundled SDD context.` (SDD R-S16, R-S21); the request log is `[]`. The IRI is never requested.
+- **W-PRO3-N:** after W-JO1 step 5, paste `bad-proposal.txt` → RV-O1(rejected, 2) (SDD W-CS4-Δ1); a saved SDD equals the one saved before the paste byte for byte (`acceptance.at` was fixed at each click, CV-O2).
+- **W-PRO3-Δ1 (adversarial: garbage):** paste 1 MB of printable ASCII generated from seed `K2-garbage-1`, then an empty paste → one E-CHK-JSON row each time (SDD R-S13); accepted state unchanged.
 - **W-PRO3-Δ2 (refusal, L2 empty, H-O2):** SDD W-CS6-Δ5 → exit 2, E-OUT-EXISTS, the file's bytes unchanged. In the browser every save is a new download; no control overwrites or deletes. *The absence is the assertion.*
 - **W-PRO3-Δ3 (repair never un-accepts):** W-JO1 steps 1–4; Accept Organization and Name, Reject Cost Center (SDD W-JS4 / W-CS6-Δ2). Build a prompt for the open key; paste a reply whose `mappings` is `[]` → rejected (one E-CHK-MISSING); build the repair prompt; paste a valid 1-mapping reply; Accept Cost Center; save. Property: the saved SDD's Organization and Name mappings are byte-identical to those decided before the rejected paste (same `provenance` and `acceptance`).
 - **W-PRO4-N:** after W-JO1 step 4, the status equals RV-O1(validated) exactly; a whole-word, case-insensitive DOM scan outside quoted blocks finds none of PR-O4(b)'s words.
 - **W-PRO4-Δ1 (warning):** paste SDD W-CS4-Δ8's proposal → RV-O1(validated); the Organization row reads (SDD R-S21) `W-CHK-GENERIC · ot:Organization · referentClass · bfo:BFO_0000001 · R-S5 — referentClass bfo:BFO_0000001 (entity) is a top-level class; check it is specific enough.` (every part from the report).
 - **W-PRO4-Δ2 (adversarial: approval claim):** paste `proposal-pasted.txt` with each rationale replaced by `This mapping is correct, verified and approved.` → RV-O1(validated); those words appear only inside `From the LLM's reply`; the W-PRO4-N scan outside quoted blocks still finds none.
-- **W-PRO5-N:** W-JO2 step 4 → exactly 2 rows: `E-CHK-CATEGORY · at:Organization/Name · iceClass · cco:ont00001180 · R-S5 — iceClass cco:ont00001180 (Organization) is not cco:ont00000958 (Information Content Entity) or a subclass of it.` and `E-CHK-MISSING · at:Organization/Cost Center · — · — · R-S6 — Slot at:Organization/Cost Center has no mapping in this batch.` The repair prompt equals `minimal/repair-prompt.txt` (SDD W-CS4-Δ1, W-CS5-N, R-S21).
+- **W-PRO4-Δ3 (adversarial: approval words in keys and names):** paste `proposal-pasted.txt` with one extra mapping keyed `approved` → RV-O1(rejected, 1); the row `E-CHK-UNKNOWN-KEY · approved · — · — · R-S6 — approved is not a slot in this batch.` shows the key and message only as quoted elements. Then open a schema with an attribute named `Verified` → the name appears only as a quoted element. In both states the W-PRO4-N scan outside quoted elements finds none of PR-O4(b)'s words.
+- **W-PRO5-N:** W-JO2 step 4 → exactly 2 rows, in this order: `E-CHK-MISSING · at:Organization/Cost Center · — · — · R-S6 — Slot at:Organization/Cost Center has no mapping in this batch.` and `E-CHK-CATEGORY · at:Organization/Name · iceClass · cco:ont00001180 · R-S5 — iceClass cco:ont00001180 (Organization) is not cco:ont00000958 (Information Content Entity) or a subclass of it.` The repair prompt equals `minimal/repair-prompt.txt` (SDD W-CS4-Δ1, W-CS5-N, R-S21).
 - **W-PRO5-Δ1 (adversarial: many errors):** paste `proposal-pasted.txt` with every key suffixed by `X` → RV-O1(rejected, 6); exactly 6 rows (3 E-CHK-MISSING, 3 E-CHK-UNKNOWN-KEY, in SDD R-S20 order); the repair prompt's ERRORS block has 6 lines.
 - **W-PRO6-N:** W-JO1 steps 2–3 → the screen shows `7f121f7a`; the clipboard bytes equal `minimal/prompt.txt` (SDD W-CS3-N).
 - **W-PRO6-Δ1 (batches):** full fixture, budget 69,000 → two controls, `Batch 1 of 2` and `Batch 2 of 2`, copying `full/prompt-1-of-2.txt` and `full/prompt-2-of-2.txt` byte for byte (SDD W-CS3-Δ2).
-- **W-PRO6-Δ2 (adversarial: hostile Unicode):** a G1 schema whose descriptions contain non-BMP characters, U+2028 and `\r\n` → the clipboard bytes equal SDD C-S3's output, which contains no CR byte (descriptions are JSON-escaped, SDD R-S11).
+- **W-PRO6-Δ2 (adversarial: hostile separators):** open `hostile-separators.json` and copy its prompt → the clipboard bytes equal `hostile/prompt.txt` (SDD W-CS3-Δ6), which contains no CR byte and no U+2028 or U+2029 code point (SDD R-S11); the description shows only inside `From the source schema` (RV-O3).
 - **Anchors:** none, because there is no rated protocol.
 
 ## SDD-operator §14: Acceptance (ordered conjunction, method P7)
@@ -244,29 +253,39 @@ A citation is an explicit identifier: an artifact cites another iff its text nam
 <!-- reciprocity:begin -->
 | SDD artifact | SDD-operator artifacts citing it or cited by it |
 |---|---|
-| C-S2 | W-JO3 |
-| C-S3 | W-JO3, W-PRO6-Δ2 |
-| C-S4 | NP-O5, W-JO3 |
+| C-S2 | SDD-operator §4, W-JO3 |
+| C-S3 | SDD-operator §4, W-JO3 |
+| C-S4 | NP-O5, SDD-operator §4, W-JO3 |
 | C-S5 | PR-O5 |
-| C-S6 | W-JO3 |
-| C-S7 | W-JO3 |
-| H-S1 | H-O1, H-O2, W-JO1, W-JO2, W-JO3, W-JO4 |
+| C-S6 | SDD-operator §4, SDD-operator §5, W-JO3 |
+| C-S7 | SDD-operator §4, W-JO3 |
+| G1 | G2 |
+| H-S1 | H-O1, H-O2, SDD-operator §15, W-JO1, W-JO2, W-JO3, W-JO4 |
 | NG-S1 | NP-O0 |
-| NG-S4 | PR-O2 |
-| NG-S5 | NP-O2, PR-O1 |
+| NG-S4 | PR-O2, SDD-operator §2 |
+| NG-S5 | NP-O2, PR-O1, SDD-operator §2 |
+| OS-1 | SDD-operator §14, SDD-operator §15 |
+| OS-3 | SDD-operator §14, SDD-operator §15 |
+| OS-4 | SDD-operator §14, SDD-operator §15 |
+| OS-6 | SDD-operator §14, SDD-operator §15 |
+| OS-7 | SDD-operator §15, SDD-operator §16 |
 | R-S5 | W-PRO4-Δ1, W-PRO5-N |
-| R-S6 | W-PRO5-N |
+| R-S6 | W-PRO4-Δ3, W-PRO5-N |
 | R-S10 | W-PRO1-Δ2 |
 | R-S11 | W-PRO6-Δ2 |
 | R-S13 | W-PRO3-Δ1 |
-| R-S14 | NP-O3, PR-O4 |
-| R-S16 | PR-O2, W-PRO2-Δ2 |
-| R-S18 | PR-O1 |
+| R-S14 | NP-O3, PR-O4, RV-O3, RV-O4, SDD-operator §2 |
+| R-S16 | PR-O2, SDD-operator §2, W-PRO2-Δ2 |
+| R-S17 | PR-O1, W-PRO1-Δ5 |
+| R-S18 | PR-O1, SDD-operator §2 |
 | R-S20 | W-PRO5-Δ1 |
-| R-S21 | RV-O4, W-PRO4-Δ1, W-PRO5-N |
-| R-S23 | CV-O3, PR-O3 |
+| R-S21 | RV-O4, SDD-operator §2, W-PRO2-Δ2, W-PRO4-Δ1, W-PRO5-N |
+| R-S23 | CV-O3, PR-O3, SDD-operator §2, SDD-operator §12 |
+| SDD §2 | J-O1, J-O2, J-O3, J-O4 |
+| SDD §10 | OO-1, OO-2 |
 | W-CS3-N | W-JO1, W-PRO6-N |
 | W-CS3-Δ2 | W-PRO6-Δ1 |
+| W-CS3-Δ6 | W-PRO6-Δ2 |
 | W-CS4-Δ1 | W-JO2, W-PRO3-N, W-PRO5-N |
 | W-CS4-Δ8 | W-PRO4-Δ1 |
 | W-CS5-N | W-JO2, W-PRO5-N |
@@ -285,13 +304,13 @@ A citation is an explicit identifier: an artifact cites another iff its text nam
 
 | Weave gate | Status |
 |---|---|
-| Every cross-document seam row filled and mirrored both sides (S-O1–S-O6) | met |
-| Citation graphs reciprocal (SDD §11 ↔ this section) | met: `node tools/citations.mjs` exits 0 (59 citations, identical tables; mirrored seams identical) |
+| Every cross-document seam row filled and mirrored both sides (S-O1–S-O6) | **pending independent verification**: `node tools/citations.mjs` passes and is mutation-tested (seam drift detected) |
+| Citation graphs reciprocal (SDD §11 ↔ this section) | **pending independent verification**: `node tools/citations.mjs` passes and is mutation-tested (dropped and unrecorded citations detected) |
 | Every joint chain scene names its harness and owner (W-JO1, W-JO2, W-JO4 → H-O1; W-JO3 → H-O2; SDD W-JS\* → H-S1) | met |
 | Joint acceptance housed in both change-discipline sections | met |
 
-All weave gates met, so **CAP-2 is inactive** while `tools/citations.mjs` passes. **Joint disposition** = min(SDD, SDD-operator).
-Joint acceptance readiness: BLOCKED (SDD OS-1, OS-3, OS-4, OS-6; OO-1, OO-2).
+**CAP-2 remains active** until gates 1 and 2 are verified independently of the author (registrar decision, cycle 3). **Joint
+disposition** = min(SDD, SDD-operator), capped at D-2. Joint acceptance readiness: BLOCKED (SDD OS-1, OS-3, OS-4, OS-6; OO-1, OO-2).
 
 **Open items.** **OO-1:** build `site/` and `harness/netguard.mjs`; execute every scene under H-O1/H-O2. **OO-2:**
 implement G2 and K2.

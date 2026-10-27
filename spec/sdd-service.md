@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Conformance** | Authored under *The Falsifiable Spec, Method Specification v0.4* (Specification-Refinement-System). Document pair: this file (`SDD`, substrate, method §4 form) and [`sdd-operator.md`](sdd-operator.md) (`SDD-operator`, experience companion, method §4A form), federated by weave record **WV-1** (housed in SDD-operator §15). |
-| **Status** | v0.3 (2026-10-27): v0.2 (prop-001 merged with registrar Decisions A and B) plus the pre-cycle-3 items OS-2 (domain/range in the term list; W-CS4-Δ5 literal) and OS-7 (reciprocity check). Supersedes v0.1 @ `b4aab5b` (cycle 2: joint D-1). Nothing built; no witness executed. |
+| **Status** | v0.4 (proposed by prop-002, 2026-10-27): v0.3 plus the dispositions of cycle-3 findings SDD-F50–F66. Supersedes v0.1 @ `b4aab5b` (cycle 2: joint D-1) and v0.3 @ `5e5b4cc` (cycle 3: joint D-2). Nothing built; no witness executed. |
 | **Governing decisions** | [`../project/DECISIONS.md`](../project/DECISIONS.md) ADR-001 to ADR-008. SDD v2.0 ([`../SDD-V2.0-SPEC.md`](../SDD-V2.0-SPEC.md)) is rationale only. Findings and dispositions are in `../review/register.md`. |
 | **Registrar / authority** | Aaron Damiano (author of record). |
 | **Normative language** | BCP 14 keywords (MUST, MUST NOT, SHOULD, MAY …) per RFC 2119 / RFC 8174, uppercase only. |
@@ -29,7 +29,7 @@ For the data engineer or ontologist who owns a Jira Assets schema inside an ente
 hand an ontology mapping to others. The need, in their words: *"Show me every decision the schema forces, let my
 enterprise LLM draft them, catch every draft that is malformed, incomplete, invented or category-wrong before I see
 it, and record exactly which ones I approved, so that anyone can trace each mapping back to the schema element it
-came from."*
+came from."* Category errors are caught as far as named ancestry and named domain and range in the pinned ontologies can show; anonymous class expressions are not evaluated (NG-S9).
 
 ## SDD §2: Journeys
 
@@ -38,39 +38,44 @@ Fixtures: [`fixtures/jira-assets/minimal-organization.json`](../fixtures/jira-as
 [`fixtures/witnesses/minimal/`](../fixtures/witnesses/minimal/). Carried state in **bold**. Harness **H-S1**: a
 shell runner executing the CLI chain in a clean container with networking disabled and the network guard of
 SDD-operator H-O2 preloaded. Owner: this document's acceptance runner. Relay steps (the person and the LLM) are
-supplied by fixture files under H-S1 and exercised for real by SDD-operator W-JO1–W-JO4 under H-O1.
+supplied under H-S1 by the literal witness files each chain names (pastes, decisions, key lists), and exercised for
+real by SDD-operator W-JO1–W-JO4 under H-O1. Every file a chain names is in the §11 registry.
 
 **J-S1: first dictionary.** Chain example **W-JS1**: (1) C-S1 on the fixture → `inventory.jsonld` **`902ab965`**
 (W-CS1-N). (2) C-S2 → `skeleton.jsonld` **`e990dbb3`** (W-CS2-N). (3) C-S3 with the inventory → one batch,
-`prompt.txt` **`7f121f7a`**, round **1** (W-CS3-N). (4) *Relay:* the paste is `proposal-pasted.txt` **`6eb7f5af`**.
-(5) C-S4 on (skeleton, prompt, paste) → `check-report.jsonld` **`b251db2e`**, `status: validated` (W-CS4-N).
-(6) C-S6 with decisions *accept ×3* by "Aaron Damiano" → `sdd.jsonld` **`bc9b2291`** (`acceptance.at` masked)
+`prompt.txt` **`7f121f7a`**, round **1** (W-CS3-N). (4) *Relay:* the paste is `proposal-pasted.txt` **`7d3a9546`**.
+(5) C-S4 on (skeleton, prompt, paste) → `check-report.jsonld` **`552fa6c8`**, `status: validated` (W-CS4-N).
+(6) C-S6 with decisions *accept ×3* by "Aaron Damiano" → `sdd.jsonld` **`d311d909`** (`acceptance.at` masked)
 (W-CS6-N). **Whole-journey outcome:** an SDD whose 3 mappings each carry their source element, its item hash, and
 the prompt, proposal and report hashes of steps 3–5.
 
-**J-S2: repair.** Chain example **W-JS2**: steps (1)–(3) of W-JS1. (4) The paste is `bad-proposal.txt` **`68704680`**.
-(5) C-S4 → `bad-check-report.jsonld` **`426c5945`**: `rejected`, round 1, exactly E-CHK-CATEGORY
-(`at:Organization/Name`) then E-CHK-MISSING (`at:Organization/Cost Center`) (W-CS4-Δ1). (6) C-S5 on that report and
-its prompt → `repair-prompt.txt` **`7ff9455d`**, round **2**, the same 3 DATA lines plus an ERRORS block holding
+**J-S2: repair.** Chain example **W-JS2**: steps (1)–(3) of W-JS1. (4) The paste is `bad-proposal.txt` **`8a227d43`**.
+(5) C-S4 → `bad-check-report.jsonld` **`981fe147`**: `rejected`, round 1, exactly E-CHK-MISSING
+(`at:Organization/Cost Center`) then E-CHK-CATEGORY (`at:Organization/Name`), in R-S20 order (W-CS4-Δ1). (6) C-S5 on that report and
+its prompt → `repair-prompt.txt` **`e14d0701`**, round **2**, the same 3 DATA lines plus an ERRORS block holding
 those 2 errors (W-CS5-N). (7) The relay returns the complete corrected set, `proposal-pasted.txt`. (8) C-S4 on
-(skeleton, repair prompt, paste) → `check-report-round2.jsonld` **`2a83f393`**, validated, round 2. (9) C-S6 →
-`sdd-round2.jsonld` **`d3b2019a`**. Outcome: identical to W-JS1's SDD except, in every mapping's `provenance`,
+(skeleton, repair prompt, paste) → `check-report-round2.jsonld` **`72e726b5`**, validated, round 2. (9) C-S6 →
+`sdd-round2.jsonld` **`a05cff1a`**. Outcome: identical to W-JS1's SDD except, in every mapping's `provenance`,
 `round` (2), `promptSha256` and `checkReportSha256`. `proposalSha256` is the same (the same paste). The round-1
 failure leaves no trace in the mappings.
 
 **J-S3: schema changed.** Chain example **W-JS3**: (1) inputs: **`sdd.jsonld`** (W-JS1) and
 `minimal-organization-v2.json`, where Cost Center's description reads "Finance code". (2) C-S7 →
-`inventory-v2.jsonld` **`0ea0045b`** and `rerun-plan.jsonld` **`6b032ea1`**: unchanged
+`inventory-v2.jsonld` **`0ea0045b`** and `rerun-plan.jsonld` **`4e09c7bb`**: unchanged
 `["at:Organization/Name", "ot:Organization"]`, changed `["at:Organization/Cost Center"]`, added `[]`, removed `[]`
-(W-CS7-N). (3) C-S2 on `inventory-v2.jsonld` → skeleton₂. (4) C-S3 with skeleton₂, inventory₂ and
-`--keys` = the plan's changed ∪ added → one batch whose DATA block holds exactly 1 line. (5) Relay; C-S4 →
-validated. (6) C-S6 with the previous SDD → 3 mappings: 2 carried from **`sdd.jsonld`** byte-identical (acceptance
-records included), 1 newly accepted. Outcome: unchanged decisions are never re-sent or silently re-accepted.
+(W-CS7-N). (3) C-S2 → `skeleton-v2.jsonld`. (4) The person forms `keys-rerun.json` from the plan's `changed` ∪
+`added` (sorted): `["at:Organization/Cost Center"]`. C-S3 with skeleton₂, inventory₂ and `--keys keys-rerun.json` →
+`prompt-rerun.txt`, whose DATA block holds exactly that 1 line. (5) Relay: `proposal-rerun.txt`; C-S4 →
+`check-report-rerun.jsonld`, validated. (6) C-S6 with decisions *accept* (Cost Center) and `--previous sdd.jsonld` →
+`sdd-v2.jsonld`: the Organization and Name mappings byte-identical to **`sdd.jsonld`**'s (acceptance records
+included), Cost Center newly accepted. Outcome: unchanged decisions are never re-sent or silently re-accepted.
 
 **J-S4: partial acceptance.** Chain example **W-JS4**: W-JS1 through step 5, then C-S6 with decisions *accept,
-accept, reject* (the reject on `at:Organization/Cost Center`) → SDD₁ with 2 mappings and
-`open: ["at:Organization/Cost Center"]` (W-CS6-Δ2). Then C-S3 `--keys` = SDD₁'s `open` → a 1-line prompt; relay;
-C-S4; C-S6 with SDD₁ as the previous SDD → `open: []`, and the 2 earlier mappings byte-identical to SDD₁'s.
+accept, reject* (the reject on `at:Organization/Cost Center`) → `sdd-partial.jsonld`: 2 mappings,
+`open: ["at:Organization/Cost Center"]` (W-CS6-Δ2). The person forms `keys-open.json` from that `open` list; C-S3
+`--keys keys-open.json` → `prompt-open.txt` (1 DATA line); relay `proposal-open.txt`; C-S4 →
+`check-report-open.jsonld`, validated; C-S6 with decisions *accept* (Cost Center) and `--previous sdd-partial.jsonld`
+→ `sdd-j4.jsonld`: `open: []`, and the 2 earlier mappings byte-identical to `sdd-partial.jsonld`'s.
 
 Coverage map (bidirectional): J-S1 → {C-S1, C-S2, C-S3, C-S4, C-S6} · J-S2 → {C-S1–C-S6} · J-S3 → {C-S7, C-S2,
 C-S3, C-S4, C-S6} · J-S4 → {C-S6, C-S3, C-S4}. Every capability serves ≥ 1 journey. Every step is homed; the relay
@@ -82,17 +87,19 @@ steps are cross-document (SDD-operator J-O1–J-O4 via S-O1–S-O3, WV-1).
 
 | Command | Inputs | Output |
 |---|---|---|
-| `sdd parse <schema>` | schema bytes | Inventory |
-| `sdd skeleton <inventory>` | Inventory | Skeleton |
-| `sdd prompt <skeleton> <inventory> [--keys <file>] [--budget <bytes>] --out-dir <dir>` | Skeleton, Inventory, optional key list | prompt files `prompt-<i>-of-<n>.txt` + PromptSet on stdout |
-| `sdd check <skeleton> <prompt> <paste>` | Skeleton, the prompt the reply answers, pasted bytes | CheckReport |
-| `sdd repair <skeleton> <inventory> <report> <prompt>` | Skeleton, Inventory, rejected CheckReport, the prompt it checked | repair prompt |
-| `sdd accept <skeleton> <inventory> <decisions> --checked <report> <paste> [--checked …] [--previous <sdd>]` | as listed; ≥ 1 validated (report, paste) pair | SemanticDataDictionary |
-| `sdd rerun <schema> <previous-sdd>` | schema bytes, SDD | RerunPlan + Inventory |
+| `sdd parse <schema> [--out <file>]` | schema bytes | Inventory |
+| `sdd skeleton <inventory> [--out <file>]` | Inventory | Skeleton |
+| `sdd prompt <skeleton> <inventory> [--keys <file>] [--budget <bytes>] --out-dir <dir>` | Skeleton, Inventory, optional key list | `prompt-<i>-of-<n>.txt` and `prompt-set.jsonld` in `<dir>` |
+| `sdd check <skeleton> <prompt> <paste> [--out <file>]` | Skeleton, the prompt the reply answers, pasted bytes | CheckReport |
+| `sdd repair <skeleton> <inventory> <report> <prompt> [--out <file>]` | Skeleton, Inventory, rejected CheckReport, the prompt it checked | repair prompt |
+| `sdd accept <skeleton> <inventory> <decisions> --checked <report> <paste> [--checked …] [--previous <sdd>] [--out <file>]` | as listed; ≥ 1 validated (report, paste) pair | SemanticDataDictionary |
+| `sdd rerun <schema> <previous-sdd> --out-dir <dir>` | schema bytes, SDD | `inventory.jsonld` and `rerun-plan.jsonld` in `<dir>` |
 
 **Exit-code contract (R-S23):** **0** success; **1** the output is a domain report of errors (still written);
 **2** usage or I/O failure (`E-IO`, `E-USAGE`, `E-OUT-EXISTS`), with nothing written. Every artifact is canonical
-bytes (R-S1). "→ `file`" means the output MUST equal that witness file byte for byte.
+bytes (R-S1). Without `--out`, a single-output command writes its artifact to stdout. A key list (`--keys`) is a JSON
+array of slot keys; forming one from a RerunPlan or from an SDD's `open` list is the person's step, not a capability.
+"→ `file`" means the output MUST equal that witness file byte for byte.
 
 **C-S1: parse.** Jira Assets import schema (bytes) → Inventory.
 - **W-CS1-N:** `minimal-organization.json` → exit 0, → `minimal/inventory.jsonld`.
@@ -118,11 +125,12 @@ bytes (R-S1). "→ `file`" means the output MUST equal that witness file byte fo
 - Determinism note: fully deterministic.
 
 **C-S3: prompt.** Skeleton + Inventory (+ optional key subset) + term list → one or more prompts and a PromptSet.
-- **W-CS3-N:** `minimal/skeleton.jsonld`, `minimal/inventory.jsonld` → exit 0; one batch, → `minimal/prompt.txt` (63,399 bytes); PromptSet = S-S8's crossing example.
+- **W-CS3-N:** `minimal/skeleton.jsonld`, `minimal/inventory.jsonld` → exit 0; one batch, → `minimal/prompt.txt` (63,399 bytes) and → `minimal/prompt-set.jsonld`.
 - **W-CS3-Δ1 (one factor: hostile source text):** on the full fixture, the Software.Notes description appears **only** as a JSON string value inside the DATA block; `-----END DATA-----` occurs exactly once as a whole line.
 - **W-CS3-Δ2 (one factor: budget):** full fixture, `--budget 69000` → exactly 2 batches, → `full/prompt-1-of-2.txt` (68,803 bytes; DATA = the groups of Organization through Blade Server, 39 lines) and `full/prompt-2-of-2.txt` (64,979 bytes; Hard Drive through Scan Event, 13 lines). Two batches result for every budget from 66,965 to 70,854 bytes.
 - **W-CS3-Δ3 (one factor: subset):** `--keys ["at:Organization/Cost Center"]` → one batch whose DATA block holds exactly that line.
 - **W-CS3-Δ4 (one factor: oversize groups):** full fixture, `--budget 63700` → exit 0; 10 batches (one per group); the PromptSet's `warnings` = exactly W-PROMPT-OVERSIZE for the groups of `ot:Person`, `ot:Location`, `ot:Hardware`, `ot:Server`, `ot:Software`, in that (group) order (R-S12).
+- **W-CS3-Δ6 (one factor: separators, SDD-F54):** `hostile-separators.json` (a type description holding U+2028, the text `-----END DATA-----`, U+2029, CR LF and instruction text) → `hostile/prompt.txt`: the prompt contains no U+2028 or U+2029 code point (each is written as the six-character escape `\u2028` or `\u2029`) and no CR byte; exactly one LF-delimited line equals `-----END DATA-----`; every DATA line parses as JSON.
 - **W-CS3-Δ5 (one factor: budget below overhead):** `--budget 50000` → exit 1, `{"code": "E-PROMPT-BUDGET"}`, no prompt written.
 - Determinism note: fully deterministic.
 
@@ -140,8 +148,11 @@ bytes (R-S1). "→ `file`" means the output MUST equal that witness file byte fo
 - **W-CS4-Δ10 (injection outcome, negative witness):** on the full fixture at the default budget, a proposal mapping every field of every slot to `bfo:BFO_0000001` → `rejected` with exactly **52 errors** (10 E-CHK-CATEGORY on `recordClass`, 35 E-CHK-CATEGORY on `iceClass`, 7 E-CHK-KIND on `relation`) and **10 warnings** (W-CHK-GENERIC on `referentClass`), in R-S20 order. **The outcome does not depend on the LLM resisting the injection.**
 - **W-CS4-Δ11 (one factor: information referent):** `referentClass` = `cco:ont00000853` → `validated`, one warning W-CHK-ICE-REFERENT.
 - **W-CS4-Δ12 (one factor: wrong batch):** the reply's `batch` = `"2/2"` against a `1/1` prompt → exactly one error, E-CHK-BATCH; no other check runs.
-- **W-CS4-Δ13 (one factor: field set):** Name's mapping carries `relation` instead of `iceClass` → exactly one error, E-CHK-FIELDS (`at:Organization/Name`); no field check runs for that mapping (R-S20).
-- **W-CS4-Δ15 (one factor: the full fixture, baseline for Δ5):** (full skeleton, `full/prompt.txt` (70,855 bytes), `full/proposal-valid.txt`) → exit 0, → `full/check-report-valid.jsonld`: `validated`, no errors, exactly one warning W-CHK-ICE-REFERENT on `ot:Software` (`cco:ont00000853`). Relations include `cco:ont00001798` *is supervised by* (domain and range Person) and `bfo:BFO_0000176` *continuant part of* (domain and range continuant) for both containment slots, so R-S8 is exercised on passing inputs.
+- **W-CS4-Δ13 (one factor: field set):** Name's mapping carries `relation` instead of `iceClass` → exactly one error, E-CHK-FIELDS (`at:Organization/Name`), message `"at:Organization/Name must have exactly the fields key, iceClass, rationale."`; no field check runs for that mapping (R-S20).
+- **W-CS4-Δ15 (one factor: the full fixture, baseline for Δ5):** (full skeleton, `full/prompt.txt` (70,855 bytes), `full/proposal-valid.txt`) → exit 0, → `full/check-report-valid.jsonld`: `validated`, no errors, exactly one warning W-CHK-ICE-REFERENT on `ot:Software` (`cco:ont00000853`). Relations include `cco:ont00001798` *is supervised by* (domain and range Person) and `bfo:BFO_0000176` *continuant part of* (domain and range continuant) for both containment slots, and `bfo:BFO_0000084` *generically depends on* (domain *generically dependent continuant*) for Software→Hardware, so R-S8 is exercised on passing inputs.
+- **W-CS4-Δ16 (one factor: batch 2 of 2, unresolved range):** (full skeleton, `full/prompt-2-of-2.txt`, `full/proposal-batch2.txt`: the Δ15 mappings for batch 2's keys, `batch: "2/2"`) → `full/check-report-batch2.jsonld`: validated; warnings exactly W-CHK-RANGE-UNRESOLVED on `ct:ot:Hard Drive` (its container Server is mapped in batch 1), W-CHK-ICE-REFERENT on `ot:Software`, W-CHK-RANGE-UNRESOLVED on `at:Software/Installed On` (its target Hardware is in batch 1).
+- **W-CS4-Δ17 (one factor: both warnings):** the N proposal with Organization's `referentClass` = `cco:ont00000958` → validated; warnings exactly W-CHK-GENERIC then W-CHK-ICE-REFERENT on `ot:Organization` (R-S5).
+- **W-CS4-Δ18 (one factor: usage):** `sdd check minimal/skeleton.jsonld` (two arguments missing) → exit 2, `{"code": "E-USAGE"}`, nothing written (R-S23).
 - **W-CS4-Δ14 (one factor: shape):** `"mappings": {}` → exactly one error, `{"code": "E-CHK-SHAPE", "key": null, "field": null, "value": "/mappings", "rule": "R-S13", "message": "The reply does not match the proposal schema at /mappings (type)."}`; no other check runs.
 - Determinism note: fully deterministic. The pasted bytes are the input; nothing is assumed about how they were produced.
 
@@ -153,18 +164,20 @@ bytes (R-S1). "→ `file`" means the output MUST equal that witness file byte fo
 **C-S6: accept.** Skeleton + Inventory + decisions + ≥ 1 validated (CheckReport, paste) pair (+ optional previous SDD) → SemanticDataDictionary.
 - **W-CS6-N:** W-CS4-N's report and paste + S-O3's decisions → exit 0, → `minimal/sdd.jsonld`, with `acceptance.at` masked.
 - **W-CS6-Δ1 (one factor: unvalidated, negative witness):** W-CS4-Δ1's report → exit 1, `{"code": "E-ACC-UNVALIDATED"}`, no SDD.
-- **W-CS6-Δ2 (one factor: a rejection):** decisions *accept, accept, reject* → SDD with 2 mappings and `open: ["at:Organization/Cost Center"]`.
+- **W-CS6-Δ2 (one factor: a rejection):** decisions *accept, accept, reject* → `minimal/sdd-partial.jsonld` (2 mappings, `open: ["at:Organization/Cost Center"]`).
 - **W-CS6-Δ3 (one factor: paste/report mismatch):** a paste whose sha256 differs from the report's `proposalSha256` → exit 1, `{"code": "E-ACC-MISMATCH"}`, no SDD.
 - **W-CS6-Δ4 (one factor: null-equivalents):** decisions with `"nullEquivalents": {"at:Organization/Cost Center": ["N/A", "-"]}` → that mapping's `nullEquivalents` = `["-", "N/A"]`; nothing else changes.
 - **W-CS6-Δ5 (one factor: existing output path, L2 refusal):** `--out` naming an existing file → exit 2, `{"code": "E-OUT-EXISTS"}`; the file's bytes are unchanged (R-S23).
 - **W-CS6-Δ6 (one factor: uncovered decision):** a decision for a key that no supplied validated report covers → exit 1, `{"code": "E-ACC-UNCOVERED", "key": …}`, no SDD.
+- **W-CS6-Δ8 (one factor: wrong skeleton):** W-CS6-N's inputs, but with `minimal/skeleton-v2.jsonld` as the skeleton → exit 1, `{"code": "E-ACC-MISMATCH"}`, no SDD (R-S18, skeleton branch).
+- **W-CS6-Δ9 (one factor: two covering reports):** `--checked` both `check-report.jsonld` (round 1) and `check-report-round2.jsonld` (round 2), each with its paste → equals `minimal/sdd-round2.jsonld`: every mapping takes the round-2 provenance (R-S18, highest round).
 - **W-CS6-Δ7 (one factor: repair round):** W-JS2's round-2 report and paste → `sdd-round2.jsonld` (`at` masked).
 - Determinism note: `acceptance.at` is masked, with the property: ISO-8601 UTC `YYYY-MM-DDTHH:MM:SSZ`, within ±5 s of the act. The witness files fix it at `2026-10-27T18:00:00Z`. `acceptance.by` is the input string verbatim (NG-S5). Everything else is deterministic.
 
 **C-S7: rerun.** New schema + previous SDD → Inventory + RerunPlan.
 - **W-CS7-N:** `minimal-organization-v2.json` + `minimal/sdd.jsonld` → exit 0, → `minimal/inventory-v2.jsonld` and `minimal/rerun-plan.jsonld`.
-- **W-CS7-Δ1 (one factor: removal):** a v2 schema from which the Cost Center attribute **and its attribute-mapping entry** are both removed → `removed: ["at:Organization/Cost Center"]`. The next C-S6 merge moves it to `retired` with its last acceptance record.
-- **W-CS7-Δ2 (one factor: identification switch):** previous SDD from the name-form fixture, new schema = the externalId variant → no `unchanged` key, every key `added` or `removed`, and `flags` = `[FL-KEY-SCHEME-CHANGED]`. No silent re-keying.
+- **W-CS7-Δ1 (one factor: removal):** `minimal-organization-v3-removed.json` (the Cost Center attribute and its attribute-mapping entry both removed) + `minimal/sdd.jsonld` → `minimal/inventory-v3.jsonld` and `minimal/rerun-plan-removed.jsonld`: `removed: ["at:Organization/Cost Center"]`, the other two `unchanged`. The next C-S6 merge moves it to `retired` with its last acceptance record.
+- **W-CS7-Δ2 (one factor: identification switch):** `synthetic-it-assets-externalids.json` + `full/sdd.jsonld` (all 52 Δ15 mappings accepted) → `full/inventory-externalids.jsonld` and `full/rerun-plan-switch.jsonld`: `unchanged` and `changed` empty, every previous key `removed`, every new key `added`, `flags` = `[{"code": "FL-KEY-SCHEME-CHANGED", "key": null, "previous": "name", "current": "externalId"}]`. No silent re-keying.
 - Determinism note: fully deterministic.
 
 ## SDD §4: Data model & rules
@@ -177,10 +190,10 @@ text and pasted bytes. All are **events**, immutable once written; a new round w
 - **R-S2: Source keys.** Object type: `ot:` + esc(externalId if present, else name). Attribute: `at:` + esc(attribute externalId) if present, else `at:` + esc(owning type name) + `/` + esc(attribute name). Containment slot: `ct:` + the contained type's key. esc is RFC 6901 escaping. `source.identification` is `"externalId"` (every item has one), `"name"` (none does) or `"mixed"`. Two items yielding the same key is E-SRC-KEY-COLLISION (R-S3). Witnesses: W-CS1-N, W-CS1-Δ5, W-CS1-Δ6, W-CS1-Δ11; V-S2.
 - **R-S3: Source validation.** C-S1 MUST validate against the vendored Atlassian schema and report each failure as E-SRC-SHAPE `{pointer, keyword, detail}`. `detail` is the missing property (`required`) or the offending value (`enum`). Umbrella `if`/`then` failures are not reported; their nested cause is. C-S1 MUST then check what that schema cannot express: E-SRC-REF-TARGET, E-SRC-MAP-TYPE, E-SRC-MAP-ATTR (an attribute neither on the type nor on an ancestor), E-SRC-DUP-TYPE, E-SRC-DUP-ATTR, E-SRC-KEY-COLLISION. An inventory with errors MUST have empty `objectTypes` and `attributes`, and C-S2 MUST refuse it (E-SKEL-ERRORED). Witnesses: W-CS1-Δ1–Δ4, W-CS1-Δ7–Δ11, W-CS2-Δ3.
 - **R-S4: Hierarchy is not containment.** A `children` edge MUST become `parent` on the child type and nothing else. A mapping selector nested under another mapped type's selector MUST produce FL-CONTAINMENT and a `containment` slot. A mapping that uses an attribute defined only on an ancestor MUST produce FL-INHERITED-USE; that attribute keeps one slot, at its defining type. Witnesses: W-CS1-Δ6, W-CS2-Δ1.
-- **R-S5: Categories.** `recordClass` and `iceClass` MUST be `cco:ont00000958` (Information Content Entity) or ICE-descended (named ancestry, ADR-008), else E-CHK-CATEGORY. A `referentClass` that is ICE-descended is validated with **W-CHK-ICE-REFERENT**: some records are about information, and that judgment is the person's. **W-CHK-GENERIC** is raised for any `recordClass`, `referentClass` or `iceClass` that is in the BFO namespace or is exactly `cco:ont00000958`. Witnesses: W-CS4-Δ1, W-CS4-Δ8, W-CS4-Δ10, W-CS4-Δ11.
+- **R-S5: Categories.** `recordClass` and `iceClass` MUST be `cco:ont00000958` (Information Content Entity) or ICE-descended (named ancestry, ADR-008), else E-CHK-CATEGORY. A `referentClass` that is ICE-descended is validated with **W-CHK-ICE-REFERENT**: some records are about information, and that judgment is the person's. **W-CHK-GENERIC** is raised for any `recordClass`, `referentClass` or `iceClass` that is in the BFO namespace or is exactly `cco:ont00000958`. When both warnings apply (a `referentClass` of exactly `cco:ont00000958`), both are raised, W-CHK-GENERIC first. Witnesses: W-CS4-Δ1, W-CS4-Δ8, W-CS4-Δ10, W-CS4-Δ11, W-CS4-Δ17.
 - **R-S6: Coverage.** The proposal's mapping keys MUST equal the prompt's DATA keys, each exactly once (E-CHK-MISSING, E-CHK-DUPLICATE, E-CHK-UNKNOWN-KEY). Witnesses: W-CS4-Δ1, W-CS4-Δ2; V-S3.
 - **R-S7: Terms.** Every CURIE MUST be in the cited term list (E-CHK-TERM), `permitted`, and of the field's kind: class for `recordClass`, `referentClass`, `iceClass`; object property for `relation`, or `sdd:NoRelation` in containment slots only (E-CHK-KIND). Witnesses: W-CS4-Δ3, W-CS4-Δ4; V-S6.
-- **R-S8: Domain and range.** A relation's named `rdfs:domain` and `rdfs:range` come from the term list (built from the pins, OS-2); anonymous domain or range expressions are not evaluated (NG-S9). The owner (contained) type's `referentClass` MUST be or descend from **every** named domain, and the target (container) type's from every named range (E-CHK-RANGE). `sdd:NoRelation` is exempt. When the needed `referentClass` is neither in the same proposal nor in a supplied previous SDD, C-S4 raises the warning **W-CHK-RANGE-UNRESOLVED**. Witnesses: W-CS4-Δ5, W-CS4-Δ15.
+- **R-S8: Domain and range.** A relation's named `rdfs:domain` and `rdfs:range` come from the term list (built from the pins, OS-2); anonymous domain or range expressions are not evaluated (NG-S9). The owner (contained) type's `referentClass` MUST be or descend from **every** named domain, and the target (container) type's from every named range (E-CHK-RANGE). `sdd:NoRelation` is exempt. If either connected `referentClass` is in neither the same proposal nor a supplied previous SDD, C-S4 raises the warning **W-CHK-RANGE-UNRESOLVED** and performs no range check for that field, whether or not the relation declares a domain or range. Witnesses: W-CS4-Δ5, W-CS4-Δ15, W-CS4-Δ16.
 - **R-S9: Value table.** Datatype and value property are fixed by Jira type for the 12 non-reference types; the LLM never chooses them. `referenced_object` attributes become `reference` slots instead (R-S7).
 
   | Jira type | `datatype` | `valueProperty` |
@@ -194,21 +207,21 @@ text and pasted bytes. All are **events**, immutable once written; a new round w
   | date_time | `xsd:dateTime` | `cco:ont00001767` has datetime value |
   | time | `xsd:string` (lexical form of `xsd:time`) | `cco:ont00001765` has text value (the pin has no time-of-day value property; registrar Decision B keeps this fallback) |
 
-  No capability invents, infers or completes a time or date value; absent values follow R-S15 (Decision B). Witnesses: W-CS2-N; W-CS2-Δ1 (all 12 non-reference types occur in the full fixture).
+  No artifact contains a date or time value other than `acceptance.at` and text copied from the source (Decision B); absent values follow R-S15. Falsified by V-S6. Witnesses: W-CS2-N; W-CS2-Δ1 (all 12 non-reference types occur in the full fixture).
 - **R-S10: Human-only fields.** A proposal MUST NOT contain `nullEquivalents`, `acceptance`, `decision`, `datatype` or `valueProperty` (E-CHK-HUMAN-FIELD). Witness: W-CS4-Δ6.
-- **R-S11: Prompt construction.** A prompt MUST be `spec/prompt-template-v2.txt` with its placeholders filled: skeleton hash, term-list hash, batch label, round; ERRORS = empty for round 1, else R-S22's block; DATA = one line per slot, in skeleton order, each `JSON.stringify` (no spaces) of exactly these fields — type `{key, kind, name, description, parent, selectors}`; attribute `{key, kind, name, description, owner, jiraType}`; reference `{key, kind, name, description, owner, target}`; containment `{key, kind, child, container, selector}`; CATALOGUE = ICE classes, other classes, object properties (permitted only), lines `curie<TAB>label` sorted by CURIE. **Source text MUST appear only as JSON string values inside DATA.** Witnesses: W-CS3-N, W-CS3-Δ1, W-CS5-N; V-S4.
+- **R-S11: Prompt construction.** A prompt MUST be `spec/prompt-template-v2.txt` with its placeholders filled: skeleton hash, term-list hash, batch label, round; ERRORS = empty for round 1, else R-S22's block; DATA = one line per slot, in skeleton order, each `JSON.stringify` (no spaces), with U+2028 and U+2029 then written as the escapes `\u2028` and `\u2029` so that no DATA line contains a line or paragraph separator, of exactly these fields — type `{key, kind, name, description, parent, selectors}`; attribute `{key, kind, name, description, owner, jiraType}`; reference `{key, kind, name, description, owner, target}`; containment `{key, kind, child, container, selector}`; CATALOGUE = ICE classes, other classes, object properties (permitted only), lines `curie<TAB>label` sorted by CURIE. **Source text MUST appear only as JSON string values inside DATA.** A *line* is a maximal LF-delimited byte sequence; the prompt contains no CR byte and no U+2028 or U+2029 code point. Witnesses: W-CS3-N, W-CS3-Δ1, W-CS3-Δ6, W-CS5-N; V-S4.
 - **R-S12: Batching.** Budget unit: **UTF-8 bytes** (default 200,000; `--budget`). A batch's size is the byte length of its prompt rendered with batch label `1/1` and round `1` (a label-independent measure, so batching never depends on the batch count; emitted prompts can differ by the label's extra digits). If the prompt with an empty DATA block exceeds the budget, C-S3 MUST fail with E-PROMPT-BUDGET. Otherwise C-S3 MUST fill batches greedily with whole object-type groups in skeleton order (a group is a type slot followed by its attribute, reference and containment slots). A group that alone exceeds the budget forms its own batch and adds W-PROMPT-OVERSIZE to the PromptSet, in group order. Witnesses: W-CS3-Δ2, W-CS3-Δ4, W-CS3-Δ5.
 - **R-S13: Answer extraction.** C-S4 MUST take the JSON object from the paste: the whole paste (trimmed) if it is one JSON object, else the content of exactly one ```` ```json ```` fenced block. Otherwise it MUST report E-CHK-JSON and stop. The object MUST then validate against the pinned, versioned proposal schema `schemas/proposal-v1.schema.json` (§11 registry); the first failure is reported as E-CHK-SHAPE (`value` = its JSON Pointer) and stops further checks. The schema is the authoritative output contract; the prompt carries a concise statement of it and an example, never a weaker one (ADR-004.1 as amended). Next, the reply's `skeletonSha256` and `batch` MUST equal the prompt's (E-CHK-SKELETON, E-CHK-BATCH; each stops further checks). Witnesses: W-CS4-N, W-CS4-Δ7, W-CS4-Δ9, W-CS4-Δ12, W-CS4-Δ14.
-- **R-S14: Validated is not accepted.** `CheckReport.status` ∈ {`validated`, `rejected`}; `validated` iff `errors` is empty. Warnings never block. No artifact field or CLI message MAY describe a validated proposal as "correct", "approved", "accepted" or "verified"; only C-S6 output carries `acceptance`. Witnesses: W-CS4-N, W-CS4-Δ8, W-CS6-N. Experience side: SDD-operator PR-O4.
+- **R-S14: Validated is not accepted.** `CheckReport.status` ∈ {`validated`, `rejected`}; `validated` iff `errors` is empty. Warnings never block. No field value or message the tool itself composes MAY describe a validated proposal as "correct", "approved", "accepted" or "verified"; text the tool only copies (an LLM `rationale`, keys, values, source names and descriptions) is outside this rule and is always presented as quoted (SDD-operator RV-O3, RV-O4). Only C-S6 output carries `acceptance`. Witnesses: W-CS4-N, W-CS4-Δ8, W-CS6-N. Experience side: SDD-operator PR-O4.
 - **R-S15: Absence semantics (ADR-003).** Every SDD MUST declare `"absenceKinds": ["missing", "explicit_null", "empty_string", "indistinguishable"]`, and every attribute mapping MUST carry `nullEquivalents` (default `[]`, sorted, set only through C-S6 decisions). No SDD field asserts anything about a referent from absence. Witnesses: W-CS6-N, W-CS6-Δ4.
 - **R-S16: Context.** An input whose `@context` is not the bundled context IRI MUST be refused (E-CTX-EXTERNAL) without dereferencing. Witness: W-CS2-Δ2.
 - **R-S17: Rerun matching.** Items match across schemas by key. A matched item is `unchanged` iff its current `itemSha256` equals the previous SDD's `source.itemSha256`, else `changed`. Arrays are sorted. In C-S6's merge, `unchanged` mappings MUST be carried byte-identical, `changed` ones MUST become `open`, and `removed` ones MUST move to `retired` with their last acceptance record. Witnesses: W-CS7-N, W-CS7-Δ1, W-CS7-Δ2; V-S5.
-- **R-S18: Acceptance is bound to validated checks.** C-S6 MUST refuse unless every supplied report is `validated` (E-ACC-UNVALIDATED), sha256(paste) = `report.proposalSha256` (E-ACC-MISMATCH), and `report.skeletonSha256` = sha256(skeleton) (E-ACC-MISMATCH). Each decided key MUST be covered by some supplied report (E-ACC-UNCOVERED); its mapping and provenance come from the covering report with the highest `round`. Only decided keys change state. Witnesses: W-CS6-Δ1, W-CS6-Δ3, W-CS6-Δ6, W-CS6-Δ7; V-S5.
-- **R-S19: Flags.** Flags never block. They are sorted by code, then key (JavaScript string order): FL-CONTAINMENT (with `container`), FL-INHERITED-USE (with the inherited attribute names, sorted), FL-NO-LABEL (neither the type nor any ancestor has a `label` attribute), FL-SELECT-VALUES-UNKNOWN (every `select` attribute), FL-UNMAPPED-TYPE, FL-KEY-SCHEME-CHANGED (C-S7 only). Witnesses: W-CS1-Δ6, W-CS7-Δ2.
+- **R-S18: Acceptance is bound to validated checks.** C-S6 MUST refuse unless every supplied report is `validated` (E-ACC-UNVALIDATED), sha256(paste) = `report.proposalSha256` (E-ACC-MISMATCH), and `report.skeletonSha256` = sha256(skeleton) (E-ACC-MISMATCH). Each decided key MUST be covered by some supplied report (E-ACC-UNCOVERED); its mapping and provenance come from the covering report with the highest `round`. Only decided keys change state. Witnesses: W-CS6-Δ1, W-CS6-Δ3, W-CS6-Δ6, W-CS6-Δ7, W-CS6-Δ8, W-CS6-Δ9; V-S5.
+- **R-S19: Flags.** Flags never block. They are sorted by code, then key (JavaScript string order): FL-CONTAINMENT (with `container`), FL-INHERITED-USE (with the inherited attribute names, sorted), FL-NO-LABEL (neither the type nor any ancestor has a `label` attribute), FL-SELECT-VALUES-UNKNOWN (every `select` attribute), FL-UNMAPPED-TYPE, FL-KEY-SCHEME-CHANGED (C-S7 only). Each flag is `{code, key}` plus: FL-CONTAINMENT `container`, `selector`; FL-INHERITED-USE `attributes`; FL-KEY-SCHEME-CHANGED `previous`, `current` (with `key: null`). Witnesses: W-CS1-Δ6, W-CS7-Δ2; the flags of `full/inventory.jsonld`.
 - **R-S20: Check order and precedence.** C-S4 MUST run R-S13 first; any failure there stops it. It then reports coverage errors (R-S6): E-CHK-MISSING and E-CHK-DUPLICATE in skeleton order, then E-CHK-UNKNOWN-KEY in proposal order. Then, for each mapping whose key is a slot, in skeleton order: R-S10 (each human-only field present is one E-CHK-HUMAN-FIELD); then the field set: the mapping's other fields MUST be exactly `{key, recordClass, referentClass, rationale}` (type), `{key, iceClass, rationale}` (attribute) or `{key, relation, rationale}` (reference, containment), else one E-CHK-FIELDS and no field check for that mapping; then it checks the fields in the order `recordClass`, `referentClass`, `iceClass`, `relation`. Each field runs R-S7 (term, then kind), then R-S5 (category), then R-S8 (range), and **stops at the first error**. Warnings for a field are raised only if it has no error. Errors and warnings are listed in that traversal order. Witnesses: W-CS4-Δ1, W-CS4-Δ3, W-CS4-Δ4, W-CS4-Δ6, W-CS4-Δ10, W-CS4-Δ13.
-- **R-S21: Messages.** Every error and warning in a CheckReport MUST carry `{code, key, field, value, rule, message}`, with `message` filled from a fixed template (`label` is the term list's label for `value`): E-CHK-CATEGORY `"{field} {value} ({label}) is not cco:ont00000958 (Information Content Entity) or a subclass of it."` · E-CHK-MISSING `"Slot {key} has no mapping in this batch."` · E-CHK-DUPLICATE `"Slot {key} is mapped more than once."` · E-CHK-UNKNOWN-KEY `"{key} is not a slot in this batch."` · E-CHK-TERM `"{field} {value} is not in the term list."` · E-CHK-KIND `"{field} {value} is not a permitted {expected} term."` · E-CHK-RANGE `"{field} {value} does not admit the referent classes it connects (domain/range)."` · E-CHK-HUMAN-FIELD `"{field} can only be set by a person at acceptance."` · E-CHK-JSON `"The reply does not contain exactly one JSON object."` · E-CHK-SHAPE `"The reply does not match the proposal schema at {value} ({keyword})."` · E-CHK-FIELDS `"{key} must have exactly the fields {expected}."` · E-CHK-SKELETON `"The reply names a different skeleton than the prompt."` · E-CHK-BATCH `"The reply names batch {value}; the prompt is batch {batch}."` · W-CHK-GENERIC `"{field} {value} ({label}) is a top-level class; check it is specific enough."` · W-CHK-ICE-REFERENT `"referentClass {value} ({label}) is information content; check the record is about information."` · W-CHK-RANGE-UNRESOLVED `"{field} {value}: the domain/range check needs a referentClass not yet mapped."` Witnesses: W-CS4-Δ1 (two templates, literal), W-CS4-Δ8, W-CS4-Δ14.
+- **R-S21: Messages.** Every error and warning in a CheckReport MUST carry `{code, key, field, value, rule, message}`, with `message` filled from a fixed template (`label` is the term list's label for `value`): E-CHK-CATEGORY `"{field} {value} ({label}) is not cco:ont00000958 (Information Content Entity) or a subclass of it."` · E-CHK-MISSING `"Slot {key} has no mapping in this batch."` · E-CHK-DUPLICATE `"Slot {key} is mapped more than once."` · E-CHK-UNKNOWN-KEY `"{key} is not a slot in this batch."` · E-CHK-TERM `"{field} {value} is not in the term list."` · E-CHK-KIND `"{field} {value} is not a permitted {expected} term."` · E-CHK-RANGE `"{field} {value} does not admit the referent classes it connects (domain/range)."` · E-CHK-HUMAN-FIELD `"{field} can only be set by a person at acceptance."` · E-CHK-JSON `"The reply does not contain exactly one JSON object."` · E-CHK-SHAPE `"The reply does not match the proposal schema at {value} ({keyword})."` · E-CHK-FIELDS `"{key} must have exactly the fields {expected}."` · E-CTX-EXTERNAL `"The file's @context is not the bundled SDD context."` (`{expected}` is `class` for `recordClass`, `referentClass` and `iceClass` and `object property` for `relation` in E-CHK-KIND, and the slot kind's field list in R-S20 order, joined by ", ", in E-CHK-FIELDS) · E-CHK-SKELETON `"The reply names a different skeleton than the prompt."` · E-CHK-BATCH `"The reply names batch {value}; the prompt is batch {batch}."` · W-CHK-GENERIC `"{field} {value} ({label}) is a top-level class; check it is specific enough."` · W-CHK-ICE-REFERENT `"referentClass {value} ({label}) is information content; check the record is about information."` · W-CHK-RANGE-UNRESOLVED `"{field} {value}: the domain/range check needs a referentClass not yet mapped."` Witnesses: W-CS4-Δ1 (two templates, literal), W-CS4-Δ8, W-CS4-Δ13, W-CS4-Δ14, W-CS4-Δ16.
 - **R-S22: Repair.** C-S5 MUST refuse a validated report (E-REPAIR-NOTHING). Otherwise its output is R-S11's prompt with the **same DATA lines** as the checked prompt, round = `report.round` + 1, and ERRORS = `"\nERRORS IN YOUR PREVIOUS REPLY\nYour previous reply for this batch was rejected for the reasons below. Return the complete corrected mapping set for every DATA line, not only the lines named here.\n"` followed by one `JSON.stringify` line per error, in report order, then `"\n"`. A repair reply is checked by C-S4 against the repair prompt, like any reply. Witnesses: W-CS5-N, W-CS5-Δ1, W-JS2.
-- **R-S23: CLI input and output.** Every command MUST write only to stdout or to new paths. A `--out` or `--out-dir` target that exists MUST be refused with exit 2 and E-OUT-EXISTS, leaving it untouched. Unreadable input is exit 2 with E-IO; bad arguments are exit 2 with E-USAGE. Witnesses: W-CS6-Δ5, W-CS1-Δ12.
+- **R-S23: CLI input and output.** Every command MUST write only to stdout or to new paths. A `--out` or `--out-dir` target that exists MUST be refused with exit 2 and E-OUT-EXISTS, leaving it untouched. Unreadable input is exit 2 with E-IO; bad arguments are exit 2 with E-USAGE. Witnesses: W-CS6-Δ5, W-CS1-Δ12, W-CS4-Δ18; V-S5.
 
 **Conflict record (P5).** Cycle 2 found W-CS4-Δ3 and W-CS4-Δ4 ("exactly one error") in conflict with R-S5 as then
 written, which also fired E-CHK-CATEGORY for an unknown or non-class `iceClass` (SDD-F29). Halt; returned to the
@@ -239,20 +252,20 @@ Full hashes of every file named here are in the §11 registry.
 
 | Seam | Producer → Consumer | Contract | Crossing example (literal) | Status |
 |---|---|---|---|---|
-| S-S1 | parse → skeleton, prompt, accept, rerun | Inventory | `minimal/inventory.jsonld` (`902ab965`) | filled |
+| S-S1 | parse → skeleton, prompt, repair, accept | Inventory | `minimal/inventory.jsonld` (`902ab965`) | filled |
 | S-S2 | skeleton → prompt, check, repair, accept | Skeleton | `minimal/skeleton.jsonld` (`e990dbb3`) | filled |
 | S-S3 | terms → prompt, check | term list | `ontology/term-list.json`, `terms_sha256` `a9e01756` | filled |
-| S-S4 | check → repair | rejected CheckReport | `minimal/bad-check-report.jsonld` (`426c5945`) | filled |
-| S-S5 | check → accept | validated CheckReport | `minimal/check-report.jsonld` (`b251db2e`) | filled |
-| S-S6 | rerun → skeleton, prompt, accept | RerunPlan | `minimal/rerun-plan.jsonld` (`6b032ea1`) | filled |
-| S-S7 | accept → rerun; → consumers | SemanticDataDictionary | `minimal/sdd.jsonld` (`bc9b2291`) | filled |
-| S-S8 | prompt → person, check | PromptSet | `{"@context": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld", "@type": "PromptSet", "skeletonSha256": "e990dbb36831aa769a09a7d5df64d396698511482c3ba849064353500ff9de57", "round": 1, "budget": 200000, "prompts": [{"batch": "1/1", "file": "prompt-1-of-1.txt", "bytes": 63399, "sha256": "7f121f7a15ed3f67563c10d2038c2722c87e92fab7160eae37bdcc3e78cbcc3c"}], "warnings": []}` | filled |
-| **S-O1** *(cross-document, mirrored in SDD-operator §8)* | FC-X | crossing examples, §8 | integration | §14.4 |
-| **S-O2** | paste box → SDD C-S4 | pasted bytes | `minimal/proposal-pasted.txt` → C-S4 input with sha256 `6eb7f5af` | filled |
+| S-S4 | check → repair | rejected CheckReport | `minimal/bad-check-report.jsonld` (`981fe147`) | filled |
+| S-S5 | check → accept | validated CheckReport | `minimal/check-report.jsonld` (`552fa6c8`) | filled |
+| S-S6 | rerun → the person (forms the `--keys` list) and accept (`--previous` merge, R-S17) | RerunPlan | `minimal/rerun-plan.jsonld` (`4e09c7bb`) | filled |
+| S-S7 | accept → rerun; → consumers | SemanticDataDictionary | `minimal/sdd.jsonld` (`d311d909`) | filled |
+| S-S8 | prompt → person, check | PromptSet | `minimal/prompt-set.jsonld` | filled |
+| **S-O1** *(cross-document, mirrored in SDD-operator §8)* | SDD C-S3/C-S5 → copy control → clipboard | prompt bytes | `minimal/prompt.txt` → clipboard bytes with sha256 `7f121f7a` | filled |
+| **S-O2** | paste box → SDD C-S4 | pasted bytes | `minimal/proposal-pasted.txt` → C-S4 input with sha256 `7d3a9546` | filled |
 | **S-O3** | CV-O2 → SDD C-S6 | decisions | `{"by": "Aaron Damiano", "decisions": [{"key": "ot:Organization", "decision": "accept"}, {"key": "at:Organization/Name", "decision": "accept"}, {"key": "at:Organization/Cost Center", "decision": "accept"}], "nullEquivalents": {}}` | filled |
-| **S-O4** | SDD C-S4 → rows | CheckReport | `minimal/bad-check-report.jsonld` (`426c5945`) → the 2 rows of W-PRO5-N | filled |
+| **S-O4** | SDD C-S4 → rows | CheckReport | `minimal/bad-check-report.jsonld` (`981fe147`) → the 2 rows of W-PRO5-N | filled |
 | **S-O5** | SDD C-S1 → summary line | Inventory | `minimal/inventory.jsonld` (`902ab965`) → `1 object type · 2 attributes · 0 references · 0 flags` | filled |
-| **S-O6** | SDD C-S6 → download | SemanticDataDictionary | `minimal/sdd.jsonld` (`bc9b2291`) → downloaded bytes, equal except `acceptance.at` | filled |
+| **S-O6** | SDD C-S6 → download | SemanticDataDictionary | `minimal/sdd.jsonld` (`d311d909`) → downloaded bytes, equal except `acceptance.at` | filled |
 
 ## SDD §7: Invariants & properties
 
@@ -264,11 +277,11 @@ Unicode, U+2028, the literal lines `-----END DATA-----` and `-----BEGIN CATALOGU
 Seeded; seeds recorded with each run.
 
 - **V-S1: Determinism and platform parity.** Scope: every output of C-S1–C-S5 and C-S7, and C-S6 outputs except `acceptance.at`. Generator: all fixtures + G1, n ≥ 200. Property: two runs give identical bytes, and the Node CLI and the browser build give identical bytes. Pinned: W-CS1-N, W-CS2-N, W-CS3-N, W-CS4-N.
-- **V-S2: Key soundness.** Scope: every C-S1 run. Generator: G1, n ≥ 200, each schema also permuted (array order shuffled) and with descriptions edited. Property: either the keys are unique, or C-S1 reports E-SRC-KEY-COLLISION naming every colliding key; the key set is invariant under permutation and description edits; every key unescapes (RFC 6901) to its source identifier. Pinned: W-CS1-Δ5, W-CS1-Δ11.
-- **V-S3: Coverage closure** *(interaction: batching × coverage)*. Scope: (skeleton, budget, proposal) triples. Generator: G1 × budgets {69,000, 200,000} × proposals derived from a correct one by dropping, duplicating or renaming 0–3 keys, n ≥ 200 triples; plus budget 50,000 on every schema. Property: `validated` ⇒ mapping keys = the prompt's DATA keys exactly; every mutation is caught with its code; the batches' DATA keys partition the skeleton's slot keys; budget 50,000 ⇒ E-PROMPT-BUDGET. Pinned: W-CS4-Δ1, W-CS4-Δ2, W-CS3-Δ2, W-CS3-Δ5.
-- **V-S4: Untrusted text containment** *(interaction: hostile text × escaping)*. Scope: every prompt and repair prompt. Generator: G1 with K1 descriptions, n ≥ 200. Property: (i) every DATA line parses as JSON, and every source string occurs only as a JSON-escaped value inside DATA; (ii) `-----END DATA-----` occurs exactly once as a whole line; (iii) for two schemas that differ only in descriptions and fit in one batch, the prompts differ only inside DATA lines and in the 2 occurrences of the skeleton hash. Pinned: W-CS3-Δ1.
-- **V-S5: Acceptance monotonicity** *(interaction: rounds × rejection × schema change)*. Scope: sequences of C-S3–C-S7 operations. Generator: random sequences of length ≤ 30 over G1 schemas, with random pastes (valid, invalid, hostile) and decisions, n ≥ 100 sequences. Property: the accepted set changes only at C-S6 steps, only for decided keys or keys moved by R-S17; carried mappings are byte-identical; C-S3, C-S4 and C-S5 never change it. Pinned: W-JS2, W-JS3, W-JS4, W-CS6-Δ1.
-- **V-S6: Term closure.** Scope: every SDD produced in V-S5 runs (≥ 100). Property: every CURIE is in the term list the SDD records, permitted, and of its field's kind; every `recordClass` and `iceClass` is ICE-descended. Pinned: W-CS6-N.
+- **V-S2: Key soundness.** Scope: every C-S1 run. Generator: G1, n ≥ 200, each schema also permuted (array order shuffled) and with descriptions edited. Property: either the keys are unique, or C-S1 reports E-SRC-KEY-COLLISION naming every colliding key; the key set is invariant under permutation and description edits; every key unescapes (RFC 6901) to its source identifier; flags are sorted and shaped per R-S19; no slot is derived from a `children` edge, and every nested selector yields exactly one containment slot (R-S4). Pinned: W-CS1-Δ5, W-CS1-Δ6, W-CS1-Δ11.
+- **V-S3: Coverage closure** *(interaction: batching × coverage)*. Scope: (skeleton, budget, proposal) triples. Generator: G1 × budgets {69,000, 200,000} × proposals derived from a correct one by dropping, duplicating or renaming 0–3 keys, n ≥ 200 triples; plus budget 50,000 on every schema. Property: `validated` ⇒ mapping keys = the prompt's DATA keys exactly; every mutation is caught with its code; the batches' DATA keys partition the skeleton's slot keys; every batch boundary is forced (adding the next group would exceed the budget, R-S12 greedy fill); budget 50,000 ⇒ E-PROMPT-BUDGET. Pinned: W-CS4-Δ1, W-CS4-Δ2, W-CS3-Δ2, W-CS3-Δ5.
+- **V-S4: Untrusted text containment** *(interaction: hostile text × escaping)*. Scope: every prompt and repair prompt. Generator: G1 with K1 descriptions, n ≥ 200. Property: (i) every DATA line parses as JSON, and every source string occurs only as a JSON-escaped value inside DATA; (ii) exactly one LF-delimited line equals `-----END DATA-----`, and the prompt contains no CR, U+2028 or U+2029; (iii) for two schemas that differ only in descriptions and fit in one batch, the prompts differ only inside DATA lines and in the 2 occurrences of the skeleton hash. Pinned: W-CS3-Δ1.
+- **V-S5: Acceptance monotonicity** *(interaction: rounds × rejection × schema change)*. Scope: sequences of C-S3–C-S7 operations. Generator: random sequences of length ≤ 30 over G1 schemas, with random pastes (valid, invalid, hostile) and decisions, n ≥ 100 sequences. Property: the accepted set changes only at C-S6 steps, only for decided keys or keys moved by R-S17; carried mappings are byte-identical; C-S3, C-S4 and C-S5 never change it. In the same runs: no message the CLI composes contains an R-S14 word (R-S14); every command given an existing `--out`/`--out-dir` target exits 2 with E-OUT-EXISTS and leaves it unchanged (R-S23); every command given a JSON-LD input whose `@context` is foreign exits 1 with E-CTX-EXTERNAL and the network guard logs no attempt (R-S16). Pinned: W-JS2, W-JS3, W-JS4, W-CS6-Δ1, W-CS6-Δ5.
+- **V-S6: Term closure.** Scope: every SDD produced in V-S5 runs (≥ 100). Property: every CURIE is in the term list the SDD records, permitted, and of its field's kind; every `recordClass` and `iceClass` is ICE-descended; `absenceKinds` is present and every `nullEquivalents` is sorted (R-S15); no value matching an ISO-8601 date or time appears except `acceptance.at` and text copied from the source (R-S9). Pinned: W-CS6-N, W-CS6-Δ4.
 
 ## SDD §8: Envelopes
 
@@ -279,7 +292,7 @@ Reference machine: `bench/config.json` (OS-6), Node 22 LTS; measured by `bench/r
 
 ## SDD §9: Non-goals
 
-- **NG-S0, experience level:** `{status: delegated(SDD-operator, sdd-operator.md); scope: the SDD Service product boundary (core, CLI, HTML tool); authority: the registrar; as-of: registry v0.2}`, discharged through WV-1.
+- **NG-S0, experience level:** `{status: delegated(SDD-operator, sdd-operator.md); scope: the SDD Service product boundary (core, CLI, HTML tool); authority: the registrar; as-of: registry v0.4}`, discharged through WV-1.
 - **NG-S1, no RDF individuals (ADR-007.1).** No capability creates instance data. *(Cited by R-S15.)*
 - **NG-S2, no star-schema profile (ADR-002).**
 - **NG-S3, no IQL evaluation.** `objectMappingIQL` is opaque.
@@ -302,7 +315,7 @@ Reference machine: `bench/config.json` (OS-6), Node 22 LTS; measured by `bench/r
 7. E-S1–E-S3 met under their measurement paths.
 
 ACCEPT = g₁ ∧ … ∧ g₇ (the minimum, never a mean). **Witness precondition (P10):** every W-\* MUST be validated by
-execution against the implementation in a clean environment before a gate consumes it. *Status at v0.2: the witness
+execution against the implementation in a clean environment before a gate consumes it. *Status at v0.4: the witness
 files are authored, with hashes computed by the author's reference generator (not an implementation); none is
 validated.*
 
@@ -310,39 +323,110 @@ validated.*
 
 ## SDD §11: Change discipline
 
-**Witness registry (authoritative hashes).** Version 2 = changed or added by prop-001. Version-1 files superseded by
+**Witness registry (authoritative hashes).** Ver *n* = the file last changed in spec v0.*n*. Every witness file a chain, witness or seam names is listed (SDD-F59). Version-1 files superseded by
 prop-001 are retained under `fixtures/witnesses/superseded/v1/` with their v1 hashes.
 
 | File | Ver | sha256 | Cited by |
 |---|---|---|---|
-| `fixtures/jira-assets/minimal-organization.json` | 1 | `3239b1f085d090c71027032833831cf151b28ec90a935e01788b992ec6363869` | W-JS1–4, W-CS1-N, S-S7 |
-| `fixtures/jira-assets/minimal-organization-v2.json` | 2 | `e86ef883322aa194ed10bda51118d02a9b0ddc51892d09d781514e9b11f5373b` | W-JS3, W-CS7-N |
-| `fixtures/jira-assets/invalid/mapping-unknown-type.json` | 2 | `c8d3d96cb64f1ba0f6670891ef97882dc3c80f7063dc53693f8a4ff44b55af3f` | W-CS1-Δ9 |
+| `fixtures/jira-assets/hostile-separators.json` | 4 | `9c2b74a5146c00492b6f073d3f0370f736f3e807e5dd4ea1be18f327e227caf7` | W-CS3-Δ6, W-PRO6-Δ2 |
 | `fixtures/jira-assets/invalid/duplicate-attribute-name.json` | 2 | `356f2b8f4b92a50684426611409222a62ea05f5d6057e744b1d6820558c47557` | W-CS1-Δ10 |
+| `fixtures/jira-assets/invalid/duplicate-object-type-name.json` | 1 | `158036c4c703ce42e269583aae6e63ad47912f76ee0b345abe551d3cfd6d7efb` | W-CS1-Δ4 |
 | `fixtures/jira-assets/invalid/key-collision.json` | 2 | `7abce9aa6f6a0eef0a1dfcfbd64476d2a0df01807d6ee5c0034cd677b1835550` | W-CS1-Δ11 |
-| `fixtures/witnesses/minimal/inventory.jsonld` | 1 | `902ab965e1d220a172944d758f2cf3931e8541a8e1c3000a3d82b13487e630ed` | W-CS1-N, W-CS2-N, W-CS3-N, S-S1, S-O5 |
-| `fixtures/witnesses/minimal/skeleton.jsonld` | 3 | `e990dbb36831aa769a09a7d5df64d396698511482c3ba849064353500ff9de57` | W-CS2-N, W-CS3-N, W-CS4-N, S-S2, S-S8 |
-| `fixtures/witnesses/minimal/prompt.txt` | 3 | `7f121f7a15ed3f67563c10d2038c2722c87e92fab7160eae37bdcc3e78cbcc3c` | W-CS3-N, W-CS4-N, W-CS5-N, S-S8, S-O1 |
-| `fixtures/witnesses/minimal/proposal-pasted.txt` | 1 | `6eb7f5afb14cad25e38fad57eeea6118f78f433c1008698f01172bafacc28e9f` | W-CS4-N, W-JS2, S-O2 |
-| `fixtures/witnesses/minimal/check-report.jsonld` | 3 | `b251db2e092646ae2a945b2bfd2b8e7bc3115fca78331cea73c2c88993c3e2ee` | W-CS4-N, W-CS6-N, S-S5 |
-| `fixtures/witnesses/minimal/bad-proposal.txt` | 1 | `68704680864a30fc0eab135889059fb304dcf54210388d6ac58d2dbc7874909c` | W-CS4-Δ1, W-JS2 |
-| `fixtures/witnesses/minimal/bad-check-report.jsonld` | 3 | `426c5945d9ee8003a7ff20f8741bd8d065a2f311d0efc67696eb377f8e02d5c4` | W-CS4-Δ1, W-CS5-N, S-S4, S-O4 |
-| `fixtures/witnesses/minimal/repair-prompt.txt` | 3 | `7ff9455dcb8d8915b59b4855376d9d7aefc84b9c226c38608f2d3e7e10b13648` | W-CS5-N, W-JS2 |
-| `fixtures/witnesses/minimal/check-report-round2.jsonld` | 3 | `2a83f393eb26b9f7956448257c1b3ba09dd89b04678aac68fdc4f0dec27665b5` | W-JS2, W-CS6-Δ7 |
-| `fixtures/witnesses/minimal/sdd.jsonld` | 3 | `bc9b22911d6c62dcea563340cf6d18bf570367c3f721085cfb8e87411160a653` | W-CS6-N, W-CS7-N, W-JS1, S-S7, S-O6 |
-| `fixtures/witnesses/minimal/sdd-round2.jsonld` | 3 | `d3b2019ac166d63db193ae019176bc7ff15164882655efa36ddef8d678a69354` | W-JS2, W-CS6-Δ7 |
+| `fixtures/jira-assets/invalid/mapping-unknown-attribute.json` | 1 | `1b9f1cdcbdf780e1ae9b5d9068039634c5b2dd8224f4033ac0d39e0d6b514c18` | W-CS1-Δ3 |
+| `fixtures/jira-assets/invalid/mapping-unknown-type.json` | 2 | `c8d3d96cb64f1ba0f6670891ef97882dc3c80f7063dc53693f8a4ff44b55af3f` | W-CS1-Δ9 |
+| `fixtures/jira-assets/invalid/missing-attribute-type.json` | 1 | `fff2af590e085490667ea8356aee965cac6773e16ca250089a1adcc0b27d7770` | W-CS1-Δ1 |
+| `fixtures/jira-assets/invalid/reference-without-target.json` | 1 | `a709d1457d65fc7bab1fb00367c4839d8b0f3f43810d3e06499c4322ac1d969c` | W-CS1-Δ8 |
+| `fixtures/jira-assets/invalid/unknown-attribute-type.json` | 1 | `0f754ada66d9d471716c92035fc29ee71ba0221cf8585ee51cc165567a840304` | W-CS1-Δ7 |
+| `fixtures/jira-assets/invalid/unknown-reference-target.json` | 1 | `ef2337610680a27c2d00e1e9dd80bba8e99c94d666d4ec11fb445706c059c398` | W-CS1-Δ2 |
+| `fixtures/jira-assets/minimal-organization-v2.json` | 2 | `e86ef883322aa194ed10bda51118d02a9b0ddc51892d09d781514e9b11f5373b` | W-CS7-N, W-JS3 |
+| `fixtures/jira-assets/minimal-organization-v3-removed.json` | 4 | `0ced1f7e469fd90db9aaec1bd4cb317c871129341822836c84c90f8b16144ad7` | W-CS7-Δ1 |
+| `fixtures/jira-assets/minimal-organization.json` | 1 | `3239b1f085d090c71027032833831cf151b28ec90a935e01788b992ec6363869` | W-CS1-N, W-JO1 |
+| `fixtures/jira-assets/synthetic-it-assets-externalids.json` | 1 | `b6692a952b16c198499c4268938636dcf80f01a8956b66b7b000351e1d59c750` | W-CS1-Δ5, W-CS7-Δ2 |
+| `fixtures/jira-assets/synthetic-it-assets.json` | 1 | `2794d08cdf3a87d72151d4c8dc84ac999291010bf04ccc5ca8d22ad736b4eded` | E-S1, E-S3, W-CS1-Δ6 |
+| `fixtures/witnesses/full/check-report-batch2.jsonld` | 4 | `9908fa5122c725dbaecde831136f66e568e82213e783e81379bddd2a6f0c79e7` | W-CS4-Δ16 |
+| `fixtures/witnesses/full/check-report-range.jsonld` | 4 | `63936cbe766233b205c29939e651279d2e6b9824350949f6b47ddf35c63ccabc` | W-CS4-Δ5 |
+| `fixtures/witnesses/full/check-report-valid.jsonld` | 4 | `0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e` | W-CS4-Δ15 |
+| `fixtures/witnesses/full/inventory-externalids.jsonld` | 4 | `1fe97aa53077bf383800857870731c817df7d806ffa582859217b9d06016d2e0` | W-CS7-Δ2 |
+| `fixtures/witnesses/full/inventory.jsonld` | 4 | `1db35f4f744fece9e4c018982b182cef3deaf5a7eaeb0274936ac95d16058fd8` | R-S19, S-O5, W-CS1-N, W-CS2-N, W-CS3-N, W-JS1 |
+| `fixtures/witnesses/full/prompt-1-of-2.txt` | 4 | `5727e10f0ee3f9d3c54924bf925400cba432243f05b2368b5b0ceda00df6f556` | W-CS3-Δ2, W-PRO6-Δ1 |
+| `fixtures/witnesses/full/prompt-2-of-2.txt` | 4 | `d47df8f76a249c99141d4f27eb9a11d43aa13c736694cf626c8481f80f10678c` | W-CS3-Δ2, W-CS4-Δ16, W-PRO6-Δ1 |
+| `fixtures/witnesses/full/prompt.txt` | 4 | `13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0` | S-O1, W-CS3-N, W-CS3-Δ6, W-CS4-N, W-CS4-Δ5, W-CS4-Δ15, W-CS5-N, W-JO1, W-JO2, W-JS1, W-JS2, W-PRO5-N, W-PRO6-N, W-PRO6-Δ2 |
+| `fixtures/witnesses/full/proposal-batch2.txt` | 4 | `d61332a9190e19c257f980fbd6f98aad8f0c71eac6030a82262fd48dae115f98` | W-CS4-Δ16 |
+| `fixtures/witnesses/full/proposal-range.txt` | 4 | `86f399d9de1e8760e9845188df86c5dc6a7ed731fa9fe377c0686257a6be395c` | W-CS4-Δ5 |
+| `fixtures/witnesses/full/proposal-valid.txt` | 4 | `35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429` | W-CS4-Δ15 |
+| `fixtures/witnesses/full/rerun-plan-switch.jsonld` | 4 | `134c43dac1be14d268fd07bc5209e1f0043eda274f1bd019c05ec78bec974b75` | W-CS7-Δ2 |
+| `fixtures/witnesses/full/sdd.jsonld` | 4 | `ea9a77a61ddae9583811a67a188c4e42beb64b4229a557ced0a6d242113a0cff` | S-O6, W-CS6-N, W-CS7-N, W-CS7-Δ1, W-CS7-Δ2, W-JO1, W-JO3, W-JS1, W-JS3, W-PRO1-N |
+| `fixtures/witnesses/full/skeleton.jsonld` | 4 | `2b309d2d0b201923ae3ce5057e0217d24e339881a963692671c3da206aa78616` | W-CS2-N, W-CS3-N, W-CS4-Δ18, W-JS1 |
+| `fixtures/witnesses/hostile/inventory.jsonld` | 4 | `45287065c3675e5486cfb47e7c3efd40acde59f619a4c19ce8818bc78eac0b89` | R-S19, S-O5, W-CS1-N, W-CS2-N, W-CS3-N, W-JS1 |
+| `fixtures/witnesses/hostile/prompt.txt` | 4 | `d18c9b86a228033d67fe11a441f2a8ab0c227a9c44c5e8021722a1ec5f2a628e` | S-O1, W-CS3-N, W-CS3-Δ6, W-CS4-N, W-CS4-Δ5, W-CS4-Δ15, W-CS5-N, W-JO1, W-JO2, W-JS1, W-JS2, W-PRO5-N, W-PRO6-N, W-PRO6-Δ2 |
+| `fixtures/witnesses/hostile/skeleton.jsonld` | 4 | `f6c464a9e92487e9f6c301f5e27f29afef356525f9f2c9a040f799b131f65fdc` | W-CS2-N, W-CS3-N, W-CS4-Δ18, W-JS1 |
+| `fixtures/witnesses/minimal/bad-check-report.jsonld` | 4 | `981fe147072fa2ba4eac652875070c3156e3cf15751777e5761c188dba17f84b` | S-O4, W-CS4-Δ1, W-CS5-N, W-JS2 |
+| `fixtures/witnesses/minimal/bad-proposal.txt` | 4 | `8a227d43ea6603ad4110fbacb8df81b6b87bf9f3ca39abb74fea106f89162282` | W-CS4-Δ1, W-JO2, W-JS2, W-PRO3-N |
+| `fixtures/witnesses/minimal/check-report-open.jsonld` | 4 | `075052bc8ce9237965ce4f47135fe673ad5644b8cc56ab6cb73b6ab1757fd165` | W-JS4 |
+| `fixtures/witnesses/minimal/check-report-rerun.jsonld` | 4 | `58e92f706ff928b88d20329ff6d427e74f06d12068332142bb8e8f97a91ee17c` | W-JS3 |
+| `fixtures/witnesses/minimal/check-report-round2.jsonld` | 4 | `72e726b51537d8a3e47635468cebd303bfa5db6facbcab72b88d347860bc052c` | W-CS6-Δ9, W-JS2 |
+| `fixtures/witnesses/minimal/check-report.jsonld` | 4 | `552fa6c873611e7aace29d27fbd76e8ac52e8d343d276fe3df3ea52c890dfd3d` | S-O4, W-CS4-N, W-CS4-Δ1, W-CS5-N, W-CS6-Δ9, W-JS1, W-JS2 |
 | `fixtures/witnesses/minimal/inventory-v2.jsonld` | 2 | `0ea0045b7131f75356dafb2759250e97edeeab52cfec7ba67b6a2be9f6e47613` | W-CS7-N, W-JS3 |
-| `fixtures/witnesses/minimal/rerun-plan.jsonld` | 3 | `6b032ea1c3b1ddb2223148399f1352d4190e6e598c575eeebb45b5f5f9be2496` | W-CS7-N, W-JS3, S-S6 |
-| `fixtures/witnesses/full/prompt-1-of-2.txt` | 3 | `2378bd1a8b66041b69156f77708512f26b66601462b26d4ac888f6b605a416f7` | W-CS3-Δ2 |
-| `fixtures/witnesses/full/prompt-2-of-2.txt` | 3 | `d55030d92d74948d0a916a5ead5284e84f043915c57b39d0ebf8c4a1635a6c2f` | W-CS3-Δ2 |
-| `spec/prompt-template-v2.txt` | 2 | `78c0635dd8f2c20de38d3f74a0a39e70d747231b95d81783a06c7ca45914cd59` | R-S11, R-S22 |
-| `fixtures/witnesses/full/prompt.txt` | 3 | `81bd90593e2e3c6649153337d52b42e5bafff1ff39a37d1119ff17a94e5d560a` | W-CS4-Δ5, W-CS4-Δ15 |
-| `fixtures/witnesses/full/proposal-valid.txt` | 3 | `db03f8a11ace02f8eee1ab7b425610c2e41ff21581a21f31f0caabc3fb3f7d9a` | W-CS4-Δ15 |
-| `fixtures/witnesses/full/check-report-valid.jsonld` | 3 | `1f8124fa97180169c3e89f803b70c00f9995eab6f0ac7fc14f3051e4e55a3562` | W-CS4-Δ15 |
-| `fixtures/witnesses/full/proposal-range.txt` | 3 | `4a535565187cd5a81157ca8c173877e5bcc129facf1758101d1089af7a8a5eae` | W-CS4-Δ5 |
-| `fixtures/witnesses/full/check-report-range.jsonld` | 3 | `d54e470c70ac16e2fa6be019b2d5b33dcddd14b09060f1895887dcc6096ddbe0` | W-CS4-Δ5 |
-| `schemas/proposal-v1.schema.json` | 2 | `c722a5cc7ba3c04233302698f0efb42701e373ade153e0a87c628ada73f7f631` | R-S13, W-CS4-Δ14 |
+| `fixtures/witnesses/minimal/inventory-v3.jsonld` | 4 | `58ae56066dc8132857d7e62093c6df0c2f05b1c25becdd2dd49a80bd48b20343` | W-CS7-Δ1 |
+| `fixtures/witnesses/minimal/inventory.jsonld` | 1 | `902ab965e1d220a172944d758f2cf3931e8541a8e1c3000a3d82b13487e630ed` | R-S19, S-O5, W-CS1-N, W-CS2-N, W-CS3-N, W-JS1 |
+| `fixtures/witnesses/minimal/keys-open.json` | 4 | `865ce456f7c0c708448fed13e267169d171d5fde96c68ea4319908f5152f69e5` | W-JS4 |
+| `fixtures/witnesses/minimal/keys-rerun.json` | 4 | `865ce456f7c0c708448fed13e267169d171d5fde96c68ea4319908f5152f69e5` | W-JS3 |
+| `fixtures/witnesses/minimal/prompt-open.txt` | 4 | `7b7791a63b7dc49e3fc342cecbeb01f8fe8e828b372c5d32944ff71b73c3105d` | W-JS4 |
+| `fixtures/witnesses/minimal/prompt-rerun.txt` | 4 | `05aa533075216937dfe8a33929bf0a50dbc9182977f2838d99bc8cd795b45916` | W-JS3 |
+| `fixtures/witnesses/minimal/prompt-set.jsonld` | 4 | `62ab24f870e21290c3e2b6578c79d9c6859f15ae266856882a4b7971073ba27b` | W-CS3-N |
+| `fixtures/witnesses/minimal/prompt.txt` | 3 | `7f121f7a15ed3f67563c10d2038c2722c87e92fab7160eae37bdcc3e78cbcc3c` | S-O1, W-CS3-N, W-CS3-Δ6, W-CS4-N, W-CS4-Δ5, W-CS4-Δ15, W-CS5-N, W-JO1, W-JO2, W-JS1, W-JS2, W-PRO5-N, W-PRO6-N, W-PRO6-Δ2 |
+| `fixtures/witnesses/minimal/proposal-open.txt` | 4 | `6537840cf5c054a5e813ea6f4bf27cf7c97bb06a325031168ea629b9c91c1a46` | W-JS4 |
+| `fixtures/witnesses/minimal/proposal-pasted.txt` | 4 | `7d3a9546da8c8ab55b25ec8e0e6e761c12529855de54fb280b47c8935d3be91b` | S-O2, W-CS4-N, W-JO1, W-JO2, W-JO4, W-JS1, W-JS2, W-PRO1-Δ2, W-PRO4-Δ2, W-PRO4-Δ3, W-PRO5-Δ1 |
+| `fixtures/witnesses/minimal/proposal-rerun.txt` | 4 | `e7ed529bd3440ee30fbee4028141aa483fa7f2857dc33a0278ebb3f811127351` | W-JS3 |
+| `fixtures/witnesses/minimal/repair-prompt.txt` | 4 | `e14d07015a3d8d33cc586f6ce2b72bd86797e6fbe6b439f85e47aa0f347b1a86` | W-CS5-N, W-JO2, W-JS2, W-PRO5-N |
+| `fixtures/witnesses/minimal/rerun-plan-removed.jsonld` | 4 | `d739af913a63a0f783fd5ad18c05b90fb70a3c44cb7330e00f0a7d9278d88414` | W-CS7-Δ1 |
+| `fixtures/witnesses/minimal/rerun-plan.jsonld` | 4 | `4e09c7bbe63d5a11faea0e8f7eec02d645bf70f5cd3342c0addd1540dfa4e0f5` | W-CS7-N, W-JS3 |
+| `fixtures/witnesses/minimal/sdd-j4.jsonld` | 4 | `1990267916386cc6be2ae2f8fee2b31fd72e79cfcdfb1c2dd5e1ff2496a1e601` | W-JS4 |
+| `fixtures/witnesses/minimal/sdd-partial.jsonld` | 4 | `769ddf341e8a55907f545da426271ee677e3a571588d712a811d7f3090577091` | W-CS6-Δ2, W-JS4, W-PRO1-Δ5 |
+| `fixtures/witnesses/minimal/sdd-round2.jsonld` | 4 | `a05cff1a945158c98ce4ff534fc061b1e128b7ca1f44e13e4a51fd5434f65160` | W-CS6-Δ7, W-CS6-Δ9, W-JO2, W-JS2 |
+| `fixtures/witnesses/minimal/sdd-v2.jsonld` | 4 | `cae6b1aaf6e43b38b5bda92084842ce100352b41a7a226ebe3929fde27d6c767` | W-JS3 |
+| `fixtures/witnesses/minimal/sdd.jsonld` | 4 | `d311d909a03fe3bb193dd60f51c6086127c18fc86764420de4004fc3ce4e07f3` | S-O6, W-CS6-N, W-CS7-N, W-CS7-Δ1, W-CS7-Δ2, W-JO1, W-JO3, W-JS1, W-JS3, W-PRO1-N |
+| `fixtures/witnesses/minimal/skeleton-v2.jsonld` | 4 | `60411c630940a686335e005622284427b07384650c4668721216a392d5196bef` | W-CS6-Δ8, W-JS3 |
+| `fixtures/witnesses/minimal/skeleton.jsonld` | 3 | `e990dbb36831aa769a09a7d5df64d396698511482c3ba849064353500ff9de57` | W-CS2-N, W-CS3-N, W-CS4-Δ18, W-JS1 |
+| `schemas/proposal-v1.schema.json` | 2 | `c722a5cc7ba3c04233302698f0efb42701e373ade153e0a87c628ada73f7f631` | R-S13 |
+| `spec/prompt-template-v2.txt` | 2 | `78c0635dd8f2c20de38d3f74a0a39e70d747231b95d81783a06c7ca45914cd59` | R-S11 |
 | `ontology/term-list.json` | ADR-005 | `terms_sha256` `a9e01756d749655a53088833bb97612791caf9a19220065848c826f99985cd39` | S-S3, every term-bearing witness |
+
+**Superseded files (retained; never cited by a current witness, enforced by `tools/witness-check.mjs`).**
+
+| File | Current in | sha256 |
+|---|---|---|
+| `fixtures/witnesses/superseded/v1/bad-check-report.jsonld` | v0.1 | `7d7e42392fb2ede15330011f34badceb40f36b38e19ced94c05d9a40fd7b71b4` |
+| `fixtures/witnesses/superseded/v1/check-report.jsonld` | v0.1 | `1dbc907c8bf3a33f285694884d0fa82bbd81a8c7294dce108e4288ac2ac9caea` |
+| `fixtures/witnesses/superseded/v1/prompt-template-v1.txt` | v0.1 | `247a6a88b74d0cbecdca90989612f291c331fcb5cbb27a81d0323b71a3600439` |
+| `fixtures/witnesses/superseded/v1/prompt.txt` | v0.1 | `4082dfe59066a7c803d41c5f080edf4304b441b435cceed21f6e31aa04d2cafc` |
+| `fixtures/witnesses/superseded/v2/full/prompt-1-of-2.txt` | v0.2 | `106c0c899600a2025b1a8662f2b1590640df585e3e6202f35f64c6c637bd1287` |
+| `fixtures/witnesses/superseded/v2/full/prompt-2-of-2.txt` | v0.2 | `a98f5432a336f82f2d64fa4b22dcf9b4ac4ecc8f9669e3ce33cae392a76753cb` |
+| `fixtures/witnesses/superseded/v2/minimal/bad-check-report.jsonld` | v0.2 | `a4f7638d9f31dadc0e6df6d56500b333b3af61c3310ad7fd4c92502b64374090` |
+| `fixtures/witnesses/superseded/v2/minimal/check-report-round2.jsonld` | v0.2 | `f8bd453f2bf08c34e0a278be2aaaa77373cad7bbb015b8dd6cac586de7d47507` |
+| `fixtures/witnesses/superseded/v2/minimal/check-report.jsonld` | v0.2 | `a95955c84c647debbbb16a359c34d023450700fb5e442a72a81b5a45b781a22c` |
+| `fixtures/witnesses/superseded/v2/minimal/prompt.txt` | v0.2 | `795cc44ff937b4634316fdcc0f21a38aa834deca19de315b98df1bd277af337b` |
+| `fixtures/witnesses/superseded/v2/minimal/repair-prompt.txt` | v0.2 | `7b89ca1bd0a8cfdc3e46a52bab0829b425fe5e802f0e13ad3edfacdba7706127` |
+| `fixtures/witnesses/superseded/v2/minimal/rerun-plan.jsonld` | v0.2 | `aa147e29fe999b90802c7ca0824ec798d317c99b67566ef10a2034e5903ba606` |
+| `fixtures/witnesses/superseded/v2/minimal/sdd-round2.jsonld` | v0.2 | `54677ba3d35a747a371d6290744f1922f5dfb8d7e52ff2863ec3cee48e53b83e` |
+| `fixtures/witnesses/superseded/v2/minimal/sdd.jsonld` | v0.2 | `71bfb31c1bf7cf53a8872b76fce037fd75b1789cf3725e247820b5f72c0b7b4b` |
+| `fixtures/witnesses/superseded/v2/minimal/skeleton.jsonld` | v0.2 | `a250c034b1d5b1e03fe791dbd9a79ef20eac910fdea6c8b673539cdc1204bb88` |
+| `fixtures/witnesses/superseded/v3/full/check-report-range.jsonld` | v0.3 | `d54e470c70ac16e2fa6be019b2d5b33dcddd14b09060f1895887dcc6096ddbe0` |
+| `fixtures/witnesses/superseded/v3/full/check-report-valid.jsonld` | v0.3 | `1f8124fa97180169c3e89f803b70c00f9995eab6f0ac7fc14f3051e4e55a3562` |
+| `fixtures/witnesses/superseded/v3/full/prompt-1-of-2.txt` | v0.3 | `2378bd1a8b66041b69156f77708512f26b66601462b26d4ac888f6b605a416f7` |
+| `fixtures/witnesses/superseded/v3/full/prompt-2-of-2.txt` | v0.3 | `d55030d92d74948d0a916a5ead5284e84f043915c57b39d0ebf8c4a1635a6c2f` |
+| `fixtures/witnesses/superseded/v3/full/prompt.txt` | v0.3 | `81bd90593e2e3c6649153337d52b42e5bafff1ff39a37d1119ff17a94e5d560a` |
+| `fixtures/witnesses/superseded/v3/full/proposal-range.txt` | v0.3 | `4a535565187cd5a81157ca8c173877e5bcc129facf1758101d1089af7a8a5eae` |
+| `fixtures/witnesses/superseded/v3/full/proposal-valid.txt` | v0.3 | `db03f8a11ace02f8eee1ab7b425610c2e41ff21581a21f31f0caabc3fb3f7d9a` |
+| `fixtures/witnesses/superseded/v3/minimal/bad-check-report.jsonld` | v0.3 | `426c5945d9ee8003a7ff20f8741bd8d065a2f311d0efc67696eb377f8e02d5c4` |
+| `fixtures/witnesses/superseded/v3/minimal/bad-proposal.txt` | v0.3 | `68704680864a30fc0eab135889059fb304dcf54210388d6ac58d2dbc7874909c` |
+| `fixtures/witnesses/superseded/v3/minimal/check-report-round2.jsonld` | v0.3 | `2a83f393eb26b9f7956448257c1b3ba09dd89b04678aac68fdc4f0dec27665b5` |
+| `fixtures/witnesses/superseded/v3/minimal/check-report.jsonld` | v0.3 | `b251db2e092646ae2a945b2bfd2b8e7bc3115fca78331cea73c2c88993c3e2ee` |
+| `fixtures/witnesses/superseded/v3/minimal/proposal-pasted.txt` | v0.3 | `6eb7f5afb14cad25e38fad57eeea6118f78f433c1008698f01172bafacc28e9f` |
+| `fixtures/witnesses/superseded/v3/minimal/repair-prompt.txt` | v0.3 | `7ff9455dcb8d8915b59b4855376d9d7aefc84b9c226c38608f2d3e7e10b13648` |
+| `fixtures/witnesses/superseded/v3/minimal/rerun-plan.jsonld` | v0.3 | `6b032ea1c3b1ddb2223148399f1352d4190e6e598c575eeebb45b5f5f9be2496` |
+| `fixtures/witnesses/superseded/v3/minimal/sdd-round2.jsonld` | v0.3 | `d3b2019ac166d63db193ae019176bc7ff15164882655efa36ddef8d678a69354` |
+| `fixtures/witnesses/superseded/v3/minimal/sdd.jsonld` | v0.3 | `bc9b22911d6c62dcea563340cf6d18bf570367c3f721085cfb8e87411160a653` |
 
 **Supersession.** Changing any governed file is a supersession event. The superseded file is retained, and every
 citer named in the reciprocal table below and in the "Cited by" column MUST be re-accepted before this document
@@ -359,29 +443,39 @@ A citation is an explicit identifier: an artifact cites another iff its text nam
 <!-- reciprocity:begin -->
 | SDD artifact | SDD-operator artifacts citing it or cited by it |
 |---|---|
-| C-S2 | W-JO3 |
-| C-S3 | W-JO3, W-PRO6-Δ2 |
-| C-S4 | NP-O5, W-JO3 |
+| C-S2 | SDD-operator §4, W-JO3 |
+| C-S3 | SDD-operator §4, W-JO3 |
+| C-S4 | NP-O5, SDD-operator §4, W-JO3 |
 | C-S5 | PR-O5 |
-| C-S6 | W-JO3 |
-| C-S7 | W-JO3 |
-| H-S1 | H-O1, H-O2, W-JO1, W-JO2, W-JO3, W-JO4 |
+| C-S6 | SDD-operator §4, SDD-operator §5, W-JO3 |
+| C-S7 | SDD-operator §4, W-JO3 |
+| G1 | G2 |
+| H-S1 | H-O1, H-O2, SDD-operator §15, W-JO1, W-JO2, W-JO3, W-JO4 |
 | NG-S1 | NP-O0 |
-| NG-S4 | PR-O2 |
-| NG-S5 | NP-O2, PR-O1 |
+| NG-S4 | PR-O2, SDD-operator §2 |
+| NG-S5 | NP-O2, PR-O1, SDD-operator §2 |
+| OS-1 | SDD-operator §14, SDD-operator §15 |
+| OS-3 | SDD-operator §14, SDD-operator §15 |
+| OS-4 | SDD-operator §14, SDD-operator §15 |
+| OS-6 | SDD-operator §14, SDD-operator §15 |
+| OS-7 | SDD-operator §15, SDD-operator §16 |
 | R-S5 | W-PRO4-Δ1, W-PRO5-N |
-| R-S6 | W-PRO5-N |
+| R-S6 | W-PRO4-Δ3, W-PRO5-N |
 | R-S10 | W-PRO1-Δ2 |
 | R-S11 | W-PRO6-Δ2 |
 | R-S13 | W-PRO3-Δ1 |
-| R-S14 | NP-O3, PR-O4 |
-| R-S16 | PR-O2, W-PRO2-Δ2 |
-| R-S18 | PR-O1 |
+| R-S14 | NP-O3, PR-O4, RV-O3, RV-O4, SDD-operator §2 |
+| R-S16 | PR-O2, SDD-operator §2, W-PRO2-Δ2 |
+| R-S17 | PR-O1, W-PRO1-Δ5 |
+| R-S18 | PR-O1, SDD-operator §2 |
 | R-S20 | W-PRO5-Δ1 |
-| R-S21 | RV-O4, W-PRO4-Δ1, W-PRO5-N |
-| R-S23 | CV-O3, PR-O3 |
+| R-S21 | RV-O4, SDD-operator §2, W-PRO2-Δ2, W-PRO4-Δ1, W-PRO5-N |
+| R-S23 | CV-O3, PR-O3, SDD-operator §2, SDD-operator §12 |
+| SDD §2 | J-O1, J-O2, J-O3, J-O4 |
+| SDD §10 | OO-1, OO-2 |
 | W-CS3-N | W-JO1, W-PRO6-N |
 | W-CS3-Δ2 | W-PRO6-Δ1 |
+| W-CS3-Δ6 | W-PRO6-Δ2 |
 | W-CS4-Δ1 | W-JO2, W-PRO3-N, W-PRO5-N |
 | W-CS4-Δ8 | W-PRO4-Δ1 |
 | W-CS5-N | W-JO2, W-PRO5-N |
@@ -396,22 +490,32 @@ A citation is an explicit identifier: an artifact cites another iff its text nam
 | W-JS4 | W-PRO2-Δ1, W-PRO3-Δ3 |
 <!-- reciprocity:end -->
 
-Reciprocity is **demonstrated mechanically** (OS-7): `node tools/citations.mjs` exits 0 at this revision (59 cross-document
-citations recorded identically in both tables; S-O1–S-O6 identical in both documents). It fails on a dropped table entry and on an unrecorded citation (both probed). It MUST be re-run on every change to either document. WV-1 gate 2 is met.
+Reciprocity is **checked mechanically, but not yet independently verified**. `node tools/citations.mjs` MUST pass on every
+change to either document. `node tools/mutation-test.mjs` demonstrates that it fails on a drifted seam row, a dropped
+table entry and an unrecorded citation. Its v0.3 seam check had a defect that hid a corrupted S-O1 row (SDD-F51). WV-1
+gates 1 and 2 therefore stay *pending independent verification*, and **CAP-2 stays active** (registrar decision, cycle 3).
+
+**Embedded digests (SDD-F50).** A witness that embeds another governed file's sha256 (a paste's `skeletonSha256`, a
+report's `promptSha256`, an SDD's provenance) cites that file. A supersession is complete only when
+`node tools/witness-check.mjs` passes: every embedded digest names a current, non-superseded governed file, and the typed
+relations between prompts, pastes, reports, skeletons, inventories and SDDs hold. The registry check alone cannot see
+embedded digests. **Independent oracle.** `node tools/oracle-check.mjs` re-derives every CheckReport witness's errors and
+warnings with a checker written from the spec by an isolated rater (`tools/oracle/oracle-b.cjs`, unmodified), so witness
+outputs are not validated only by the generator that produced them.
 
 **Open items.**
 - **OS-1:** author `schemas/*.schema.json` for the remaining artifacts (the proposal schema is done and pinned), the bundled `context/sdd-v1.jsonld` (hash-pinned), and **SHACL shapes for the SemanticDataDictionary** (`shapes/sdd-v1.shacl.ttl`, ADR-006), with `minimal/sdd.jsonld` as the conforming witness.
-- **OS-2:** *closed (v0.3).* The term list carries named `rdfs:domain` / `rdfs:range` for every object property (CCO 148 / 149 named and 15 / 15 anonymous edges; BFO 28 / 31). The reader matches rdflib 7.1.1 exactly on all six edge sets (`tools/verify-hierarchy.py`). The new `terms_sha256` superseded every term-bearing witness; the version-2 files are retained under `fixtures/witnesses/superseded/v2/`. W-CS4-Δ5 and Δ15 are literal.
+- **OS-2:** *closed (v0.3).* The term list carries every named `rdfs:domain` / `rdfs:range` the pins state: of 225 CCO object properties, 112 have at least one named domain and 110 at least one named range; of 40 BFO object properties, 28 and 31 (the rest have none, or only anonymous expressions, NG-S9). In the source files: CCO 148 named domain and 149 named range edges plus 15 and 15 anonymous; BFO 28 and 31. The reader matches rdflib 7.1.1 exactly on all six edge sets (`tools/verify-hierarchy.py`). The new `terms_sha256` superseded every term-bearing witness; the version-2 files are retained under `fixtures/witnesses/superseded/v2/`. W-CS4-Δ5 and Δ15 are literal.
 - **OS-3:** implement G1 and K1.
 - **OS-4:** build the core and CLI; execute every witness under H-S1.
 - **OS-5:** closed by registrar Decision B (2026-10-27): the R-S9 text fallback is retained.
 - **OS-6:** `bench/` with the reference machine.
-- **OS-7:** *closed (v0.3).* `tools/citations.mjs` extracts every cross-document citation (explicit-identifier rule) and checks both tables and the mirrored seam rows; exit 0 at this revision.
+- **OS-7:** *tool built (v0.3), corrected and mutation-tested (v0.4); independent verification pending.* `tools/citations.mjs` extracts every cross-document citation (explicit-identifier rule, with section-level attribution for blocks that define no identifier) and checks both tables and the mirrored seam rows.
 
 ## SDD §12: Closure report (method P2)
 
 Granularity: template structure. The one-paragraph summary and §1 are informative. Every BCP 14 clause lives in §3,
-§4, §7, §8, §9 or §10.
+§4 and §7 to §11.
 
 | Clauses | Class | Falsifier | Validation | Gate |
 |---|---|---|---|---|
