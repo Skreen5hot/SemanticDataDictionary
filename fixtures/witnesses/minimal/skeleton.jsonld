@@ -1,0 +1,30 @@
+{
+  "@context": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld",
+  "@type": "Skeleton",
+  "inventorySha256": "902ab965e1d220a172944d758f2cf3931e8541a8e1c3000a3d82b13487e630ed",
+  "termListSha256": "0965d5a4bf184696def722537148c8ed4a93dca9bee365ad8be052c3c91156f5",
+  "slots": [
+    {
+      "key": "ot:Organization",
+      "kind": "type",
+      "recordClass": null,
+      "referentClass": null
+    },
+    {
+      "key": "at:Organization/Name",
+      "kind": "attribute",
+      "jiraType": "text",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    },
+    {
+      "key": "at:Organization/Cost Center",
+      "kind": "attribute",
+      "jiraType": "text",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "iceClass": null
+    }
+  ]
+}

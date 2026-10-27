@@ -135,3 +135,40 @@ registrar.
 
 **Register state:** 24 findings open, 0 dispositioned. Disposition of findings is deferred to the SDD Service spec
 (method §4 form), which supersedes this document's normative role; SDD v2.0 remains as rationale.
+
+## Dispositions: cycle 1 (2026-10-27, appended; sections above unamended)
+
+Every finding raised in cycle 1 is dispositioned against the SDD Service spec pair v0.1 (`spec/sdd-service.md`,
+`spec/sdd-operator.md`) and ADR-001 to ADR-008. SDD v2.0 is retained as rationale only; its normative role is
+superseded. Kinds: **resolved** (fixed as raised) · **resolved otherwise** (the defect cannot recur, for the stated
+reason) · **deferred** (open item named) · **rejected** (reasons stated). None is dropped (PR-M1).
+
+| Finding | Disposition | Where |
+|---|---|---|
+| SDD-F01 role relation conflict | resolved otherwise: v1 has no role/inverse construct; a reference maps to one object property, checked for kind and domain/range | R-S7, R-S8 |
+| SDD-F02 instant vs interval | resolved otherwise: no temporal-region modelling in v1; date and time values are information-content literals | R-S9, NG-S1 |
+| SDD-F03 assertion vs asserted | resolved: record and referent are separate slots | ADR-001, R-S5, C-S2 |
+| SDD-F04 scope mismatch | resolved: Jira Assets profile only; star schemas a declared non-goal | ADR-002, NG-S2 |
+| SDD-F05 null semantics conflict | resolved: single rule; F-S11-1's reading rejected | ADR-003, R-S15 |
+| SDD-F06 unverified vocabulary | resolved: pinned term list; every CURIE checked. Four v2.0 terms shown not to exist in the pin | ADR-005, R-S7, V-S6 |
+| SDD-F07 no normative keywords | resolved: BCP 14 profile; closure reports | both spec headers, §12/§16 |
+| SDD-F08 instance-IRI minting | resolved otherwise: v1 mints no individuals | NG-S1 (ADR-007.1) |
+| SDD-F09 example drops assertion layer | resolved: every type mapping carries `recordClass` | ADR-001, S-S7 |
+| SDD-F10 one class slot per table | resolved: two slots | R-S5, W-CS2-N |
+| SDD-F11 qualities listed as realizable | resolved otherwise: no hand-written BFO taxonomy; categories come from pinned ancestry | R-S5, ADR-008 |
+| SDD-F12 ICE/IBE concretization | resolved otherwise: v1 types the record as an ICE and makes no concretization claim; bearers are a materialization concern | R-S5, NG-S1 |
+| SDD-F13 house as site | resolved: domain/range checked mechanically (House is a material entity, not a site, per the pinned ancestry) | R-S8 (literal pending OS-2) |
+| SDD-F14 `boundary_of: bfo:Occurrent` | resolved otherwise: no temporal boundary modelling in v1 | NG-S1 |
+| SDD-F15 timestamp in a foreign-key column | resolved otherwise: no star schema; Jira date types fixed by the value table | NG-S2, R-S9 |
+| SDD-F16 `house_dim` undefined | resolved otherwise: the v2.0 example is retired with its normative role | — |
+| SDD-F17 latent role vs null semantics | resolved: nothing is posited from absence | ADR-003 rule 1, R-S15 |
+| SDD-F18 gap sentinel | resolved: absence is recorded on the record, never instantiated | ADR-003 rules 1–2 |
+| SDD-F19 provenance unmodelled | resolved for definitions: every mapping carries provenance and acceptance; record-level absence metadata deferred to materialization | S-S7, R-S15, NG-S1 |
+| SDD-F20 "no restructuring" claim | resolved otherwise: the claim is not made; scope fixed | ADR-002 |
+| SDD-F21 capabilities without mechanism | resolved: scope fixed at C-S1–C-S7; reasoning and projection are non-goals | ADR-007.4, NG-S9 |
+| SDD-F22 no changelog | resolved: witness registry and supersession protocol | sdd-service §11 |
+| SDD-F23 temporal precision, bitemporality | deferred: timezone, granularity and valid/assertion time belong to the materialization service | NG-S1 |
+| SDD-F24 inverse-query paths disagree | resolved otherwise: no inverse construct in v1 | R-S7 |
+
+**Register state:** 24 findings, 24 dispositioned (22 resolved or resolved otherwise, 1 of them with its witness literal pending
+(F13 → OS-2); 1 partly deferred (F19); 1 deferred (F23); none rejected). Cycle 2 grades the spec pair.

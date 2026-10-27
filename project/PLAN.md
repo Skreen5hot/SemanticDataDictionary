@@ -43,7 +43,7 @@ and declared as a non-goal, so v1 stays small.
 | 1 | **Ground truth** | Synthetic Jira Assets fixture schema covering every attribute type and edge case; pinned BFO/CCO releases plus the permitted-term list; Atlassian attribute types confirmed | Fixtures committed; term list hashed |
 | 2 | **Author the spec pair** | `spec/sdd-service.md` (method §4: capabilities, journeys, seams, rules, properties, acceptance, closure report) **and** `spec/sdd-operator.md` (method §4A: promises and scenes for the relay loop) | Closure report with 0 orphans |
 | 3 | **Grade and refine** | SRS cycle: two isolated raters, adjudication, findings, proposals, walks | Disposition **D-3**, readiness stated honestly |
-| 4 | **Build** | Core library (shared), offline HTML tool, Node CLI | Every witness executed in a clean environment |
+| 4 | **Build** | Core library (shared), offline HTML tool, Node CLI. **The HTML tool is published through GitHub Pages** (Actions is enabled on the repo), at `https://skreen5hot.github.io/SemanticDataDictionary/`, which also serves the JSON-LD context at its IRI | Every witness executed in a clean environment; Pages deploy green |
 | 5 | **Pilot** | You run it on the enterprise schema inside the enterprise | Your acceptance; break events logged |
 
 Phase 2 also disposes all 24 cycle-1 findings: each one is resolved, deferred, or rejected, with reasons, in the new
@@ -70,7 +70,14 @@ Draft journeys: **J1** first dictionary (C1→C6) · **J2** repair loop (C4→C5
   third individual deferred (ADR-001); boundary and scope fixed (ADR-007).
 - **Phase 1: complete** (2026-10-27). The blocking question below was resolved by the registrar: Option B (ADR-008),
   with a request sent to Ontology-Template. Both open points are answered (`SOURCE-FORMAT.md`).
-- **Phase 2: next** (author the spec pair). Awaiting the registrar's go-ahead.
+- **Phase 2: drafted** (2026-10-27). [`spec/sdd-service.md`](../spec/sdd-service.md) (substrate: 7 capabilities, 4
+  journeys, 19 rules, 6 properties) and [`spec/sdd-operator.md`](../spec/sdd-operator.md) (companion: 6 promises, 4
+  journeys, 15 scenes), woven by WV-1. Both closure reports show 0 orphans. Minimal-fixture witnesses are literal
+  files with computed hashes (`fixtures/witnesses/minimal/`). All 24 cycle-1 findings are dispositioned
+  (`review/register.md`). Self-identified gaps: crossing examples S-S6 and S-S7 pending (OS-4); W-CS4-Δ5 literal
+  pending (OS-2).
+- **Phase 3: next**: grade the pair (two isolated raters), awaiting the registrar's go-ahead.
+- **Publishing (registrar, 2026-10-27):** GitHub Actions is on for Pages; the HTML tool ships there (Phase 4).
 
 ### Phase 1 deliverables
 

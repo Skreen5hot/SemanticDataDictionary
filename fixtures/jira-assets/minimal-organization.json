@@ -1,0 +1,52 @@
+{
+  "$schema": "https://api.atlassian.com/jsm/assets/imports/external/schema/versions/2021_09_15",
+  "schema": {
+    "objectSchema": {
+      "name": "Minimal Organization",
+      "description": "Smallest synthetic fixture: one object type, two attributes. Used by the spec crossing examples.",
+      "objectTypes": [
+        {
+          "name": "Organization",
+          "description": "An organizational unit that people belong to",
+          "attributes": [
+            {
+              "name": "Name",
+              "description": "Organization name",
+              "type": "text",
+              "label": true
+            },
+            {
+              "name": "Cost Center",
+              "description": "Finance cost center code",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "mapping": {
+    "objectTypeMappings": [
+      {
+        "objectTypeName": "Organization",
+        "selector": "organizations",
+        "description": "Organizations",
+        "attributesMapping": [
+          {
+            "attributeName": "Name",
+            "attributeLocators": [
+              "name"
+            ],
+            "externalIdPart": true
+          },
+          {
+            "attributeName": "Cost Center",
+            "attributeLocators": [
+              "costCenter"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

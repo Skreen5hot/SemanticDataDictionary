@@ -5,3 +5,4 @@
 vendor/**             -text
 fixtures/**           -text
 ontology/**           -text
+spec/prompt-template-*.txt  -text
