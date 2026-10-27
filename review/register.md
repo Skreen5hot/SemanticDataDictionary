@@ -258,3 +258,22 @@ from cycle 1: the vacuous READY in §6.2.6.
 
 **Register state:** cycle 2 raised 25 findings (SDD-F25–F49), 0 dispositioned. One routing is open: service P8. Next:
 a proposal (`review/proposals/prop-001`), merged only on the registrar's command (no auto-merge).
+
+## Registrar ruling: cycle 2 (2026-10-27, appended; sections above unamended)
+
+- The registrar (Aaron Damiano) **accepts the cycle-2 results and the joint D-1 disposition.**
+- **Service P8 = 1** (rater B's score), ruled by the registrar instead of a third rater. Rationale: both raters
+  identified the same underlying deficiency (SDD-F26: carried state C-S6 cannot derive), so a third evaluation would
+  not materially change the outcome.
+- **Adjudicated vectors:** service P1 2 · P2 1 · P3 1 · P4 2 · P5 1 · P6 2 · P7 2 · **P8 1** · P9 1 · P10 1 = **14/20**,
+  D-2. Operator 15/22, D-1. **Joint D-1**, CAP-2 active. `provisional: false`.
+
+`Joint Disposition: D-1 Uniformly under-specified`
+`Acceptance readiness: BLOCKED — SDD-F25; OS-1–OS-4, OS-6; OO-1, OO-2; CAP-2`
+
+- **prop-001 authorized for drafting** under these constraints: (1) one consolidated proposal disposing F25–F49 with
+  rationale; (2) priority on corrections to requirements, contracts, contradictions, witnesses and traceability,
+  especially the operator spec; (3) architecture, the seven capabilities and v1 scope preserved, with nothing added
+  unless it resolves a demonstrated defect; (4) CAP-2 applied: no reciprocity or traceability claim until
+  demonstrated; (5) method observations kept separate; (6) no change to the approved specs and no cycle 3 without the
+  registrar's authorization.
