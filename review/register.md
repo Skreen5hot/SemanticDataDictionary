@@ -384,3 +384,19 @@ Progress against cycle 2: the operator document rose from D-1 (15/22) to D-2 (18
 (SDD-F50). The method's supersession walk (P10.3) needs embedded-digest dependencies in the citation graph.
 
 **Register state:** cycle 3 raised 17 findings (SDD-F50–F66), 0 dispositioned. Open routing: service P8.
+
+## Registrar ruling: cycle 3 (2026-10-27, appended; sections above unamended)
+
+- The registrar accepts the cycle-3 adjudication and the joint **D-2** result.
+- **Service P8 = 1** (rater A's score), ruled by the registrar. Rationale: both raters identified the same deficiency
+  (SDD-F56: J-S3 and J-S4 not fully literal), and a third evaluation would not change the disposition. Adjudicated
+  service vector: 14/20, D-2. Operator 18/22, D-2. **Joint D-2**, CAP-2 active. `provisional: false`.
+- **prop-002 authorized for drafting:** address F50–F66 (P5 halts, witness correctness, seam reciprocity and CAP-2
+  first); fix underlying causes (a generator for inputs as well as outputs, embedded-reference checks, seam-drift
+  detection); checks must detect deliberately corrupted artifacts, and a generator must not validate its own results
+  on shared assumptions; the seven capabilities, the architecture and the v1 boundaries are preserved; CAP-2 stays
+  active until the reciprocity evidence is independently demonstrated; one consolidated proposal with diff,
+  dispositions and verification results; no merge without authorization.
+- **Process change:** after prop-002 is approved, the next priority is a **minimal implementation of the shared
+  deterministic core** (parse, skeleton, prompt, check) against real executable witnesses, not another paper cycle.
+  Neither cycle 4 nor full Phase 4 starts without authorization.
