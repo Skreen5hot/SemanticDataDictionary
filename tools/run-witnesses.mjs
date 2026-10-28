@@ -1,10 +1,10 @@
-// Witness runner for the built core (C-S1 parse, C-S2 skeleton, C-S3 prompt, C-S4 check, C-S5 repair). It executes an
-// implementation's CLI against every C-S1–C-S5 witness in spec/sdd-service.md and judges the ACTUAL output: byte
+// Witness runner for the core (C-S1 parse, C-S2 skeleton, C-S3 prompt, C-S4 check, C-S5 repair, C-S6 accept, C-S7 rerun). It executes an
+// implementation's CLI against every C-S1–C-S7 witness in spec/sdd-service.md and judges the ACTUAL output: byte
 // equality with the witness file where one exists, else the outcome the witness states (exit code, exact codes/keys).
 // The runner is written from the spec text; it shares no code with the implementation under test.
 //
 //   node tools/run-witnesses.mjs [--impl <path to sdd.mjs>]     default: src/cli/sdd.mjs
-import { readFileSync, writeFileSync, mkdtempSync, rmSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdtempSync, mkdirSync, rmSync, existsSync, readdirSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { join, dirname } from 'node:path';
@@ -279,8 +279,71 @@ function e2e(list, decided, expected) {
 check('C-S6 end-to-end: schema → validated → accept ×3 → SDD', () => e2e(ACCEPT3, KEYS, 'minimal/sdd.jsonld'));
 check('C-S6 end-to-end: partial rejection stays open', () => e2e([[KEYS[0], 'accept'], [KEYS[1], 'accept'], [KEYS[2], 'reject']], KEYS.slice(0, 2), 'minimal/sdd-partial.jsonld'));
 
+// ---------------- C-S7 rerun ----------------
+const OTHER_TERMS = (s) => s.replace(/("termListSha256": ")[0-9a-f]{64}/, '$1' + '0'.repeat(64));
+const TERMS = JSON.parse(rd(join(ROOT, 'ontology/term-list.json'))).terms_sha256;
+function rerun(schema, prev) { const dir = join(TMP, `${n++}-rerun`); const r = sdd('rerun', schema, prev, '--out-dir', dir); return { r, dir, inv: () => rd(join(dir, 'inventory.jsonld')), plan: () => JSON.parse(rd(join(dir, 'rerun-plan.jsonld'))), planText: () => rd(join(dir, 'rerun-plan.jsonld')) }; }
+for (const [id, schema, prev, inv, plan] of [
+  ['W-CS7-N', 'minimal-organization-v2.json', 'minimal/sdd.jsonld', 'minimal/inventory-v2.jsonld', 'minimal/rerun-plan.jsonld'],
+  ['W-CS7-Δ1', 'minimal-organization-v3-removed.json', 'minimal/sdd.jsonld', 'minimal/inventory-v3.jsonld', 'minimal/rerun-plan-removed.jsonld'],
+  ['W-CS7-Δ2', 'synthetic-it-assets-externalids.json', 'full/sdd.jsonld', 'full/inventory-externalids.jsonld', 'full/rerun-plan-switch.jsonld'],
+]) check(id, () => {
+  const x = rerun(F('jira-assets/' + schema), W(prev)); if (x.r.code !== 0) return exitIs(x.r, 0);
+  const parsed = sdd('parse', F('jira-assets/' + schema)).out;
+  return all(sameFile(x.inv(), W(inv)), sameFile(x.planText(), W(plan)), x.inv() === parsed ? true : 'rerun inventory differs from sdd parse of the same schema');
+});
+check('W-CS7-Δ2 no silent re-keying', () => { const p = JSON.parse(rd(W('full/rerun-plan-switch.jsonld'))); const prev = JSON.parse(rd(W('full/sdd.jsonld'))); return all(deq([p.unchanged, p.changed], [[], []], 'unchanged/changed'), deq([...p.removed].sort(), prev.mappings.map((m) => m.key).sort(), 'every previous key removed')); });
+check('W-CS7-Δ3', () => {
+  const x = rerun(F('jira-assets/minimal-organization-v2.json'), tmp('prev-other-terms.jsonld', OTHER_TERMS(rd(W('minimal/sdd.jsonld'))))); if (x.r.code !== 0) return exitIs(x.r, 0);
+  const p = x.plan();
+  return all(sameFile(x.inv(), W('minimal/inventory-v2.jsonld')), deq([p.unchanged, p.changed, p.added, p.removed], [[], ['at:Organization/Cost Center', 'at:Organization/Name', 'ot:Organization'], [], []], 'unchanged/changed/added/removed'),
+    deq(p.flags, [{ code: 'FL-TERMS-CHANGED', key: null, previous: '0'.repeat(64), current: TERMS }], 'flags'));
+});
+for (const [id, args, code, exit] of [
+  ['foreign @context previous SDD', [F('jira-assets/minimal-organization-v2.json'), tmp('foreign-sdd.jsonld', rd(W('minimal/sdd.jsonld')).replace('https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld', 'https://example.org/ctx.jsonld'))], 'E-CTX-EXTERNAL', 1],
+  ['previous is not an SDD', [F('jira-assets/minimal-organization-v2.json'), W('minimal/check-report.jsonld')], 'E-USAGE', 2],
+  ['unreadable schema', [join(TMP, 'missing.json'), W('minimal/sdd.jsonld')], 'E-IO', 2],
+  ['missing argument', [F('jira-assets/minimal-organization-v2.json')], 'E-USAGE', 2],
+]) check(`C-S7 refusal (R-S23): ${id}`, () => { const dir = join(TMP, `${n++}-never`); const r = sdd('rerun', ...args, '--out-dir', dir); return all(exitIs(r, exit), codeIn(r, code), r.out === '' ? true : 'wrote to stdout', nothingAt(dir)); });
+check('C-S7 E-OUT-EXISTS (R-S23)', () => { const dir = join(TMP, `${n++}-exists`); mkdirSync(dir); writeFileSync(join(dir, 'keep.txt'), 'KEEP'); const r = sdd('rerun', F('jira-assets/minimal-organization-v2.json'), W('minimal/sdd.jsonld'), '--out-dir', dir); return all(exitIs(r, 2), codeIn(r, 'E-OUT-EXISTS'), deq(readdirSync(dir), ['keep.txt'], 'directory contents')); });
+
+// SDD-F72 on the C-S6 side: nothing is carried from a previous SDD built on another term list.
+check('W-CS6-Δ10', () => accept([W('minimal/skeleton-v2.jsonld'), W('minimal/inventory-v2.jsonld'), decisions([[KEYS[2], 'accept']]), '--checked', W('minimal/check-report-rerun.jsonld'), W('minimal/proposal-rerun.txt'), '--previous', tmp('prev-other.jsonld', OTHER_TERMS(rd(W('minimal/sdd.jsonld'))))], [KEYS[2]], 'minimal/sdd-v2.jsonld',
+  (w) => { w.mappings = w.mappings.filter((m) => m.key === KEYS[2]); w.open = ['at:Organization/Name', 'ot:Organization']; }));
+
+// End to end, W-JS3: changed schema → rerun → re-prompt only changed ∪ added → relay → check → accept with --previous.
+check('C-S7 end-to-end (W-JS3)', () => {
+  const x = rerun(F('jira-assets/minimal-organization-v2.json'), W('minimal/sdd.jsonld')); if (x.r.code !== 0) return 'rerun: ' + exitIs(x.r, 0);
+  const inv = join(x.dir, 'inventory.jsonld'), plan = x.plan();
+  const sk = tmp('sk2.jsonld', sdd('skeleton', inv).out);
+  const keys = tmp('keys.json', JSON.stringify([...plan.changed, ...plan.added].sort()));
+  const dir = join(TMP, `${n++}-p`); const p = sdd('prompt', sk, inv, '--keys', keys, '--out-dir', dir); if (p.code !== 0) return 'prompt: ' + exitIs(p, 0);
+  const prompt = join(dir, 'prompt-1-of-1.txt');
+  const c = sdd('check', sk, prompt, W('minimal/proposal-rerun.txt')); if (c.code !== 0) return 'check: ' + exitIs(c, 0);
+  return all(sameFile(rd(sk), W('minimal/skeleton-v2.jsonld')), sameFile(rd(prompt), W('minimal/prompt-rerun.txt')), sameFile(c.out, W('minimal/check-report-rerun.jsonld')),
+    accept([sk, inv, decisions([[KEYS[2], 'accept']]), '--checked', tmp('rr.jsonld', c.out), W('minimal/proposal-rerun.txt'), '--previous', W('minimal/sdd.jsonld')], [KEYS[2]], 'minimal/sdd-v2.jsonld'));
+});
+// End to end, W-CS7-Δ1 continuation: removal → the next C-S6 merge retires Cost Center with its last acceptance
+// record; the unchanged mappings are carried byte-identical; nothing is re-accepted. (A merge needs one validated
+// pair, so the remaining slots are re-proposed and left undecided.)
+check('C-S7 end-to-end (W-CS7-Δ1 removal → retired)', () => {
+  const x = rerun(F('jira-assets/minimal-organization-v3-removed.json'), W('minimal/sdd.jsonld')); if (x.r.code !== 0) return 'rerun: ' + exitIs(x.r, 0);
+  const inv = join(x.dir, 'inventory.jsonld'); const sk = tmp('sk3.jsonld', sdd('skeleton', inv).out);
+  const dir = join(TMP, `${n++}-p3`); const p = sdd('prompt', sk, inv, '--out-dir', dir); if (p.code !== 0) return 'prompt: ' + exitIs(p, 0);
+  const prompt = join(dir, 'prompt-1-of-1.txt');
+  const o = JSON.parse(rd(W('minimal/proposal-pasted.txt')).match(/\{[\s\S]*\}/)[0]);
+  o.skeletonSha256 = createHash('sha256').update(readFileSync(sk)).digest('hex'); o.mappings = o.mappings.filter((m) => m.key !== KEYS[2]);
+  const paste = tmp('p3.txt', JSON.stringify(o, null, 2));
+  const c = sdd('check', sk, prompt, paste); if (c.code !== 0) return 'check: ' + exitIs(c, 0) + ' ' + c.out.slice(0, 200);
+  const r = sdd('accept', sk, inv, decisions([]), '--checked', tmp('r3.jsonld', c.out), paste, '--previous', W('minimal/sdd.jsonld'));
+  if (r.code !== 0) return 'accept with no new decisions: ' + exitIs(r, 0);
+  const out = JSON.parse(r.out), prev = JSON.parse(rd(W('minimal/sdd.jsonld')));
+  const pm = (k) => prev.mappings.find((m) => m.key === k);
+  return all(deq(out.mappings, [pm(KEYS[0]), pm(KEYS[1])], 'carried mappings byte-identical'), deq(out.open, [], 'open'), deq(out.retired, [pm(KEYS[2])], 'retired = the removed mapping with its acceptance record'));
+});
+
 rmSync(TMP, { recursive: true, force: true });
-const caps = { 'C-S1': [], 'C-S2': [], 'C-S3': [], 'C-S4': [], 'C-S5': [], 'C-S6': [], other: [] };
+const caps = { 'C-S1': [], 'C-S2': [], 'C-S3': [], 'C-S4': [], 'C-S5': [], 'C-S6': [], 'C-S7': [], other: [] };
 for (const r of results) (caps[(/W-CS(\d)/.exec(r.id) ? 'C-S' + /W-CS(\d)/.exec(r.id)[1] : /^C-S\d/.exec(r.id)?.[0]) || 'other'] || caps.other).push(r);
 for (const [cap, rs] of Object.entries(caps)) {
   if (!rs.length) continue;

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SDD CLI (C-S1 parse, C-S2 skeleton, C-S3 prompt, C-S4 check, C-S5 repair, C-S6 accept). Reads files, passes bytes to the pure core,
+// SDD CLI (C-S1 parse, C-S2 skeleton, C-S3 prompt, C-S4 check, C-S5 repair, C-S6 accept, C-S7 rerun). Reads files, passes bytes to the pure core,
 // writes canonical bytes. Exit codes per R-S23: 0 success; 1 domain report of errors; 2 usage / I/O.
 
 import fs from 'node:fs';
@@ -14,6 +14,7 @@ import { checkProposal } from '../core/check.mjs';
 import { buildRepairPrompt } from '../core/repair.mjs';
 import { indexTerms } from '../core/terms.mjs';
 import { acceptMappings } from '../core/accept.mjs';
+import { rerunPlan } from '../core/rerun.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const RES = {
@@ -39,6 +40,7 @@ const COMMANDS = {
   check: { positional: 3, options: ['--out'] },
   repair: { positional: 4, options: ['--out'] },
   accept: { positional: 3, options: ['--checked', '--previous', '--out'] },
+  rerun: { positional: 2, options: ['--out-dir'], required: ['--out-dir'] },
 };
 
 function parseArgs(argv) {
@@ -93,6 +95,14 @@ function emit(out, bytes) {
   if (out === undefined) process.stdout.write(bytes);
   else writeNew(out, bytes);
 }
+function makeOutDir(dir) {
+  try {
+    fs.mkdirSync(dir);
+  } catch (e) {
+    if (e.code === 'EEXIST') throw new Exit(2, { code: 'E-OUT-EXISTS', message: `${dir} exists` });
+    throw new Exit(2, { code: 'E-IO', message: `cannot create ${dir}: ${e.code || e.message}` });
+  }
+}
 function loadTerms() {
   return indexTerms(readResourceJson(RES.terms));
 }
@@ -137,12 +147,7 @@ function run(argv) {
         const template = fromUtf8(readInput(RES.template));
         const { promptSet, prompts } = buildPrompts({ skeletonBytes, inventoryBytes, keys, budget, template, terms: loadTerms() });
         const dir = opts['--out-dir'];
-        try {
-          fs.mkdirSync(dir);
-        } catch (e) {
-          if (e.code === 'EEXIST') throw new Exit(2, { code: 'E-OUT-EXISTS', message: `${dir} exists` });
-          throw new Exit(2, { code: 'E-IO', message: `cannot create ${dir}: ${e.code || e.message}` });
-        }
+        makeOutDir(dir);
         for (const p of prompts) writeNew(path.join(dir, p.file), p.bytes);
         writeNew(path.join(dir, 'prompt-set.jsonld'), canonicalBytes(promptSet));
         return 0;
@@ -179,6 +184,17 @@ function run(argv) {
         const at = new Date().toISOString().replace(/\.[0-9]{3}Z$/, 'Z');
         const sddValue = acceptMappings({ skeletonBytes, inventoryBytes, decisionsBytes, checked: pairs, previousBytes, terms: loadTerms(), at });
         emit(opts['--out'], canonicalBytes(sddValue));
+        return 0;
+      }
+      case 'rerun': {
+        const schemaBytes = readInput(positional[0]);
+        const previousBytes = readInput(positional[1]);
+        const { inventory, plan } = rerunPlan({ schemaBytes, previousBytes, atlassianSchema: readResourceJson(RES.atlassian), terms: loadTerms() });
+        const dir = opts['--out-dir'];
+        makeOutDir(dir);
+        writeNew(path.join(dir, 'inventory.jsonld'), canonicalBytes(inventory));
+        if (plan === null) return 1; // errored inventory: the domain report alone (R-S3, R-S23); no plan
+        writeNew(path.join(dir, 'rerun-plan.jsonld'), canonicalBytes(plan));
         return 0;
       }
     }

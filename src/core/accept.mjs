@@ -56,18 +56,20 @@ function readReport(bytes, i) {
   return r;
 }
 
-function readPrevious(bytes) {
+/** A previous SemanticDataDictionary (C-S6 --previous, C-S7). Context foreign -> E-CTX-EXTERNAL; wrong kind -> E-USAGE. */
+export function readPrevious(bytes) {
   const p = readJsonLd(bytes, 'previous SDD');
   if (p['@type'] !== 'SemanticDataDictionary' || !Array.isArray(p.mappings) || !Array.isArray(p.open) || !Array.isArray(p.retired) ||
       !p.mappings.every((m) => isObj(m) && isStr(m.key) && isStr(m.kind) && isObj(m.source) && isStr(m.source.itemSha256)) ||
-      !p.retired.every((m) => isObj(m) && isStr(m.key))) {
+      !p.retired.every((m) => isObj(m) && isStr(m.key)) ||
+      !isObj(p.source) || !isStr(p.source.identification) || !isObj(p.environment) || !isStr(p.environment.termListSha256)) {
     throw usage('the previous file is not a SemanticDataDictionary');
   }
   return p;
 }
 
 /** R-S1 item hash of the inventory entry a slot was built from (containment: its FL-CONTAINMENT entry). */
-function sourceOf(slot, inventory) {
+export function sourceOf(slot, inventory) {
   if (slot.kind === 'type') {
     const t = inventory.objectTypes.find((x) => x.key === slot.key);
     return { source: { name: t.name, externalId: t.externalId, itemSha256: itemSha256(t) } };
@@ -169,7 +171,10 @@ export function acceptMappings({ skeletonBytes, inventoryBytes, decisionsBytes, 
   }
 
   // 5. Build: decided keys from the covering report; undecided keys carried from the previous SDD if unchanged (R-S17).
-  const prevByKey = new Map(previous ? previous.mappings.map((m) => [m.key, m]) : []);
+  // R-S17 (SDD-F72): a previous SDD made under another term list carries no mapping; its keys that are still slots
+  // and not decided here become open, and removed keys still move to `retired`.
+  const carryable = previous !== null && previous.environment.termListSha256 === terms.termsSha256;
+  const prevByKey = new Map(carryable ? previous.mappings.map((m) => [m.key, m]) : []);
   const mappings = [];
   const open = [];
   for (const slot of slots) {

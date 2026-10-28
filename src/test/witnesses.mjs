@@ -1,4 +1,4 @@
-// Witness runner for C-S1..C-S6 (and the W-JS1..W-JS4 chain steps using those capabilities).
+// Witness runner for C-S1..C-S7 (and the W-JS1..W-JS4 chains through the CLI).
 // Runs the CLI as a subprocess and compares outputs byte for byte, or checks the stated expectation.
 // Usage: node src/test/witnesses.mjs   (from the repository root). Writes only under src/.witness-tmp (removed).
 
@@ -623,6 +623,154 @@ witness('C-S6 merge after W-CS7-Δ1 (removed key → retired with its acceptance
   const v = json(r.stdout), prev = json(read(W('minimal/sdd.jsonld')));
   return all(expect(r.status === 0, r.stderr), expect(eq(v.retired, [prev.mappings[2]]), 'retired'),
     expect(eq(v.mappings, prev.mappings.slice(0, 2)), 'carried'), expect(eq(v.open, []), 'open'));
+});
+
+// ---------- C-S6 term-list change (SDD-F72) ----------
+const ZERO64 = '0'.repeat(64);
+const TERMS_SHA = 'a9e01756d749655a53088833bb97612791caf9a19220065848c826f99985cd39';
+const zeroTermsSdd = (file = 'minimal/sdd.jsonld') => {
+  const text = read(W(file)).toString('utf8');
+  if (!text.includes(`"termListSha256": "${TERMS_SHA}"`)) throw new Error('fixture term-list hash not found');
+  return put('sdd-zero-terms.jsonld', text.replace(`"termListSha256": "${TERMS_SHA}"`, `"termListSha256": "${ZERO64}"`));
+};
+// A validated (report, paste) pair for the v3 schema's two remaining slots, built through the CLI.
+const v3Pair = (inv3) => {
+  const sk3 = tmp('skeleton-v3.jsonld');
+  const s = sdd('skeleton', inv3, '--out', sk3);
+  const { r, d } = promptDir(sk3, inv3);
+  const pr = path.join(d, 'prompt-1-of-1.txt');
+  const skHash = read(pr).toString('utf8').split('\n').find((l) => l.startsWith('skeleton: ')).slice('skeleton: '.length);
+  const paste = put('p3.txt', JSON.stringify({ skeletonSha256: skHash, batch: '1/1', mappings: nProposal().mappings.slice(0, 2) }));
+  const rep = tmp('r3.jsonld');
+  const c = sdd('check', sk3, pr, paste, '--out', rep);
+  return { sk3, rep, paste, codes: [s, r, c].map((x) => x.status) };
+};
+witness('W-CS6-Δ10', () => {
+  const r = accept(W('minimal/skeleton-v2.jsonld'), W('minimal/inventory-v2.jsonld'), DEC([ACC3[2]]), [RERUN_PAIR], '--previous', zeroTermsSdd());
+  const v = json(r.stdout);
+  return all(expect(r.status === 0, r.stderr), expect(eq(v.mappings.map((m) => m.key), ['at:Organization/Cost Center']), 'mappings'),
+    expect(v.mappings[0].acceptance.at !== WITNESS_AT, 'Cost Center not accepted in this act'),
+    expect(eq(v.open, ['at:Organization/Name', 'ot:Organization']), `open ${JSON.stringify(v.open)}`), expect(eq(v.retired, []), 'retired'));
+});
+witness('W-CS6-Δ10 (another term list: removed keys still retire, nothing carried)', () => {
+  const inv3 = W('minimal/inventory-v3.jsonld');
+  const { sk3, rep, paste, codes: c } = v3Pair(inv3);
+  const r = accept(sk3, inv3, DEC([]), [[rep, paste]], '--previous', zeroTermsSdd());
+  const v = json(r.stdout), prev = json(read(W('minimal/sdd.jsonld')));
+  return all(expect(c.every((x) => x === 0), `exit codes ${c}`), expect(r.status === 0, r.stderr), expect(eq(v.mappings, []), 'carried'),
+    expect(eq(v.open, ['at:Organization/Name', 'ot:Organization']), 'open'), expect(eq(v.retired, [prev.mappings[2]]), 'retired'));
+});
+
+// ---------- C-S7 ----------
+const rerun = (schema, prev, ...extra) => { const d = tmp('rerun'); const r = sdd('rerun', schema, prev, '--out-dir', d, ...extra); return { r, d }; };
+const rerunMatches = (schema, prev, invFile, planFile) => {
+  const { r, d } = rerun(schema, prev);
+  const files = fs.existsSync(d) ? fs.readdirSync(d).sort() : [];
+  return all(expect(r.status === 0, `exit ${r.status} ${r.stderr}`), expect(eq(files, ['inventory.jsonld', 'rerun-plan.jsonld']), files.join()),
+    expect(r.stdout.length === 0, 'stdout written'),
+    expect(same(read(path.join(d, 'inventory.jsonld')), read(W(invFile))), `inventory differs from ${invFile}`),
+    expect(same(read(path.join(d, 'inventory.jsonld')), sdd('parse', schema).stdout), 'inventory differs from sdd parse'),
+    expect(same(read(path.join(d, 'rerun-plan.jsonld')), read(W(planFile))), `plan differs from ${planFile}`));
+};
+witness('W-CS7-N', () => rerunMatches(F('minimal-organization-v2.json'), W('minimal/sdd.jsonld'), 'minimal/inventory-v2.jsonld', 'minimal/rerun-plan.jsonld'));
+witness('W-CS7-Δ1', () => rerunMatches(F('minimal-organization-v3-removed.json'), W('minimal/sdd.jsonld'), 'minimal/inventory-v3.jsonld', 'minimal/rerun-plan-removed.jsonld'));
+witness('W-CS7-Δ1 (continuation through the CLI: the next C-S6 merge retires Cost Center with its last acceptance record)', () => {
+  const { r: s1, d } = rerun(F('minimal-organization-v3-removed.json'), W('minimal/sdd.jsonld'));
+  const inv = path.join(d, 'inventory.jsonld'), plan = json(read(path.join(d, 'rerun-plan.jsonld')));
+  const { sk3, rep, paste, codes: c } = v3Pair(inv);
+  const s6 = accept(sk3, inv, DEC([]), [[rep, paste]], '--previous', W('minimal/sdd.jsonld'));
+  const v = json(s6.stdout), prev = json(read(W('minimal/sdd.jsonld')));
+  return all(expect(s1.status === 0 && c.every((x) => x === 0) && s6.status === 0, `exit codes ${[s1.status, ...c, s6.status]} ${s6.stderr}`),
+    expect(eq([...plan.changed, ...plan.added], []), 'nothing to re-send'),
+    expect(eq(v.retired, [prev.mappings[2]]), 'retired'), expect(eq(v.mappings, prev.mappings.slice(0, 2)), 'carried byte-identical'),
+    expect(eq(v.open, []), 'open'));
+});
+witness('W-CS7-Δ2', () => {
+  const ok = rerunMatches(F('synthetic-it-assets-externalids.json'), W('full/sdd.jsonld'), 'full/inventory-externalids.jsonld', 'full/rerun-plan-switch.jsonld');
+  if (ok !== true) return ok;
+  const { d } = rerun(F('synthetic-it-assets-externalids.json'), W('full/sdd.jsonld'));
+  const p = json(read(path.join(d, 'rerun-plan.jsonld'))), prev = json(read(W('full/sdd.jsonld')));
+  return all(expect(p.unchanged.length === 0 && p.changed.length === 0, 'matched items'),
+    expect(eq(p.removed, prev.mappings.map((m) => m.key).sort()), 'removed ≠ every previous key'), expect(p.added.length === 52, 'added'),
+    expect(eq(p.flags, [{ code: 'FL-KEY-SCHEME-CHANGED', key: null, previous: 'name', current: 'externalId' }]), 'flags'));
+});
+witness('W-CS7-Δ3', () => {
+  const { r, d } = rerun(F('minimal-organization-v2.json'), zeroTermsSdd());
+  const p = json(read(path.join(d, 'rerun-plan.jsonld')));
+  return all(expect(r.status === 0, `exit ${r.status} ${r.stderr}`),
+    expect(same(read(path.join(d, 'inventory.jsonld')), read(W('minimal/inventory-v2.jsonld'))), 'inventory'),
+    expect(eq(p.unchanged, []), 'unchanged'), expect(eq(p.changed, ['at:Organization/Cost Center', 'at:Organization/Name', 'ot:Organization']), 'changed'),
+    expect(eq(p.added, []) && eq(p.removed, []), 'added/removed'),
+    expect(eq(p.flags, [{ code: 'FL-TERMS-CHANGED', key: null, previous: ZERO64, current: TERMS_SHA }]), `flags ${JSON.stringify(p.flags)}`),
+    expect(same(read(path.join(d, 'rerun-plan.jsonld')), Buffer.from(JSON.stringify(p, null, 2) + '\n')), 'not canonical'));
+});
+witness('C-S7 determinism (two runs, identical bytes)', () => {
+  const a = rerun(F('synthetic-it-assets-externalids.json'), W('full/sdd.jsonld')).d, b = rerun(F('synthetic-it-assets-externalids.json'), W('full/sdd.jsonld')).d;
+  return expect(['inventory.jsonld', 'rerun-plan.jsonld'].every((f) => same(read(path.join(a, f)), read(path.join(b, f)))), 'differ');
+});
+witness('C-S7 same schema again: every item unchanged', () => {
+  const { r, d } = rerun(F('synthetic-it-assets.json'), W('full/sdd.jsonld'));
+  const p = json(read(path.join(d, 'rerun-plan.jsonld')));
+  return all(expect(r.status === 0, r.stderr),
+    expect(p.unchanged.length === 52 && !p.changed.length && !p.added.length && !p.removed.length && !p.flags.length, JSON.stringify(p).slice(0, 300)));
+});
+witness('C-S7 errored new schema: exit 1, the errored inventory (= sdd parse) alone, no plan', () => {
+  const schema = F('invalid/unknown-reference-target.json');
+  const { r, d } = rerun(schema, W('minimal/sdd.jsonld'));
+  return all(expect(r.status === 1, `exit ${r.status}`), expect(eq(fs.readdirSync(d), ['inventory.jsonld']), fs.readdirSync(d).join()),
+    expect(same(read(path.join(d, 'inventory.jsonld')), sdd('parse', schema).stdout), 'inventory ≠ sdd parse'));
+});
+witness('C-S7 refusals (exit codes, nothing written, one stderr line, precedence)', () => {
+  const v2 = F('minimal-organization-v2.json'), prev = W('minimal/sdd.jsonld');
+  const variant = (name, f) => { const v = json(read(prev)); f(v); return put(name, JSON.stringify(v, null, 2) + '\n'); };
+  const foreign = variant('foreign-sdd.jsonld', (v) => { v['@context'] = 'https://example.org/ctx.jsonld'; });
+  const noEnv = variant('noenv-sdd.jsonld', (v) => { delete v.environment; });
+  const otherFormat = variant('fmt-sdd.jsonld', (v) => { v.source.format = 'csv/1'; });
+  const existing = tmp('exists'); fs.mkdirSync(existing); fs.writeFileSync(path.join(existing, 'keep.txt'), 'keep');
+  const missing = path.join(TMP, 'missing.json');
+  const at = (args, status, code) => {
+    const d = tmp('rr');
+    const r = sdd('rerun', ...args.map((a) => (a === '$D' ? d : a)));
+    return all(refused(r, status, code), expect(!fs.existsSync(d), `${code}: out-dir created`));
+  };
+  const ex = sdd('rerun', v2, prev, '--out-dir', existing);
+  return all(
+    at([v2, prev], 2, 'E-USAGE'), // --out-dir missing
+    at([v2, '--out-dir', '$D'], 2, 'E-USAGE'),
+    at([v2, prev, prev, '--out-dir', '$D'], 2, 'E-USAGE'),
+    at([v2, prev, '--out', '$D'], 2, 'E-USAGE'),
+    refused(ex, 2, 'E-OUT-EXISTS'),
+    expect(eq(fs.readdirSync(existing), ['keep.txt']) && read(path.join(existing, 'keep.txt')).toString() === 'keep', 'existing dir touched'),
+    refused(sdd('rerun', missing, prev, '--out-dir', existing), 2, 'E-OUT-EXISTS'), // out-dir checked before inputs are read
+    at([missing, prev, '--out-dir', '$D'], 2, 'E-IO'),
+    at([v2, missing, '--out-dir', '$D'], 2, 'E-IO'),
+    at([v2, foreign, '--out-dir', '$D'], 1, 'E-CTX-EXTERNAL'),
+    at([F('invalid/unknown-reference-target.json'), foreign, '--out-dir', '$D'], 1, 'E-CTX-EXTERNAL'), // previous refused before the schema is parsed
+    at([v2, W('minimal/inventory.jsonld'), '--out-dir', '$D'], 2, 'E-USAGE'), // not an SDD
+    at([v2, noEnv, '--out-dir', '$D'], 2, 'E-USAGE'),
+    at([v2, otherFormat, '--out-dir', '$D'], 2, 'E-USAGE'),
+    at([v2, put('notjson.jsonld', 'nope'), '--out-dir', '$D'], 2, 'E-IO'));
+});
+witness('W-JS3 (full chain through the CLI: rerun → skeleton → prompt --keys → check → accept --previous)', () => {
+  const { r: s2, d } = rerun(F('minimal-organization-v2.json'), W('minimal/sdd.jsonld'));
+  const inv = path.join(d, 'inventory.jsonld'), planPath = path.join(d, 'rerun-plan.jsonld'), plan = json(read(planPath));
+  const sk = tmp('skeleton-v2.jsonld');
+  const s3 = sdd('skeleton', inv, '--out', sk);
+  const keyList = [...plan.changed, ...plan.added].sort();
+  const keys = put('keys-rerun.json', JSON.stringify(keyList));
+  const { r: s4, d: pd } = promptDir(sk, inv, '--keys', keys);
+  const pr = path.join(pd, 'prompt-1-of-1.txt'), rep = tmp('check-report-rerun.jsonld');
+  const s5 = sdd('check', sk, pr, W('minimal/proposal-rerun.txt'), '--out', rep);
+  const out = tmp('sdd-v2.jsonld');
+  const s6 = accept(sk, inv, DEC([ACC3[2]]), [[rep, W('minimal/proposal-rerun.txt')]], '--previous', W('minimal/sdd.jsonld'), '--out', out);
+  return all(expect([s2, s3, s4, s5].every((x) => x.status === 0), `exit codes ${[s2, s3, s4, s5].map((x) => x.status)}`),
+    expect(same(read(planPath), read(W('minimal/rerun-plan.jsonld'))), 'plan'),
+    expect(same(read(sk), read(W('minimal/skeleton-v2.jsonld'))), 'skeleton-v2'),
+    expect(eq(keyList, json(read(W('minimal/keys-rerun.json')))), 'keys'),
+    expect(same(read(pr), read(W('minimal/prompt-rerun.txt'))), 'prompt-rerun'),
+    expect(same(read(rep), read(W('minimal/check-report-rerun.jsonld'))), 'check-report-rerun'),
+    sddMatches(s6, read(out), 'minimal/sdd-v2.jsonld', 2),
+    expect(eq(json(read(out)).mappings.slice(0, 2), json(read(W('minimal/sdd.jsonld'))).mappings.slice(0, 2)), 'carried mappings differ'));
 });
 
 // ---------- end-to-end through the CLI: schema → parse → skeleton → prompt → check → accept ----------

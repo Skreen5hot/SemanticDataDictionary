@@ -533,3 +533,35 @@ The item (7) jira-assets base-name reading was made explicit.
   - the previous SDD's term list is not compared with the current one.
 - **All other checks pass:** the regressions (registry, witness, oracle, citations and term list); the mutation test
   (84 corruptions detected, control correct); the difftest (28/28).
+
+## C-S7 rerun built; SDD-F72; v1 roadmap (2026-10-28, appended; sections above unamended)
+
+| Id | Sev | Finding | Disposition |
+|---|---|---|---|
+| **SDD-F72** | Major | **A previous SDD built on another term list was carried silently.** Demonstrated: `sdd accept --previous` with a previous SDD whose `termListSha256` differs exited 0 and carried both earlier acceptances unchanged. The spec had no rule. Found against the registrar's C-S7 requirement ("incompatible term-list versions … never silently accepted"). | **Corrected.** R-S17 now applies §11 supersession: a term-list change marks no item `unchanged` and adds FL-TERMS-CHANGED (R-S19), and C-S6's `--previous` merge carries nothing (those keys become `open`). Witnesses W-CS7-Δ3 and W-CS6-Δ10. *Alternative, if the registrar prefers:* refuse outright. Not chosen, because it would discard every earlier decision. |
+
+- **C-S7 built** by the independent implementer (`src/core/rerun.mjs`, CLI `sdd rerun`), with the C-S6 F72 fix in
+  `src/core/accept.mjs`.
+- **Independent judge: 104/104.** The C-S7 checks were written from the spec before the code existed:
+  - W-CS7-N, Δ1 and Δ2 are byte-equal for both the inventory and the plan. Each inventory also equals `sdd parse`
+    of the same schema.
+  - Δ2 does no silent re-keying.
+  - Δ3: another term list gives every item `changed` plus FL-TERMS-CHANGED.
+  - W-CS6-Δ10 carries nothing.
+  - The refusals (E-CTX-EXTERNAL; E-USAGE for a non-SDD previous; E-IO; E-USAGE; E-OUT-EXISTS with the directory
+    untouched) write nothing.
+  - **End to end:** the W-JS3 chain (rerun → re-prompt only changed ∪ added → check → accept with `--previous`)
+    equals `sdd-v2.jsonld`, and every intermediate is byte-equal. The removal chain retires Cost Center with its
+    acceptance record and carries the others byte-identical.
+- The implementer's runner: 97/97.
+- **Readings recorded, no spec change** (none blocking):
+  - previous items are the SDD's `mappings`, so a previously open key comes back as `added`;
+  - a kind change counts as `changed`;
+  - FL-KEY-SCHEME-CHANGED fires on any identification change, including to or from `mixed`;
+  - an errored new schema writes only its inventory (exit 1, no plan);
+  - a `--previous` SDD lacking `termListSha256` or `identification` is refused (E-USAGE);
+  - the RerunPlan key order follows the witnesses (its schema is part of OS-1).
+- **All other checks pass:** the regressions (registry, witness, oracle, citations, term list), the mutation test (84
+  corruptions detected, control correct) and the difftest (28/28).
+- **`project/PLAN.md`** now shows the five-milestone path to v1. Milestones 1–2 are complete and the offline HTML
+  application is next.

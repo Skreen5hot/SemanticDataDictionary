@@ -4,9 +4,8 @@
 artifact mapping every object type, attribute and reference onto BFO/CCO. The structural work is mechanical and
 offline; the meaning is proposed by the enterprise LLM through a copy-paste relay and accepted by a human.
 
-**Governing documents.** Decisions: [`DECISIONS.md`](DECISIONS.md) (ADR-001 to ADR-004). Rationale:
-[`../SDD-V2.0-SPEC.md`](../SDD-V2.0-SPEC.md). Findings to resolve: [`../review/register.md`](../review/register.md)
-(SDD-F01 to F24). Method: *The Falsifiable Spec v0.4* (Specification-Refinement-System).
+**Governing documents.** Decisions: [`DECISIONS.md`](DECISIONS.md) (ADR-001 to ADR-008). Spec: [`../spec/sdd-service.md`](../spec/sdd-service.md) v0.4.1. Rationale:
+[`../SDD-V2.0-SPEC.md`](../SDD-V2.0-SPEC.md). Findings: [`../review/register.md`](../review/register.md). Method: *The Falsifiable Spec v0.4* (Specification-Refinement-System).
 
 ## The workflow the service implements
 
@@ -35,57 +34,101 @@ offline; the meaning is proposed by the enterprise LLM through a copy-paste rela
 A later, separate step is **applying** an accepted SDD to actual Jira data to produce RDF. It is out of scope for v1
 and declared as a non-goal, so v1 stays small.
 
-## Phases
+## Path to v1 (registrar direction, 2026-10-28)
 
-| # | Phase | Output | Exit condition |
-|---|---|---|---|
-| 0 | **Decisions** (this file + ADRs) | ADR-001 to ADR-004 | ADR-003 accepted by the registrar |
-| 1 | **Ground truth** | Synthetic Jira Assets fixture schema covering every attribute type and edge case; pinned BFO/CCO releases plus the permitted-term list; Atlassian attribute types confirmed | Fixtures committed; term list hashed |
-| 2 | **Author the spec pair** | `spec/sdd-service.md` (method §4: capabilities, journeys, seams, rules, properties, acceptance, closure report) **and** `spec/sdd-operator.md` (method §4A: promises and scenes for the relay loop) | Closure report with 0 orphans |
-| 3 | **Grade and refine** | SRS cycle: two isolated raters, adjudication, findings, proposals, walks | Disposition **D-3**, readiness stated honestly |
-| 4 | **Build** | Core library (shared), offline HTML tool, Node CLI. **The HTML tool is published through GitHub Pages** (Actions is enabled on the repo), at `https://skreen5hot.github.io/SemanticDataDictionary/`, which also serves the JSON-LD context at its IRI | Every witness executed in a clean environment; Pages deploy green |
-| 5 | **Pilot** | You run it on the enterprise schema inside the enterprise | Your acceptance; break events logged |
+Five milestones, in order. Every implementation slice is built by an independent implementer from the spec alone and
+judged by `tools/run-witnesses.mjs` (written from the spec text, never from the implementation). No new grading
+cycles, architecture or scope unless a demonstrated blocker needs a registrar decision.
 
-Phase 2 also disposes all 24 cycle-1 findings: each one is resolved, deferred, or rejected, with reasons, in the new
-spec's register.
+### 1. C1–C6 core: COMPLETE
 
-## Draft capability list (for Phase 2)
+- **Delivered:**
+  - pure core `src/core/` (no I/O, clock or randomness; browser-capable) and the CLI `src/cli/sdd.mjs`, covering
+    parse, skeleton, prompt, check, repair and accept;
+  - spec v0.4.1 (F67–F71 resolved; Decision C);
+  - CAP-2 lifted (Decision B).
+- **Completion condition (met):** every C-S1–C-S6 witness passes under the independent judge (91/91 at `428c10b`),
+  including end-to-end repair and acceptance. All regression checks pass.
+- **Blockers:** none.
 
-| Id | Capability | Deterministic? |
+### 2. C7 schema-change handling: COMPLETE
+
+- **Deliverables:**
+  - `sdd rerun` (C-S7): new schema + previous SDD → Inventory + RerunPlan;
+  - SDD-F72: a different term list never carries silently;
+  - witnesses W-CS7-N, Δ1–Δ3 and W-CS6-Δ10;
+  - the W-JS3 chain end to end, and removal → retired.
+- **Completion condition (met):** the independent judge passes every C-S7 check (104/104 overall) and the
+  regression suite is green. This closes the capability part of OS-4.
+- **Blockers:** none.
+
+### 3. Offline HTML application: NEXT
+
+- **Deliverables:**
+  - `site/`: one offline page reusing `src/core/` unchanged, implementing SDD-operator CV-O1–CV-O3 and PR-O1–PR-O6;
+  - the bundled term list and the JSON-LD context `context/sdd-v1.jsonld` (the context part of **OS-1**), served at
+    its IRI by GitHub Pages;
+  - the Pages deploy;
+  - **OO-1:** `harness/netguard.mjs` and the H-O1 (Playwright) and H-O2 harnesses, with every W-JO\* and W-PRO\*
+    scene executed.
+- **Completion condition:**
+  - every SDD-operator scene passes under H-O1 with the browser offline;
+  - browser and CLI produce identical bytes for the same inputs (V-S1 parity);
+  - E-O1 (works from `file://`), E-O2 and E-O3 (≤ 3 MB) are met;
+  - the Pages deploy is green.
+- **Blockers:** none known.
+
+### 4. Release verification: PENDING
+
+- **Deliverables:**
+  - **OS-1** (remainder): JSON Schemas for the remaining artifacts, plus SHACL shapes for the SDD with
+    `minimal/sdd.jsonld` conforming;
+  - **OS-3:** generators G1 and K1, with V-S1–V-S6 run at their stated n;
+  - **OO-2:** generators G2 and K2, with V-O1–V-O3 run;
+  - **OS-6:** `bench/` on the reference machine, covering E-S1–E-S3;
+  - **H-S1:** every witness re-run in a clean, network-disabled container (the execution remainder of OS-4);
+  - both acceptance conjunctions evaluated (SDD §10, SDD-operator §14), and a release candidate tagged.
+- **Completion condition:** both acceptance conjunctions hold, so readiness is no longer BLOCKED.
+- **Blockers:** none. The registrar must name the reference machine for OS-6 and E-O2 (an input, not a design
+  decision).
+
+### 5. Enterprise pilot and registrar acceptance: PENDING
+
+- **Deliverables:**
+  - the release candidate run on the enterprise Jira Assets schema inside the enterprise: the offline page (or its
+    saved copy), relayed by hand to the enterprise LLM;
+  - break events logged;
+  - fixes only for demonstrated defects.
+- **Completion condition:** the registrar's final acceptance of v1.
+- **Blockers:** none known. This needs the registrar's access to the enterprise environment. The open request to
+  Ontology-Template (CCO hierarchy register) does not block: ADR-008 Option B is in place.
+
+### Checks to run before any commit to `spec/`, `fixtures/`, `src/` or `tools/`
+
+`node tools/run-witnesses.mjs`, `node tools/registry-check.mjs`, `node tools/witness-check.mjs`,
+`node tools/oracle-check.mjs`, `node tools/citations.mjs`, `node tools/build-term-list.mjs --check`, and
+`node tools/mutation-test.mjs` when any check changes.
+
+## Capabilities (v1 scope, fixed)
+
+| Id | Capability | Status |
 |---|---|---|
-| C1 | **Parse**: Jira Assets schema → structural inventory, with flagged ambiguities | Yes |
-| C2 | **Skeleton**: inventory → SDD skeleton (all items, meaning fields empty) | Yes |
-| C3 | **Prompt**: skeleton + term list + output schema + rules → prompt text | Yes |
-| C4 | **Check**: pasted LLM reply → itemized errors, or a validated proposal | Yes (the LLM reply is the input; nothing is assumed about it) |
-| C5 | **Repair prompt**: errors → follow-up prompt | Yes |
-| C6 | **Accept**: per-mapping human accept or reject → accepted SDD plus acceptance record | Yes (the human act is the input) |
-| C7 | **Re-run on schema change**: new schema and previous SDD → only new or changed items sent to the LLM | Yes |
+| C1 | **Parse**: Jira Assets schema → structural inventory, with flagged ambiguities | Built |
+| C2 | **Skeleton**: inventory → SDD skeleton (all items, meaning fields empty) | Built |
+| C3 | **Prompt**: skeleton + term list + output schema + rules → prompt text | Built |
+| C4 | **Check**: pasted LLM reply → itemized errors, or a validated proposal | Built |
+| C5 | **Repair prompt**: errors → follow-up prompt for the same batch | Built |
+| C6 | **Accept**: per-mapping human accept or reject → accepted SDD plus acceptance record | Built |
+| C7 | **Re-run on schema change**: new schema and previous SDD → only new or changed items go back to the LLM | Built |
 
-Draft journeys: **J1** first dictionary (C1→C6) · **J2** repair loop (C4→C5→C4) · **J3** schema changed (C7→C3→…).
+## History (phases 0–3, condensed)
 
-## Status
-
-- **Phase 0: complete** (2026-10-27). The registrar approved the plan and resolved all four open questions: ADR-003
-  accepted with amendment; ADR-005 (pinned ontologies from Ontology-Template); ADR-006 (JSON-LD canonical);
-  third individual deferred (ADR-001); boundary and scope fixed (ADR-007).
-- **Phase 1: complete** (2026-10-27). The blocking question below was resolved by the registrar: Option B (ADR-008),
-  with a request sent to Ontology-Template. Both open points are answered (`SOURCE-FORMAT.md`).
-- **Phase 2: drafted** (2026-10-27). [`spec/sdd-service.md`](../spec/sdd-service.md) (substrate: 7 capabilities, 4
-  journeys, 19 rules, 6 properties) and [`spec/sdd-operator.md`](../spec/sdd-operator.md) (companion: 6 promises, 4
-  journeys, 15 scenes), woven by WV-1. Both closure reports show 0 orphans. Minimal-fixture witnesses are literal
-  files with computed hashes (`fixtures/witnesses/minimal/`). All 24 cycle-1 findings are dispositioned
-  (`review/register.md`). Self-identified gaps: crossing examples S-S6 and S-S7 pending (OS-4); W-CS4-Δ5 literal
-  pending (OS-2).
-- **Spec v0.4 merged (2026-10-28, prop-002).** CAP-2 active pending independent reciprocity verification. Checks to run
-  before any change to `spec/` or `fixtures/`: `registry-check`, `witness-check`, `oracle-check`, `citations`,
-  `build-term-list --check`, and `mutation-test` when any check changes.
-- **Minimal core (C1–C4): authorized 2026-10-28,** bounded: parse, skeleton, prompt, check against the executable
-  witnesses. Not the full application; no cycle 4.
-- **Phase 3 (history):** Cycle 2 graded v0.1 at joint D-1; prop-001 was merged as v0.2 (Decisions A and B); OS-2
-  and OS-7 were completed as v0.3 (see `review/register.md`). **Cycle 3 awaits the registrar's authorization.**
-  Before any commit to `spec/`, run: `node tools/registry-check.mjs`, `node tools/citations.mjs`,
-  `node tools/build-term-list.mjs --check`.
-- **Publishing (registrar, 2026-10-27):** GitHub Actions is on for Pages; the HTML tool ships there (Phase 4).
+- **Phases 0–1 (2026-10-27):** the decisions (ADR-001 to ADR-008) and the ground truth (pinned ontologies, term list,
+  fixtures, Atlassian schema) are complete.
+- **Phases 2–3:** the spec pair was authored and graded over three cycles, and prop-001 and prop-002 were merged. The
+  history is in `review/register.md`.
+- **Process change (2026-10-28):** incremental build with independent executable verification replaced paper
+  grading cycles.
 
 ### Phase 1 deliverables
 
