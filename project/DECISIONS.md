@@ -123,7 +123,10 @@ proposed by the enterprise LLM through a manual relay:
 3. The tool **checks the output deterministically**: format, full coverage (every object type, attribute and
    reference mapped exactly once), only permitted terms, BFO category checks, and the mapping rules. Every error
    names the item and the rule it breaks.
-4. On errors, the tool **generates a repair prompt** listing only the errors, and the relay repeats.
+4. On errors, the tool **generates a repair prompt** listing the errors, and the relay repeats.
+   **Amended 2026-10-28 (registrar Decision A, prop-002 review; SDD-F63):** the repair prompt lists every error *and*
+   resends the batch's DATA lines, asking for the complete corrected mapping set (SDD R-S22, as merged in v0.2). Only
+   the errors are new; resending the batch keeps one validated report per batch and makes acceptance unambiguous.
 5. The **human accepts or rejects each mapping** explicitly. Only accepted mappings enter the final SDD, which
    records who accepted what and when.
 

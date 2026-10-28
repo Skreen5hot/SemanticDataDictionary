@@ -1,0 +1,1425 @@
+{
+  "@context": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld",
+  "@type": "SemanticDataDictionary",
+  "sddVersion": 1,
+  "source": {
+    "format": "jira-assets-import/2021_09_15",
+    "sha256": "2794d08cdf3a87d72151d4c8dc84ac999291010bf04ccc5ca8d22ad736b4eded",
+    "schemaName": "Synthetic IT Asset Register",
+    "identification": "name",
+    "inventorySha256": "1db35f4f744fece9e4c018982b182cef3deaf5a7eaeb0274936ac95d16058fd8"
+  },
+  "environment": {
+    "termListSha256": "a9e01756d749655a53088833bb97612791caf9a19220065848c826f99985cd39",
+    "ontologyTemplateCommit": "114f28db82adf727f5e31aab4872ed56550e84af",
+    "contextIri": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld"
+  },
+  "absenceKinds": [
+    "missing",
+    "explicit_null",
+    "empty_string",
+    "indistinguishable"
+  ],
+  "mappings": [
+    {
+      "key": "ot:Organization",
+      "kind": "type",
+      "source": {
+        "name": "Organization",
+        "externalId": null,
+        "itemSha256": "379cf42a71e7fe1d351b13ee2e722faf0cdd38bb3eb1c1029b0dd9c22fb58bf1"
+      },
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00001180",
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Organization/Name",
+      "kind": "attribute",
+      "source": {
+        "name": "Name",
+        "externalId": null,
+        "owner": "ot:Organization",
+        "jiraType": "text",
+        "itemSha256": "e56b7ed82ef5798d26f070fdb75ffe6bb35d76ea4982b0aa526ac79a7380a897"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Organization/Cost Center",
+      "kind": "attribute",
+      "source": {
+        "name": "Cost Center",
+        "externalId": null,
+        "owner": "ot:Organization",
+        "jiraType": "text",
+        "itemSha256": "656c724cebc0e8a483b552b8c23f5bd7aea959e7a3d3a6675ffe06931abf57b7"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "ot:Person",
+      "kind": "type",
+      "source": {
+        "name": "Person",
+        "externalId": null,
+        "itemSha256": "22f8085f5623b963d61ffc3c07191f45bfc838b04c27f9504bedeebab0bc74cb"
+      },
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00001262",
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Person/Full Name",
+      "kind": "attribute",
+      "source": {
+        "name": "Full Name",
+        "externalId": null,
+        "owner": "ot:Person",
+        "jiraType": "text",
+        "itemSha256": "9c526e07a27c2b57deaa15795c8db0a9cd4468fde78d6c2fb6ace05a1912b3fa"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Person/Employee Number",
+      "kind": "attribute",
+      "source": {
+        "name": "Employee Number",
+        "externalId": null,
+        "owner": "ot:Person",
+        "jiraType": "text",
+        "itemSha256": "7e395e8dc0b0458e5b717e659f98ed41bfc8956e0064aefc5c230661f91146ae"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Person/Email",
+      "kind": "attribute",
+      "source": {
+        "name": "Email",
+        "externalId": null,
+        "owner": "ot:Person",
+        "jiraType": "email",
+        "itemSha256": "88cbced6b6c0a0bc446ea4fca1d6e75232b6b5e4f17ad667134262bb7d623081"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Person/Start Date",
+      "kind": "attribute",
+      "source": {
+        "name": "Start Date",
+        "externalId": null,
+        "owner": "ot:Person",
+        "jiraType": "date",
+        "itemSha256": "0bdc73139e1146c6457f057a9ffe1b28e011f8d5cc676cd6f096551bb91ef6ea"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:date",
+      "valueProperty": "cco:ont00001771",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Person/Active",
+      "kind": "attribute",
+      "source": {
+        "name": "Active",
+        "externalId": null,
+        "owner": "ot:Person",
+        "jiraType": "boolean",
+        "itemSha256": "ef3eeff21c8580707a6aaf1d6c875394f14ffb5ef4604e08ac44afdff8a28f4a"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:boolean",
+      "valueProperty": "cco:ont00001772",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Person/Department",
+      "kind": "reference",
+      "source": {
+        "name": "Department",
+        "externalId": null,
+        "owner": "ot:Person",
+        "jiraType": "referenced_object",
+        "target": "ot:Organization",
+        "itemSha256": "b86cf0a01d7dbb30e8cf44aaaed67f1145df64c90f629b367b953b283a907aa4"
+      },
+      "relation": "cco:ont00001939",
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Person/Manager",
+      "kind": "reference",
+      "source": {
+        "name": "Manager",
+        "externalId": null,
+        "owner": "ot:Person",
+        "jiraType": "referenced_object",
+        "target": "ot:Person",
+        "itemSha256": "63b18f0a1f1de98270d6d6aad32a173fde0e9d76d0ca378d690f5472822a53a0"
+      },
+      "relation": "cco:ont00001798",
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "ot:Location",
+      "kind": "type",
+      "source": {
+        "name": "Location",
+        "externalId": null,
+        "itemSha256": "8bdb1ef81c5a00bc318df794324a8684ee1245040d7212fcdb83ccc26eb592e7"
+      },
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000192",
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Location/Name",
+      "kind": "attribute",
+      "source": {
+        "name": "Name",
+        "externalId": null,
+        "owner": "ot:Location",
+        "jiraType": "text",
+        "itemSha256": "4dcd9086af132ece5c3bf8fa82e4302076b431ff2da1a8d35d1f751e739eaee4"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Location/Site Code",
+      "kind": "attribute",
+      "source": {
+        "name": "Site Code",
+        "externalId": null,
+        "owner": "ot:Location",
+        "jiraType": "text",
+        "itemSha256": "d6ea0f8e51aadcbca3809a6450062dc040bd416f86627bdd67da237c6277e7d1"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Location/Country",
+      "kind": "attribute",
+      "source": {
+        "name": "Country",
+        "externalId": null,
+        "owner": "ot:Location",
+        "jiraType": "text",
+        "itemSha256": "2b1cbaadb5dca81a1e23f1875bb87ec4d517b35586dec4abf48faf9342d68a35"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Location/Address",
+      "kind": "attribute",
+      "source": {
+        "name": "Address",
+        "externalId": null,
+        "owner": "ot:Location",
+        "jiraType": "textarea",
+        "itemSha256": "6933fb1e8e6e546254fe7e2d657ec08f8948e1e8e643a998871057f79a6197d9"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Location/Latitude",
+      "kind": "attribute",
+      "source": {
+        "name": "Latitude",
+        "externalId": null,
+        "owner": "ot:Location",
+        "jiraType": "double",
+        "itemSha256": "0721329fe62a8934ce1d554d5305377331cce838ed6b15b50b4b2d2d8a96b899"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:double",
+      "valueProperty": "cco:ont00001770",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Location/Longitude",
+      "kind": "attribute",
+      "source": {
+        "name": "Longitude",
+        "externalId": null,
+        "owner": "ot:Location",
+        "jiraType": "double",
+        "itemSha256": "f4ff51d738f04234159e831477e50a92e377aad97d5d1f75e52b1d37dbfa3bba"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:double",
+      "valueProperty": "cco:ont00001770",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "ot:Hardware",
+      "kind": "type",
+      "source": {
+        "name": "Hardware",
+        "externalId": null,
+        "itemSha256": "3b1651b8274e487b9932a4b65b9b3c36c20c4f13c22a182ea159ac408c7f915f"
+      },
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000995",
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Hardware/Asset Tag",
+      "kind": "attribute",
+      "source": {
+        "name": "Asset Tag",
+        "externalId": null,
+        "owner": "ot:Hardware",
+        "jiraType": "text",
+        "itemSha256": "6a290b5437d92591f0798baee0242f00ae1283820d3ea385b4e22b65ddf92935"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Hardware/Serial Number",
+      "kind": "attribute",
+      "source": {
+        "name": "Serial Number",
+        "externalId": null,
+        "owner": "ot:Hardware",
+        "jiraType": "text",
+        "itemSha256": "150f9c54c2a475d429f966ecc258a94dfa35143d2efe34c39be123cd80eda854"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Hardware/Purchase Date",
+      "kind": "attribute",
+      "source": {
+        "name": "Purchase Date",
+        "externalId": null,
+        "owner": "ot:Hardware",
+        "jiraType": "date",
+        "itemSha256": "822400397bc57bfbb5cc0ebb104dcc54314f5bd4c93afd7bfd353da0bb7321a3"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:date",
+      "valueProperty": "cco:ont00001771",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Hardware/Purchase Cost",
+      "kind": "attribute",
+      "source": {
+        "name": "Purchase Cost",
+        "externalId": null,
+        "owner": "ot:Hardware",
+        "jiraType": "double",
+        "itemSha256": "1bbbefb7dfa3d316fe711e71de49a8ba301568f347dbc4f5323264e86b34e3ae"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:double",
+      "valueProperty": "cco:ont00001770",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Hardware/Status",
+      "kind": "attribute",
+      "source": {
+        "name": "Status",
+        "externalId": null,
+        "owner": "ot:Hardware",
+        "jiraType": "select",
+        "itemSha256": "75e9347030e10b9860c8332f9515c3d1f593f4c5d5b8ae84fa163c6c58ace103"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Hardware/Warranty URL",
+      "kind": "attribute",
+      "source": {
+        "name": "Warranty URL",
+        "externalId": null,
+        "owner": "ot:Hardware",
+        "jiraType": "url",
+        "itemSha256": "c6d1b59cb40b2f297db3b215fab374775eb14b98935b0c828a31a1b24596dce7"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:anyURI",
+      "valueProperty": "cco:ont00001768",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Hardware/Owner",
+      "kind": "reference",
+      "source": {
+        "name": "Owner",
+        "externalId": null,
+        "owner": "ot:Hardware",
+        "jiraType": "referenced_object",
+        "target": "ot:Person",
+        "itemSha256": "8f817b3a1159ab9082a6318f5d249fa26af6670a9740ede8e7a4974abfe10029"
+      },
+      "relation": "cco:ont00001925",
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Hardware/Location",
+      "kind": "reference",
+      "source": {
+        "name": "Location",
+        "externalId": null,
+        "owner": "ot:Hardware",
+        "jiraType": "referenced_object",
+        "target": "ot:Location",
+        "itemSha256": "094d9ece05af90fcaca979a09c0cc97dbaebbb3f19802034695cfa5f45f9b860"
+      },
+      "relation": "bfo:BFO_0000171",
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "ot:Laptop",
+      "kind": "type",
+      "source": {
+        "name": "Laptop",
+        "externalId": null,
+        "itemSha256": "6f895bb9a148b6d41f534d36136e4221f7e3d0859fe79ba9ced3b03c1cc3aee7"
+      },
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000420",
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Laptop/Encrypted",
+      "kind": "attribute",
+      "source": {
+        "name": "Encrypted",
+        "externalId": null,
+        "owner": "ot:Laptop",
+        "jiraType": "boolean",
+        "itemSha256": "62f1bf25baa104470019a131c84f9a62791c646045b56cf1a8cbb99244f2a60e"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:boolean",
+      "valueProperty": "cco:ont00001772",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Laptop/RAM GB",
+      "kind": "attribute",
+      "source": {
+        "name": "RAM GB",
+        "externalId": null,
+        "owner": "ot:Laptop",
+        "jiraType": "integer",
+        "itemSha256": "0087650d3e327bd1d72da55c8667c0fc9f7694ac063da17cebdcee7861eac6fe"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:integer",
+      "valueProperty": "cco:ont00001773",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "ot:Server",
+      "kind": "type",
+      "source": {
+        "name": "Server",
+        "externalId": null,
+        "itemSha256": "c25930f878d8395ab2fb4b2c460f5d0862cbd920db6687f00c9e81d3cb87c067"
+      },
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000420",
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Server/Hostname",
+      "kind": "attribute",
+      "source": {
+        "name": "Hostname",
+        "externalId": null,
+        "owner": "ot:Server",
+        "jiraType": "text",
+        "itemSha256": "585bcadd43f3b76aba721181194ed7fa886acedd66e50ffcbfdd30b30d8c2c82"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Server/IP Address",
+      "kind": "attribute",
+      "source": {
+        "name": "IP Address",
+        "externalId": null,
+        "owner": "ot:Server",
+        "jiraType": "ipaddress",
+        "itemSha256": "d31d8babd00dd429c50c969c414cde1632e589d3f2351b093ebe849bc014cf4b"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Server/Maintenance Window Start",
+      "kind": "attribute",
+      "source": {
+        "name": "Maintenance Window Start",
+        "externalId": null,
+        "owner": "ot:Server",
+        "jiraType": "time",
+        "itemSha256": "ca81e216cf602325b08733e3760b30bbeb81782a2b39a67c18979e958afbcf04"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Server/Rack Position",
+      "kind": "attribute",
+      "source": {
+        "name": "Rack Position",
+        "externalId": null,
+        "owner": "ot:Server",
+        "jiraType": "integer",
+        "itemSha256": "8c4d94b99abaecc6708c3dc7f1bd43e20bb5a27175d7812d36a60758eb6dc9fc"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:integer",
+      "valueProperty": "cco:ont00001773",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Server/Ports~1Protocols",
+      "kind": "attribute",
+      "source": {
+        "name": "Ports/Protocols",
+        "externalId": null,
+        "owner": "ot:Server",
+        "jiraType": "textarea",
+        "itemSha256": "aedecf1e126b70927f46981cd75b8c09ddbd4d5638deb0cf2686a1308545e0dc"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "ot:Blade Server",
+      "kind": "type",
+      "source": {
+        "name": "Blade Server",
+        "externalId": null,
+        "itemSha256": "492e80a49bf99689b71dc30b623ba8f6d9d1d107801c8f14239794f7e00f207a"
+      },
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000420",
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Blade Server/Chassis Slot",
+      "kind": "attribute",
+      "source": {
+        "name": "Chassis Slot",
+        "externalId": null,
+        "owner": "ot:Blade Server",
+        "jiraType": "integer",
+        "itemSha256": "8132209c211bdeac59da572a63bf0c55c1a99d9cc823207a04e191d4caf48805"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:integer",
+      "valueProperty": "cco:ont00001773",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "ct:ot:Blade Server",
+      "kind": "containment",
+      "source": {
+        "child": "ot:Blade Server",
+        "container": "ot:Server",
+        "selector": "servers.blades",
+        "itemSha256": "a200bc21ebc49021673ea84e0d7f99453f67cfa699aab5d6dea8bcf431497cb7"
+      },
+      "relation": "bfo:BFO_0000176",
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "ot:Hard Drive",
+      "kind": "type",
+      "source": {
+        "name": "Hard Drive",
+        "externalId": null,
+        "itemSha256": "ee8f6313a28094a6ac92aaa8e56c6568d6c8f6c055b2c64f5e1bdc3f6b901443"
+      },
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000117",
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Hard Drive/Capacity GB",
+      "kind": "attribute",
+      "source": {
+        "name": "Capacity GB",
+        "externalId": null,
+        "owner": "ot:Hard Drive",
+        "jiraType": "integer",
+        "itemSha256": "fa94dfda47857f5ee37deb1e5d25c240b53de12e4153ec1472981081f5ad76f5"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:integer",
+      "valueProperty": "cco:ont00001773",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "ct:ot:Hard Drive",
+      "kind": "containment",
+      "source": {
+        "child": "ot:Hard Drive",
+        "container": "ot:Server",
+        "selector": "servers.disks",
+        "itemSha256": "f83dd3ee530326c10da7097ceed703165d0c593e07f8a1f34527fc7d8894af7c"
+      },
+      "relation": "bfo:BFO_0000176",
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "ot:Software",
+      "kind": "type",
+      "source": {
+        "name": "Software",
+        "externalId": null,
+        "itemSha256": "54b91b65955e1a36f4c05eb9cb0851bb99a00c84adc1379929bfaa0c080d3aaf"
+      },
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000853",
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Software/Name",
+      "kind": "attribute",
+      "source": {
+        "name": "Name",
+        "externalId": null,
+        "owner": "ot:Software",
+        "jiraType": "text",
+        "itemSha256": "b66780611a7c2dcad5b7167c5e25eb37638f1cdb21fc5c649b3c0873d12c9214"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Software/Version",
+      "kind": "attribute",
+      "source": {
+        "name": "Version",
+        "externalId": null,
+        "owner": "ot:Software",
+        "jiraType": "text",
+        "itemSha256": "2229b434590063ad39e788350eb4e420c041eb116270cb7a3af5cefa960d6a99"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Software/Last Scanned",
+      "kind": "attribute",
+      "source": {
+        "name": "Last Scanned",
+        "externalId": null,
+        "owner": "ot:Software",
+        "jiraType": "date_time",
+        "itemSha256": "a0fca52855e2b85599e725a0f880bfeaece0e22db16040787eee32fe91b73d71"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:dateTime",
+      "valueProperty": "cco:ont00001767",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Software/Vendor Site",
+      "kind": "attribute",
+      "source": {
+        "name": "Vendor Site",
+        "externalId": null,
+        "owner": "ot:Software",
+        "jiraType": "url",
+        "itemSha256": "f774efa97f40a824d668b91a2d9d6cb63b19bd2bbb0fc16ff5dbc6828539ac2e"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:anyURI",
+      "valueProperty": "cco:ont00001768",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Software/Installed On",
+      "kind": "reference",
+      "source": {
+        "name": "Installed On",
+        "externalId": null,
+        "owner": "ot:Software",
+        "jiraType": "referenced_object",
+        "target": "ot:Hardware",
+        "itemSha256": "c93f644f7d630158a52c255646992284b6f3a319e161258f85ed2276045a1e52"
+      },
+      "relation": "bfo:BFO_0000084",
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Software/Notes",
+      "kind": "attribute",
+      "source": {
+        "name": "Notes",
+        "externalId": null,
+        "owner": "ot:Software",
+        "jiraType": "textarea",
+        "itemSha256": "080a963e160be135f338abd72e88bf3a41863eef6c66f89f6c0557ec2a41c145"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "ot:Scan Event",
+      "kind": "type",
+      "source": {
+        "name": "Scan Event",
+        "externalId": null,
+        "itemSha256": "cf6e63fc03efa84e7aea7e846de1ad4a9d4fd61bf1749c95167ee5bc8d9588ba"
+      },
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000037",
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Scan Event/Started",
+      "kind": "attribute",
+      "source": {
+        "name": "Started",
+        "externalId": null,
+        "owner": "ot:Scan Event",
+        "jiraType": "date_time",
+        "itemSha256": "4efe8de40d44a19c783cc679926e70d3e2f116428e96fc4716de076d8f8a93cd"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:dateTime",
+      "valueProperty": "cco:ont00001767",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Scan Event/Items Found",
+      "kind": "attribute",
+      "source": {
+        "name": "Items Found",
+        "externalId": null,
+        "owner": "ot:Scan Event",
+        "jiraType": "integer",
+        "itemSha256": "2a555f7193e859f6c1b29b943c34a65da85d418bbc74a54c259ab8dc5b4a3b52"
+      },
+      "iceClass": "cco:ont00000853",
+      "datatype": "xsd:integer",
+      "valueProperty": "cco:ont00001773",
+      "nullEquivalents": [],
+      "rationale": "Witness mapping.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
+        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    }
+  ],
+  "open": [],
+  "retired": []
+}

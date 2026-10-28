@@ -1,5 +1,5 @@
 SDD MAPPING REQUEST
-skeleton: f203f691eb6e59af46cd501bbfb8c774d14f644d1cbe3be8aa914f5b7a07b0d2
+skeleton: 2b309d2d0b201923ae3ce5057e0217d24e339881a963692671c3da206aa78616
 terms: a9e01756d749655a53088833bb97612791caf9a19220065848c826f99985cd39
 batch: 2/2
 round: 1
@@ -27,7 +27,7 @@ Reply with exactly one JSON object and nothing else. It has the fields "skeleton
 - reference: {"key": ..., "relation": CURIE, "rationale": ...}
 - containment: {"key": ..., "relation": CURIE or "sdd:NoRelation", "rationale": ...}
 Example (illustrative keys and terms):
-{"skeletonSha256": "f203f691eb6e59af46cd501bbfb8c774d14f644d1cbe3be8aa914f5b7a07b0d2", "batch": "2/2", "mappings": [
+{"skeletonSha256": "2b309d2d0b201923ae3ce5057e0217d24e339881a963692671c3da206aa78616", "batch": "2/2", "mappings": [
 {"key": "ot:Example", "recordClass": "cco:ont00000853", "referentClass": "cco:ont00001180", "rationale": "The record describes an organization."},
 {"key": "at:Example/Name", "iceClass": "cco:ont00001014", "rationale": "The value is the organization's proper name."}]}
 

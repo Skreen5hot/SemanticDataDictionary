@@ -1,0 +1,107 @@
+{
+  "@context": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld",
+  "@type": "SemanticDataDictionary",
+  "sddVersion": 1,
+  "source": {
+    "format": "jira-assets-import/2021_09_15",
+    "sha256": "e86ef883322aa194ed10bda51118d02a9b0ddc51892d09d781514e9b11f5373b",
+    "schemaName": "Minimal Organization",
+    "identification": "name",
+    "inventorySha256": "0ea0045b7131f75356dafb2759250e97edeeab52cfec7ba67b6a2be9f6e47613"
+  },
+  "environment": {
+    "termListSha256": "a9e01756d749655a53088833bb97612791caf9a19220065848c826f99985cd39",
+    "ontologyTemplateCommit": "114f28db82adf727f5e31aab4872ed56550e84af",
+    "contextIri": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld"
+  },
+  "absenceKinds": [
+    "missing",
+    "explicit_null",
+    "empty_string",
+    "indistinguishable"
+  ],
+  "mappings": [
+    {
+      "key": "ot:Organization",
+      "kind": "type",
+      "source": {
+        "name": "Organization",
+        "externalId": null,
+        "itemSha256": "379cf42a71e7fe1d351b13ee2e722faf0cdd38bb3eb1c1029b0dd9c22fb58bf1"
+      },
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00001180",
+      "rationale": "The Assets object is a descriptive record about an organization.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "7f121f7a15ed3f67563c10d2038c2722c87e92fab7160eae37bdcc3e78cbcc3c",
+        "proposalSha256": "7d3a9546da8c8ab55b25ec8e0e6e761c12529855de54fb280b47c8935d3be91b",
+        "checkReportSha256": "552fa6c873611e7aace29d27fbd76e8ac52e8d343d276fe3df3ea52c890dfd3d"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Organization/Name",
+      "kind": "attribute",
+      "source": {
+        "name": "Name",
+        "externalId": null,
+        "owner": "ot:Organization",
+        "jiraType": "text",
+        "itemSha256": "e56b7ed82ef5798d26f070fdb75ffe6bb35d76ea4982b0aa526ac79a7380a897"
+      },
+      "iceClass": "cco:ont00001014",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "The label is the organization's proper name.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "7f121f7a15ed3f67563c10d2038c2722c87e92fab7160eae37bdcc3e78cbcc3c",
+        "proposalSha256": "7d3a9546da8c8ab55b25ec8e0e6e761c12529855de54fb280b47c8935d3be91b",
+        "checkReportSha256": "552fa6c873611e7aace29d27fbd76e8ac52e8d343d276fe3df3ea52c890dfd3d"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    },
+    {
+      "key": "at:Organization/Cost Center",
+      "kind": "attribute",
+      "source": {
+        "name": "Cost Center",
+        "externalId": null,
+        "owner": "ot:Organization",
+        "jiraType": "text",
+        "itemSha256": "a023b9ef44dc977d3530f2b37f393010f8ecad5e9c6a2f1c6d49c832b23465fa"
+      },
+      "iceClass": "cco:ont00000077",
+      "datatype": "xsd:string",
+      "valueProperty": "cco:ont00001765",
+      "nullEquivalents": [],
+      "rationale": "A cost center is a code identifier assigned by finance.",
+      "provenance": {
+        "round": 1,
+        "batch": "1/1",
+        "promptSha256": "05aa533075216937dfe8a33929bf0a50dbc9182977f2838d99bc8cd795b45916",
+        "proposalSha256": "e7ed529bd3440ee30fbee4028141aa483fa7f2857dc33a0278ebb3f811127351",
+        "checkReportSha256": "58e92f706ff928b88d20329ff6d427e74f06d12068332142bb8e8f97a91ee17c"
+      },
+      "acceptance": {
+        "decision": "accepted",
+        "by": "Aaron Damiano",
+        "at": "2026-10-27T18:00:00Z"
+      }
+    }
+  ],
+  "open": [],
+  "retired": []
+}

@@ -1,0 +1,13 @@
+{
+  "@context": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld",
+  "@type": "CheckReport",
+  "skeletonSha256": "e990dbb36831aa769a09a7d5df64d396698511482c3ba849064353500ff9de57",
+  "batch": "1/1",
+  "round": 1,
+  "promptSha256": "7f121f7a15ed3f67563c10d2038c2722c87e92fab7160eae37bdcc3e78cbcc3c",
+  "proposalSha256": "6eb7f5afb14cad25e38fad57eeea6118f78f433c1008698f01172bafacc28e9f",
+  "termListSha256": "a9e01756d749655a53088833bb97612791caf9a19220065848c826f99985cd39",
+  "status": "validated",
+  "errors": [],
+  "warnings": []
+}
