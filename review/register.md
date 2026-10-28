@@ -422,3 +422,22 @@ Progress against cycle 2: the operator document rose from D-1 (15/22) to D-2 (18
   in `review/proposals/prop-002/prop-002.md` (F63 completed by Decision A). **CAP-2 active.**
 - **Next (authorized):** a bounded minimal-core implementation of C1–C4 against the executable witnesses, with an
   independent CAP-2 verification. Not authorized: the complete application, or cycle 4.
+
+## Minimal core C1–C4 and independent CAP-2 verification (2026-10-28, appended; sections above unamended)
+
+Full report: `review/core-v0/milestone-report.md`.
+- **Implementation** (`src/`): built by a separate agent from the spec alone, without the author's generator or check
+  tools. Pure core, zero dependencies.
+- **Independent judge** (`tools/run-witnesses.mjs`): **54/54 C-S1–C-S4 witnesses pass.**
+- **Unseen-input differential test:** 28/28 outputs agree between the implementation and the reference generator.
+- **CAP-2 (verified by a third agent, independent of the tools' author): Gate 1 MET; Gate 2 NOT MET.** CAP-2 remains active.
+
+| Id | Sev | Finding | Found by |
+|---|---|---|---|
+| **SDD-F67** | Major | **Reciprocity incomplete:** SDD §5 `html` row ↔ CV-O1–CV-O3 missing from both tables. `citations.mjs` skips rows whose first cell starts with a backtick, which drops this citation and still reports "ok". | independent CAP-2 verifier |
+| **SDD-F68** | Minor | **Registry "Cited by" copy errors** for the `full/` and `hostile/` prompt, inventory, skeleton and SDD rows (base-name matching in the author's builder). | verifier and implementer, independently |
+| **SDD-F69** | Major | **Template-fill injection:** placeholder text such as `{{CATALOGUE}}` in a description is expanded by a chained fill (the author's reference generator and `witness-check.mjs`). R-S11 does not require single-pass substitution; the independent implementation used it. | unseen-input differential test |
+| **SDD-F70** | Major | **The citation rule is under-specified:** citing artifact for multi-id or no-id blocks; the identifier universe (codes, WV-1, § refs); ranges and wildcards; relation to the registry; direction. | independent CAP-2 verifier |
+| **SDD-F71** | Minor | **Implementation-surfaced gaps** (the implementer's list, items 1–25): inventory field rules only in witnesses (OS-1); containment-key clash; refusal vs "report still written"; the stderr object shape; uncoded mismatched inputs; the W-PROMPT-OVERSIZE shape; R-S8's previous SDD with no `check` input; shape-error keyword order; catalogue headers defined only by example. | independent implementer |
+
+**Register state:** F67–F71 open, awaiting the registrar's direction. No spec change has been made.

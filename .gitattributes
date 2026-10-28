@@ -9,3 +9,4 @@ spec/prompt-template-*.txt  -text
 review/proposals/**/files/**  -text
 schemas/**  -text
 tools/oracle/**  -text
+review/core-v0/evidence/**  -text
