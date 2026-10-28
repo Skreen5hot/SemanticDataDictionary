@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SDD CLI (C-S1 parse, C-S2 skeleton, C-S3 prompt, C-S4 check, C-S5 repair). Reads files, passes bytes to the pure core,
+// SDD CLI (C-S1 parse, C-S2 skeleton, C-S3 prompt, C-S4 check, C-S5 repair, C-S6 accept). Reads files, passes bytes to the pure core,
 // writes canonical bytes. Exit codes per R-S23: 0 success; 1 domain report of errors; 2 usage / I/O.
 
 import fs from 'node:fs';
@@ -13,6 +13,7 @@ import { buildPrompts, DEFAULT_BUDGET } from '../core/prompt.mjs';
 import { checkProposal } from '../core/check.mjs';
 import { buildRepairPrompt } from '../core/repair.mjs';
 import { indexTerms } from '../core/terms.mjs';
+import { acceptMappings } from '../core/accept.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const RES = {
@@ -37,6 +38,7 @@ const COMMANDS = {
   prompt: { positional: 2, options: ['--keys', '--budget', '--out-dir'], required: ['--out-dir'] },
   check: { positional: 3, options: ['--out'] },
   repair: { positional: 4, options: ['--out'] },
+  accept: { positional: 3, options: ['--checked', '--previous', '--out'] },
 };
 
 function parseArgs(argv) {
@@ -45,9 +47,15 @@ function parseArgs(argv) {
   if (!spec) throw usage(`unknown command ${cmd === undefined ? '(none)' : cmd}; expected one of ${Object.keys(COMMANDS).join(', ')}`);
   const positional = [];
   const opts = {};
+  const checked = [];
   for (let i = 0; i < rest.length; i++) {
     const a = rest[i];
-    if (a.startsWith('--')) {
+    if (a === '--checked' && cmd === 'accept') {
+      // Repeatable; takes two values: <report> <paste>.
+      if (i + 2 >= rest.length || rest[i + 1].startsWith('--') || rest[i + 2].startsWith('--')) throw usage('--checked needs <report> <paste>');
+      checked.push({ report: rest[i + 1], paste: rest[i + 2] });
+      i += 2;
+    } else if (a.startsWith('--')) {
       if (!spec.options.includes(a)) throw usage(`unknown option ${a} for ${cmd}`);
       if (a in opts) throw usage(`option ${a} given twice`);
       if (i + 1 >= rest.length) throw usage(`option ${a} needs a value`);
@@ -56,7 +64,8 @@ function parseArgs(argv) {
   }
   if (positional.length !== spec.positional) throw usage(`${cmd} takes ${spec.positional} argument(s), got ${positional.length}`);
   for (const r of spec.required || []) if (!(r in opts)) throw usage(`${cmd} requires ${r}`);
-  return { cmd, positional, opts };
+  if (cmd === 'accept' && checked.length === 0) throw usage('accept requires at least one --checked <report> <paste>');
+  return { cmd, positional, opts, checked };
 }
 
 function readInput(file) {
@@ -89,7 +98,7 @@ function loadTerms() {
 }
 
 function run(argv) {
-  const { cmd, positional, opts } = parseArgs(argv);
+  const { cmd, positional, opts, checked } = parseArgs(argv);
   refuseExisting(opts['--out']);
   refuseExisting(opts['--out-dir']);
 
@@ -158,6 +167,18 @@ function run(argv) {
         const template = fromUtf8(readInput(RES.template));
         const { bytes } = buildRepairPrompt({ skeletonBytes, inventoryBytes, reportBytes, promptBytes, template, terms: loadTerms() });
         emit(opts['--out'], bytes);
+        return 0;
+      }
+      case 'accept': {
+        const skeletonBytes = readInput(positional[0]);
+        const inventoryBytes = readInput(positional[1]);
+        const decisionsBytes = readInput(positional[2]);
+        const pairs = checked.map((c) => ({ reportBytes: readInput(c.report), pasteBytes: readInput(c.paste) }));
+        const previousBytes = opts['--previous'] === undefined ? undefined : readInput(opts['--previous']);
+        // The clock is read here, never in the core: acceptance.at is the time of this act (UTC, whole seconds).
+        const at = new Date().toISOString().replace(/\.[0-9]{3}Z$/, 'Z');
+        const sddValue = acceptMappings({ skeletonBytes, inventoryBytes, decisionsBytes, checked: pairs, previousBytes, terms: loadTerms(), at });
+        emit(opts['--out'], canonicalBytes(sddValue));
         return 0;
       }
     }

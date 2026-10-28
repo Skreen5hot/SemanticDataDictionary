@@ -34,6 +34,7 @@ export function indexTerms(termList) {
 
   const api = {
     termsSha256: termList.terms_sha256,
+    ontologyTemplateCommit: termList.ontology_template_commit,
     get: (curie) => byCurie.get(curie),
     label: (curie) => byCurie.get(curie)?.label ?? null,
     /** class `curie` is, or descends from, the class with IRI `ancestorIri`. */

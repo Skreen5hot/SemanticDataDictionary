@@ -504,3 +504,32 @@ The item (7) jira-assets base-name reading was made explicit.
   - registry-check, witness-check, oracle-check, citations and build-term-list;
   - the mutation test detects 84 corruptions with their expected checkers, and the control case behaves correctly;
   - the unseen-input difftest agrees 28/28.
+
+## C-S6 accept built (2026-10-28, appended; sections above unamended)
+
+- **Built by the independent implementer** (`src/core/accept.mjs`, CLI `sdd accept`). The core stays pure: the CLI
+  reads the clock and passes `at` in.
+- **Independent judge: 91/91.** The C-S6 checks, all written from the spec before the code existed (they failed
+  against the prior build):
+  - W-CS6-N, Δ2, Δ4, Δ7, Δ9 (both `--checked` orders) are byte-equal. Only the act's own `acceptance.at` is masked,
+    after a format and ±5 s check.
+  - The W-JS3 and W-JS4 `--previous` merges are byte-equal, carried acceptance records included.
+  - The refusals Δ1 (also one unvalidated among validated), Δ3, Δ6 (names the key), Δ8, Δ5 (file unchanged) and
+    E-USAGE, E-IO and E-CTX-EXTERNAL all write nothing.
+  - A validated report with zero decisions accepts nothing.
+  - A forged validated report whose paste smuggles `nullEquivalents`, `acceptance` and `datatype` is refused (the
+    paste is re-checked against its report).
+  - **End to end:** schema → validated → accept ×3 equals `minimal/sdd.jsonld`. With a partial rejection it equals
+    `minimal/sdd-partial.jsonld`, and Cost Center stays open.
+- The implementer's runner: 85/85.
+- **Readings recorded, no spec change** (none blocking; the witness bytes fix each):
+  - containment `itemSha256` is the FL-CONTAINMENT flag entry;
+  - R-S18 checks run before the R-S23 chain checks (W-CS6-Δ8 requires it);
+  - `open` and `retired` are sorted;
+  - on equal highest rounds, the first `--checked` pair wins;
+  - a reject also needs coverage;
+  - a retired entry is the full previous mapping;
+  - the decisions shape is strict;
+  - the previous SDD's term list is not compared with the current one.
+- **All other checks pass:** the regressions (registry, witness, oracle, citations and term list); the mutation test
+  (84 corruptions detected, control correct); the difftest (28/28).

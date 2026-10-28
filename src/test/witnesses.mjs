@@ -1,4 +1,4 @@
-// Witness runner for C-S1..C-S5 (and the W-JS1/W-JS2 chain steps using only those capabilities).
+// Witness runner for C-S1..C-S6 (and the W-JS1..W-JS4 chain steps using those capabilities).
 // Runs the CLI as a subprocess and compares outputs byte for byte, or checks the stated expectation.
 // Usage: node src/test/witnesses.mjs   (from the repository root). Writes only under src/.witness-tmp (removed).
 
@@ -457,6 +457,191 @@ witness('R-S23 E-OUT-EXISTS', () => {
     sdd('prompt', MSK, W('minimal/inventory.jsonld'), '--out-dir', TMP), sdd('check', MSK, MPR, W('minimal/proposal-pasted.txt'), '--out', existing)];
   return all(expect(rs.every((r) => r.status === 2 && json(Buffer.from(r.stderr)).code === 'E-OUT-EXISTS'), rs.map((r) => r.stderr).join()),
     expect(read(existing).toString() === 'keep', 'file changed'));
+});
+
+// ---------- C-S6 ----------
+// Mask: every acceptance.at the act wrote must be YYYY-MM-DDTHH:MM:SSZ within ±5 s of the act; carried records keep
+// their own value. With every `at` set to the witness value, the bytes must equal the witness file.
+const AT_RE = /"at": "([0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z)"/g;
+const WITNESS_AT = '2026-10-27T18:00:00Z';
+const DEC = (decisions, nullEquivalents = {}) => put('decisions.json', JSON.stringify({ by: 'Aaron Damiano', decisions, nullEquivalents }));
+const ACC3 = [{ key: 'ot:Organization', decision: 'accept' }, { key: 'at:Organization/Name', decision: 'accept' }, { key: 'at:Organization/Cost Center', decision: 'accept' }];
+const PART3 = [{ key: 'ot:Organization', decision: 'accept' }, { key: 'at:Organization/Name', decision: 'accept' }, { key: 'at:Organization/Cost Center', decision: 'reject' }];
+const ALL3 = () => DEC(ACC3);
+const accept = (sk, inv, dec, pairs, ...extra) => {
+  const t0 = Date.now();
+  const r = sdd('accept', sk, inv, dec, ...pairs.flatMap(([rep, paste]) => ['--checked', rep, paste]), ...extra);
+  r.t0 = t0; r.t1 = Date.now();
+  return r;
+};
+const sddMatches = (r, bytes, witnessFile, carriedAts = 0) => {
+  const text = Buffer.from(bytes).toString('utf8');
+  const ats = [...text.matchAll(AT_RE)].map((m) => m[1]);
+  const fresh = ats.filter((a) => a !== WITNESS_AT);
+  const inWindow = fresh.every((a) => { const t = Date.parse(a); return t >= r.t0 - 6000 && t <= r.t1 + 5000; });
+  const masked = text.replace(AT_RE, `"at": "${WITNESS_AT}"`);
+  return all(expect(r.status === 0, `exit ${r.status} ${r.stderr}`), expect(ats.length > 0, 'no acceptance.at'),
+    expect(fresh.length === ats.length - carriedAts, `at values ${ats}`),
+    expect(inWindow, `at outside ±5 s: ${fresh}`), expect(masked === read(W(witnessFile)).toString('utf8'), `bytes differ from ${witnessFile} (masked)`));
+};
+const MPASTE = W('minimal/proposal-pasted.txt'), MREP = W('minimal/check-report.jsonld');
+const N_PAIR = [MREP, MPASTE];
+const R2_PAIR = [W('minimal/check-report-round2.jsonld'), MPASTE];
+const OPEN_PAIR = [W('minimal/check-report-open.jsonld'), W('minimal/proposal-open.txt')];
+
+witness('W-CS6-N', () => {
+  const out = tmp('sdd.jsonld');
+  const r = accept(MSK, MIN, ALL3(), [N_PAIR], '--out', out);
+  return all(sddMatches(r, read(out), 'minimal/sdd.jsonld'), expect(r.stdout.length === 0, 'stdout with --out'));
+});
+witness('W-CS6-N (by is the input string verbatim)', () => {
+  const by = '  Ä. Damiano "x" ';
+  const r = accept(MSK, MIN, put('d.json', JSON.stringify({ by, decisions: [ACC3[0]], nullEquivalents: {} })), [N_PAIR]);
+  return all(expect(r.status === 0, r.stderr), expect(json(r.stdout).mappings[0].acceptance.by === by, 'by not verbatim'));
+});
+witness('W-CS6-Δ1', () => {
+  const out = tmp('never.jsonld');
+  return refused(accept(MSK, MIN, ALL3(), [[W('minimal/bad-check-report.jsonld'), W('minimal/bad-proposal.txt')]], '--out', out), 1, 'E-ACC-UNVALIDATED', out);
+});
+witness('W-CS6-Δ2', () => {
+  const r = accept(MSK, MIN, DEC(PART3), [N_PAIR]);
+  return all(sddMatches(r, r.stdout, 'minimal/sdd-partial.jsonld'), expect(eq(json(r.stdout).open, ['at:Organization/Cost Center']), 'open'));
+});
+witness('C-S6 property 1: undecided keys stay open; a validated report accepts nothing by itself', () => {
+  const r1 = accept(MSK, MIN, DEC(ACC3.slice(0, 2)), [N_PAIR]);
+  const r0 = accept(MSK, MIN, DEC([]), [N_PAIR]);
+  const v0 = json(r0.stdout);
+  return all(sddMatches(r1, r1.stdout, 'minimal/sdd-partial.jsonld'),
+    expect(r0.status === 0 && v0.mappings.length === 0 && eq(v0.open, ['at:Organization/Cost Center', 'at:Organization/Name', 'ot:Organization']), 'zero decisions'));
+});
+witness('W-CS6-Δ3', () => {
+  const out = tmp('never.jsonld');
+  const paste = put('paste.txt', Buffer.concat([read(MPASTE), Buffer.from(' ')]));
+  return refused(accept(MSK, MIN, ALL3(), [[MREP, paste]], '--out', out), 1, 'E-ACC-MISMATCH', out);
+});
+witness('W-CS6-Δ4', () => {
+  const r = accept(MSK, MIN, DEC(ACC3, { 'at:Organization/Cost Center': ['N/A', '-'] }), [N_PAIR]);
+  const v = json(r.stdout), base = json(read(W('minimal/sdd.jsonld')));
+  const ne = v.mappings[2].nullEquivalents;
+  v.mappings[2].nullEquivalents = [];
+  for (const m of v.mappings) m.acceptance.at = WITNESS_AT;
+  return all(expect(r.status === 0, r.stderr), expect(eq(ne, ['-', 'N/A']), `nullEquivalents ${JSON.stringify(ne)}`), expect(eq(v, base), 'something else changed'));
+});
+witness('W-CS6-Δ5', () => {
+  const existing = put('exists.jsonld', 'keep');
+  const r = accept(MSK, MIN, ALL3(), [N_PAIR], '--out', existing);
+  return all(refused(r, 2, 'E-OUT-EXISTS'), expect(read(existing).toString() === 'keep', 'file changed'));
+});
+witness('W-CS6-Δ6', () => {
+  const out = tmp('never.jsonld');
+  const r = accept(MSK, MIN, DEC([ACC3[2], ACC3[0]]), [OPEN_PAIR], '--out', out);
+  return all(refused(r, 1, 'E-ACC-UNCOVERED', out), expect(json(Buffer.from(r.stderr)).key === 'ot:Organization', r.stderr));
+});
+witness('W-CS6-Δ6 (an uncovered reject is refused too)', () =>
+  refused(accept(MSK, MIN, DEC([{ key: 'ot:Organization', decision: 'reject' }]), [OPEN_PAIR]), 1, 'E-ACC-UNCOVERED'));
+witness('W-CS6-Δ7', () => {
+  const r = accept(MSK, MIN, ALL3(), [R2_PAIR]);
+  return sddMatches(r, r.stdout, 'minimal/sdd-round2.jsonld');
+});
+witness('W-CS6-Δ8', () => {
+  const out = tmp('never.jsonld');
+  return refused(accept(W('minimal/skeleton-v2.jsonld'), MIN, ALL3(), [N_PAIR], '--out', out), 1, 'E-ACC-MISMATCH', out);
+});
+witness('W-CS6-Δ9 (both argument orders)', () => {
+  const r1 = accept(MSK, MIN, ALL3(), [N_PAIR, R2_PAIR]);
+  const r2 = accept(MSK, MIN, ALL3(), [R2_PAIR, N_PAIR]);
+  return all(sddMatches(r1, r1.stdout, 'minimal/sdd-round2.jsonld'), sddMatches(r2, r2.stdout, 'minimal/sdd-round2.jsonld'));
+});
+witness('C-S6 R-S9/R-S10: datatype, valueProperty from the value table; nullEquivalents default []', () => {
+  const r = accept(MSK, MIN, ALL3(), [N_PAIR]);
+  const v = json(r.stdout), sk = json(read(MSK));
+  return all(expect(r.status === 0, r.stderr), ...v.mappings.filter((m) => m.kind === 'attribute').map((m) => {
+    const s = sk.slots.find((x) => x.key === m.key);
+    return expect(m.datatype === s.datatype && m.valueProperty === s.valueProperty && eq(m.nullEquivalents, []), m.key);
+  }));
+});
+witness('C-S6 full fixture: all 52 accepted → full/sdd.jsonld (masked; reference and containment shapes)', () => {
+  const dec = DEC(json(read(FSK)).slots.map((s) => ({ key: s.key, decision: 'accept' })));
+  const r = accept(FSK, W('full/inventory.jsonld'), dec, [[W('full/check-report-valid.jsonld'), W('full/proposal-valid.txt')]]);
+  return sddMatches(r, r.stdout, 'full/sdd.jsonld');
+});
+witness('C-S6 refusals: usage, I/O, context, kinds (nothing written)', () => {
+  const foreign = json(read(MREP)); foreign['@context'] = 'https://example.org/ctx.jsonld';
+  return all(
+    refused(sdd('accept', MSK, MIN, ALL3()), 2, 'E-USAGE'),
+    refused(sdd('accept', MSK, MIN, ALL3(), '--checked', MREP), 2, 'E-USAGE'),
+    refused(accept(MSK, MIN, path.join(TMP, 'missing.json'), [N_PAIR]), 2, 'E-IO'),
+    refused(accept(MSK, MIN, put('d.json', 'not json'), [N_PAIR]), 2, 'E-USAGE'),
+    refused(accept(MSK, MIN, DEC([{ key: 'ot:Organization', decision: 'approve' }]), [N_PAIR]), 2, 'E-USAGE'),
+    refused(accept(MSK, MIN, DEC([ACC3[0], { key: 'ot:Organization', decision: 'reject' }]), [N_PAIR]), 2, 'E-USAGE'),
+    refused(accept(MSK, MIN, DEC([ACC3[0]], { 'ot:Organization': ['N/A'] }), [N_PAIR]), 2, 'E-USAGE'),
+    refused(accept(MSK, MIN, DEC([{ key: 'at:Organization/Name', decision: 'reject' }], { 'at:Organization/Name': ['N/A'] }), [N_PAIR]), 2, 'E-USAGE'),
+    refused(accept(MSK, W('minimal/inventory-v2.jsonld'), ALL3(), [N_PAIR]), 2, 'E-USAGE'),
+    refused(accept(MSK, MIN, ALL3(), [[put('f.jsonld', JSON.stringify(foreign, null, 2) + '\n'), MPASTE]]), 1, 'E-CTX-EXTERNAL'),
+    refused(accept(MSK, MIN, ALL3(), [N_PAIR], '--previous', MREP), 2, 'E-USAGE'));
+});
+
+// ---------- chains: C-S6 steps ----------
+witness('W-JS1 (step 6)', () => {
+  const r = accept(MSK, MIN, ALL3(), [N_PAIR]);
+  return sddMatches(r, r.stdout, 'minimal/sdd.jsonld');
+});
+witness('W-JS2 (step 9)', () => {
+  const r = accept(MSK, MIN, ALL3(), [R2_PAIR]);
+  return sddMatches(r, r.stdout, 'minimal/sdd-round2.jsonld');
+});
+const RERUN_PAIR = [W('minimal/check-report-rerun.jsonld'), W('minimal/proposal-rerun.txt')];
+witness('W-JS3 (step 6, --previous)', () => {
+  const r = accept(W('minimal/skeleton-v2.jsonld'), W('minimal/inventory-v2.jsonld'), DEC([ACC3[2]]), [RERUN_PAIR], '--previous', W('minimal/sdd.jsonld'));
+  return all(sddMatches(r, r.stdout, 'minimal/sdd-v2.jsonld', 2),
+    expect(eq(json(r.stdout).mappings.slice(0, 2), json(read(W('minimal/sdd.jsonld'))).mappings.slice(0, 2)), 'carried mappings differ'));
+});
+witness('W-JS3 (no decision: the changed key is open, never silently re-accepted)', () => {
+  const r = accept(W('minimal/skeleton-v2.jsonld'), W('minimal/inventory-v2.jsonld'), DEC([]), [RERUN_PAIR], '--previous', W('minimal/sdd.jsonld'));
+  const v = json(r.stdout);
+  return all(expect(r.status === 0, r.stderr), expect(eq(v.open, ['at:Organization/Cost Center']), 'open'),
+    expect(eq(v.mappings, json(read(W('minimal/sdd.jsonld'))).mappings.slice(0, 2)), 'carried'));
+});
+witness('W-JS4 (both C-S6 steps, --previous)', () => {
+  const partial = tmp('sdd-partial.jsonld'), j4 = tmp('sdd-j4.jsonld');
+  const r1 = accept(MSK, MIN, DEC(PART3), [N_PAIR], '--out', partial);
+  const r2 = accept(MSK, MIN, DEC([ACC3[2]]), [OPEN_PAIR], '--previous', W('minimal/sdd-partial.jsonld'), '--out', j4);
+  const r3 = accept(MSK, MIN, DEC([ACC3[2]]), [OPEN_PAIR], '--previous', partial); // chained from our own step output
+  return all(sddMatches(r1, read(partial), 'minimal/sdd-partial.jsonld'), sddMatches(r2, read(j4), 'minimal/sdd-j4.jsonld', 2),
+    expect(eq(json(read(j4)).mappings.slice(0, 2), json(read(W('minimal/sdd-partial.jsonld'))).mappings), 'carried'),
+    expect(r3.status === 0 && eq(json(r3.stdout).mappings.slice(0, 2), json(read(partial)).mappings), 'carried from own output'));
+});
+witness('C-S6 merge after W-CS7-Δ1 (removed key → retired with its acceptance record)', () => {
+  const inv3 = W('minimal/inventory-v3.jsonld');
+  const sk3 = put('skeleton-v3.jsonld', sdd('skeleton', inv3).stdout);
+  const { d } = promptDir(sk3, inv3);
+  const pr = path.join(d, 'prompt-1-of-1.txt');
+  const skHash = read(pr).toString('utf8').split('\n').find((l) => l.startsWith('skeleton: ')).slice('skeleton: '.length);
+  const paste = put('p3.txt', JSON.stringify({ skeletonSha256: skHash, batch: '1/1', mappings: nProposal().mappings.slice(0, 2) }));
+  const rep = put('r3.jsonld', sdd('check', sk3, pr, paste).stdout);
+  const r = accept(sk3, inv3, DEC([]), [[rep, paste]], '--previous', W('minimal/sdd.jsonld'));
+  const v = json(r.stdout), prev = json(read(W('minimal/sdd.jsonld')));
+  return all(expect(r.status === 0, r.stderr), expect(eq(v.retired, [prev.mappings[2]]), 'retired'),
+    expect(eq(v.mappings, prev.mappings.slice(0, 2)), 'carried'), expect(eq(v.open, []), 'open'));
+});
+
+// ---------- end-to-end through the CLI: schema → parse → skeleton → prompt → check → accept ----------
+const e2e = (decisions) => {
+  const inv = tmp('inventory.jsonld'), sk = tmp('skeleton.jsonld'), rep = tmp('check-report.jsonld'), out = tmp('sdd.jsonld');
+  const s1 = sdd('parse', F('minimal-organization.json'), '--out', inv);
+  const s2 = sdd('skeleton', inv, '--out', sk);
+  const { r: s3, d } = promptDir(sk, inv);
+  const s4 = sdd('check', sk, path.join(d, 'prompt-1-of-1.txt'), MPASTE, '--out', rep);
+  const s6 = accept(sk, inv, DEC(decisions), [[rep, MPASTE]], '--out', out);
+  return { codes: [s1, s2, s3, s4].map((x) => x.status), s6, out };
+};
+witness('E2E schema→…→accept ×3 = minimal/sdd.jsonld', () => {
+  const { codes: c, s6, out } = e2e(ACC3);
+  return all(expect(c.every((x) => x === 0), `exit codes ${c}`), sddMatches(s6, read(out), 'minimal/sdd.jsonld'));
+});
+witness('E2E schema→…→accept, accept, reject = minimal/sdd-partial.jsonld', () => {
+  const { codes: c, s6, out } = e2e(PART3);
+  return all(expect(c.every((x) => x === 0), `exit codes ${c}`), sddMatches(s6, read(out), 'minimal/sdd-partial.jsonld'));
 });
 
 fs.rmSync(TMP, { recursive: true, force: true });

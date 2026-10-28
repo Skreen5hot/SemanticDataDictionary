@@ -197,8 +197,90 @@ function loop(fixture, rejected, corrected, files) {
 check('C-S5 end-to-end (W-JS2, minimal)', () => loop('minimal-organization.json', 'minimal/bad-proposal.txt', 'minimal/proposal-pasted.txt', ['minimal/bad-check-report.jsonld', 'minimal/repair-prompt.txt', 'minimal/check-report-round2.jsonld']));
 check('C-S5 end-to-end (full fixture, no witness file)', () => loop('synthetic-it-assets.json', 'full/proposal-range.txt', 'full/proposal-valid.txt', null));
 
+// ---------------- C-S6 accept ----------------
+// Decisions files are written from the spec text (S-O3's literal decisions; the witnesses' one-factor variants).
+const BY = 'Aaron Damiano';
+const KEYS = ['ot:Organization', 'at:Organization/Name', 'at:Organization/Cost Center'];
+const decisions = (list, nullEquivalents = {}) => tmp('decisions.json', JSON.stringify({ by: BY, decisions: list.map(([key, decision]) => ({ key, decision })), nullEquivalents }));
+const ACCEPT3 = KEYS.map((k) => [k, 'accept']);
+const canon = (v) => JSON.stringify(v, null, 2) + '\n';
+// Run accept and judge the SDD: canonical bytes (R-S1); `acceptance.at` of each key decided in THIS run is ISO-8601
+// UTC within ±5 s of the act (then set to the witness's fixed value); every other byte, including the acceptance
+// records of carried mappings, must equal the expected SDD. Only keys decided `accept` here may gain an acceptance.
+function accept(args, decided, expected, edit) {
+  const t0 = Date.now(); const r = sdd('accept', ...args); const t1 = Date.now();
+  if (r.code !== 0) return exitIs(r, 0);
+  const o = JSON.parse(r.out);
+  if (canon(o) !== r.out) return 'output is not canonical JSON (R-S1)';
+  const want = JSON.parse(rd(W(expected))); if (edit) edit(want);
+  for (const m of o.mappings || []) {
+    if (!decided.includes(m.key)) continue;
+    const at = m.acceptance?.at;
+    if (!/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/.test(at || '')) return `${m.key}: acceptance.at ${at} is not YYYY-MM-DDTHH:MM:SSZ`;
+    const ms = Date.parse(at); if (ms < t0 - 5000 || ms > t1 + 5000) return `${m.key}: acceptance.at ${at} is not within ±5 s of the act`;
+    const w = want.mappings.find((x) => x.key === m.key); if (w?.acceptance) m.acceptance.at = w.acceptance.at;
+  }
+  return canon(o) === canon(want) ? true : 'SDD differs from ' + expected + firstDiff(canon(o), canon(want));
+}
+const SK = W('minimal/skeleton.jsonld'), INV = W('minimal/inventory.jsonld');
+const R1 = ['--checked', W('minimal/check-report.jsonld'), W('minimal/proposal-pasted.txt')];
+const R2 = ['--checked', W('minimal/check-report-round2.jsonld'), W('minimal/proposal-pasted.txt')];
+check('W-CS6-N', () => accept([SK, INV, decisions(ACCEPT3), ...R1], KEYS, 'minimal/sdd.jsonld'));
+check('W-CS6-Δ2', () => accept([SK, INV, decisions([[KEYS[0], 'accept'], [KEYS[1], 'accept'], [KEYS[2], 'reject']]), ...R1], KEYS.slice(0, 2), 'minimal/sdd-partial.jsonld'));
+check('W-CS6-Δ4', () => accept([SK, INV, decisions(ACCEPT3, { 'at:Organization/Cost Center': ['N/A', '-'] }), ...R1], KEYS, 'minimal/sdd.jsonld', (w) => { w.mappings.find((m) => m.key === 'at:Organization/Cost Center').nullEquivalents = ['-', 'N/A']; }));
+check('W-CS6-Δ7', () => accept([SK, INV, decisions(ACCEPT3), ...R2], KEYS, 'minimal/sdd-round2.jsonld'));
+check('W-CS6-Δ9', () => accept([SK, INV, decisions(ACCEPT3), ...R1, ...R2], KEYS, 'minimal/sdd-round2.jsonld'));
+check('W-CS6-Δ9 (reports in the other order)', () => accept([SK, INV, decisions(ACCEPT3), ...R2, ...R1], KEYS, 'minimal/sdd-round2.jsonld'));
+check('W-JS3 step 6 (--previous, rerun subset)', () => accept([W('minimal/skeleton-v2.jsonld'), W('minimal/inventory-v2.jsonld'), decisions([[KEYS[2], 'accept']]), '--checked', W('minimal/check-report-rerun.jsonld'), W('minimal/proposal-rerun.txt'), '--previous', W('minimal/sdd.jsonld')], [KEYS[2]], 'minimal/sdd-v2.jsonld'));
+check('W-JS4 step 2 (--previous, open key)', () => accept([SK, INV, decisions([[KEYS[2], 'accept']]), '--checked', W('minimal/check-report-open.jsonld'), W('minimal/proposal-open.txt'), '--previous', W('minimal/sdd-partial.jsonld')], [KEYS[2]], 'minimal/sdd-j4.jsonld'));
+// Refusals (R-S18, R-S23): exit code and code as the witness states, nothing on stdout, the --out path never created.
+for (const [id, args, code, exit] of [
+  ['W-CS6-Δ1', [SK, INV, decisions(ACCEPT3), '--checked', W('minimal/bad-check-report.jsonld'), W('minimal/bad-proposal.txt')], 'E-ACC-UNVALIDATED', 1],
+  ['W-CS6-Δ1 (one unvalidated among validated)', [SK, INV, decisions(ACCEPT3), ...R1, '--checked', W('minimal/bad-check-report.jsonld'), W('minimal/bad-proposal.txt')], 'E-ACC-UNVALIDATED', 1],
+  ['W-CS6-Δ3', [SK, INV, decisions(ACCEPT3), '--checked', W('minimal/check-report.jsonld'), W('minimal/bad-proposal.txt')], 'E-ACC-MISMATCH', 1],
+  ['W-CS6-Δ6', [SK, INV, decisions([[KEYS[0], 'accept']]), '--checked', W('minimal/check-report-open.jsonld'), W('minimal/proposal-open.txt')], 'E-ACC-UNCOVERED', 1],
+  ['W-CS6-Δ8', [W('minimal/skeleton-v2.jsonld'), INV, decisions(ACCEPT3), ...R1], 'E-ACC-MISMATCH', 1],
+  ['C-S6 no --checked pair (R-S23)', [SK, INV, decisions(ACCEPT3)], 'E-USAGE', 2],
+  ['C-S6 unreadable decisions (R-S23)', [SK, INV, join(TMP, 'missing.json'), ...R1], 'E-IO', 2],
+  ['C-S6 foreign @context report (R-S16)', [SK, INV, decisions(ACCEPT3), '--checked', tmp('foreign.jsonld', rd(W('minimal/check-report.jsonld')).replace('https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld', 'https://example.org/ctx.jsonld')), W('minimal/proposal-pasted.txt')], 'E-CTX-EXTERNAL', 1],
+]) check(`${id.startsWith('W-') ? '' : ''}${id}`, () => { const out = join(TMP, `${n++}-never.jsonld`); const r = sdd('accept', ...args, '--out', out); return all(exitIs(r, exit), codeIn(r, code), r.out === '' ? true : 'wrote to stdout', nothingAt(out)); });
+check('W-CS6-Δ6 names the key', () => { const r = sdd('accept', SK, INV, decisions([[KEYS[0], 'accept']]), '--checked', W('minimal/check-report-open.jsonld'), W('minimal/proposal-open.txt')); return codeIn(r, '"ot:Organization"'); });
+check('W-CS6-Δ5', () => { const out = tmp('exists.jsonld', 'KEEP'); const r = sdd('accept', SK, INV, decisions(ACCEPT3), ...R1, '--out', out); return all(exitIs(r, 2), codeIn(r, 'E-OUT-EXISTS'), rd(out) === 'KEEP' ? true : 'existing file was changed'); });
+// Validation is not acceptance (R-S14): a validated report with NO decisions must not yield any accepted mapping.
+check('C-S6 validated but undecided → nothing accepted', () => {
+  const r = sdd('accept', SK, INV, decisions([]), ...R1);
+  if (r.code !== 0) return r.out === '' ? true : 'refused but wrote output';
+  const o = JSON.parse(r.out);
+  return all(deq((o.mappings || []).filter((m) => m.acceptance).length, 0, 'accepted mappings'), deq([...(o.open || [])].sort(), [...KEYS].sort(), 'open keys'));
+});
+
+// Adversarial (R-S10, R-S18): a forged "validated" report whose hash matches a paste smuggling human-only fields.
+// No SDD may result in which those fields came from the paste.
+check('C-S6 forged report smuggling human-only fields', () => {
+  const paste = rd(W('minimal/proposal-pasted.txt')).replace('"key": "at:Organization/Cost Center",', '"key": "at:Organization/Cost Center", "nullEquivalents": ["X"], "acceptance": {"decision": "accepted", "by": "LLM", "at": "2020-01-01T00:00:00Z"}, "datatype": "xsd:integer",');
+  const rep = JSON.parse(rd(W('minimal/check-report.jsonld'))); rep.proposalSha256 = createHash('sha256').update(Buffer.from(paste, 'utf8')).digest('hex');
+  const out = join(TMP, `${n++}-never.jsonld`);
+  const r = sdd('accept', SK, INV, decisions(ACCEPT3), '--checked', tmp('forged.jsonld', canon(rep)), tmp('smuggled.txt', paste), '--out', out);
+  if (r.code !== 0) return all(r.code === 1 || r.code === 2 ? true : exitIs(r, 1), nothingAt(out));
+  const m = JSON.parse(rd(out)).mappings.find((x) => x.key === 'at:Organization/Cost Center');
+  return all(deq(m.nullEquivalents, [], 'nullEquivalents'), deq(m.acceptance.by, BY, 'acceptance.by'), deq(m.datatype, 'xsd:string', 'datatype'));
+});
+
+// End to end, every step through the CLI from the source schema, explicit decisions only.
+function e2e(list, decided, expected) {
+  const inv = tmp('inv.jsonld', sdd('parse', F('jira-assets/minimal-organization.json')).out);
+  const sk = tmp('sk.jsonld', sdd('skeleton', inv).out);
+  const dir = join(TMP, `${n++}-e2e`); const p = sdd('prompt', sk, inv, '--out-dir', dir); if (p.code !== 0) return exitIs(p, 0);
+  const prompt = join(dir, 'prompt-1-of-1.txt');
+  const c = sdd('check', sk, prompt, W('minimal/proposal-pasted.txt')); if (c.code !== 0) return 'check: ' + exitIs(c, 0);
+  if (JSON.parse(c.out).status !== 'validated') return 'proposal not validated';
+  return accept([sk, inv, decisions(list), '--checked', tmp('report.jsonld', c.out), W('minimal/proposal-pasted.txt')], decided, expected);
+}
+check('C-S6 end-to-end: schema → validated → accept ×3 → SDD', () => e2e(ACCEPT3, KEYS, 'minimal/sdd.jsonld'));
+check('C-S6 end-to-end: partial rejection stays open', () => e2e([[KEYS[0], 'accept'], [KEYS[1], 'accept'], [KEYS[2], 'reject']], KEYS.slice(0, 2), 'minimal/sdd-partial.jsonld'));
+
 rmSync(TMP, { recursive: true, force: true });
-const caps = { 'C-S1': [], 'C-S2': [], 'C-S3': [], 'C-S4': [], 'C-S5': [], other: [] };
+const caps = { 'C-S1': [], 'C-S2': [], 'C-S3': [], 'C-S4': [], 'C-S5': [], 'C-S6': [], other: [] };
 for (const r of results) (caps[(/W-CS(\d)/.exec(r.id) ? 'C-S' + /W-CS(\d)/.exec(r.id)[1] : /^C-S\d/.exec(r.id)?.[0]) || 'other'] || caps.other).push(r);
 for (const [cap, rs] of Object.entries(caps)) {
   if (!rs.length) continue;
