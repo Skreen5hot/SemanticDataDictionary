@@ -237,7 +237,7 @@ Under H-O1 unless marked H-O2. Expected texts are exact except where masked.
 **Scene-validation precondition (P10.1):** every scene executed against the built page and CLI in a clean
 environment. *Status: met for every W-PRO\* and W-JO\* scene (H-O1 `harness/h-o1.mjs`, H-O2 `harness/h-o2.mjs`, on `ubuntu-24.04` and against the published page, 2026-10-28). V-O1–V-O3 (OO-2) pending.*
 
-`Disposition: per method §6` · `Acceptance readiness: BLOCKED — OO-2; SDD OS-1, OS-3, OS-4, OS-6`
+`Disposition: per method §6` · `Acceptance readiness: BLOCKED — OO-2; SDD OS-3, OS-4, OS-6`
 
 ## SDD-operator §15: Change discipline
 
@@ -265,7 +265,6 @@ Citations follow the normative citation rule in SDD §11 (identifiers, attributi
 | NG-S1 | NP-O0 |
 | NG-S4 | PR-O2, SDD-operator §2 |
 | NG-S5 | NP-O2, PR-O1, SDD-operator §2 |
-| OS-1 | SDD-operator §14, SDD-operator §15 |
 | OS-3 | SDD-operator §14, SDD-operator §15 |
 | OS-4 | SDD-operator §14, SDD-operator §15 |
 | OS-6 | SDD-operator §14, SDD-operator §15 |
@@ -314,7 +313,7 @@ Citations follow the normative citation rule in SDD §11 (identifiers, attributi
 | Joint acceptance housed in both change-discipline sections | met |
 
 **CAP-2 was lifted** by the registrar (Decision B, 2026-10-28) after gates 1 and 2 were verified independently of the author (SDD §11). **Joint
-disposition** = min(SDD, SDD-operator), no longer capped by CAP-2; it is reassessed only at the next authorized grading. Joint acceptance readiness: BLOCKED (SDD OS-1, OS-3, OS-4, OS-6; OO-2).
+disposition** = min(SDD, SDD-operator), no longer capped by CAP-2; it is reassessed only at the next authorized grading. Joint acceptance readiness: BLOCKED (SDD OS-3, OS-4, OS-6; OO-2).
 
 **Open items.** **OO-1:** *closed (2026-10-28):* `site/` and `harness/netguard.mjs` built; every scene executed under H-O1/H-O2. **OO-2:**
 implement G2 and K2.

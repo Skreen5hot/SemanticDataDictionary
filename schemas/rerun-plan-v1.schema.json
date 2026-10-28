@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skreen5hot.github.io/SemanticDataDictionary/schemas/rerun-plan-v1.schema.json",
+  "title": "SDD RerunPlan, version 1",
+  "description": "Authoritative shape of a C-S7 RerunPlan (SDD R-S1, R-S17, R-S19; OS-1): slot keys of the new inventory matched by key against the previous SDD's mappings, each list sorted and duplicate-free, plus the C-S7-only flags FL-KEY-SCHEME-CHANGED and FL-TERMS-CHANGED (key null). Property order is the R-S1 canonical key order.",
+  "type": "object",
+  "required": ["@context", "@type", "previousSddSha256", "inventorySha256", "unchanged", "changed", "added", "removed", "flags"],
+  "additionalProperties": false,
+  "properties": {
+    "@context": { "const": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld" },
+    "@type": { "const": "RerunPlan" },
+    "previousSddSha256": { "$ref": "#/$defs/sha256" },
+    "inventorySha256": { "$ref": "#/$defs/sha256" },
+    "unchanged": { "$ref": "#/$defs/keyList" },
+    "changed": { "$ref": "#/$defs/keyList" },
+    "added": { "$ref": "#/$defs/keyList" },
+    "removed": { "$ref": "#/$defs/keyList" },
+    "flags": { "type": "array", "items": { "$ref": "#/$defs/flag" } }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "slotKey": { "type": "string", "pattern": "^(ot:([^~/]|~[01])*|at:([^~/]|~[01])*(/([^~/]|~[01])*)?|ct:ot:([^~/]|~[01])*)$" },
+    "keyList": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/slotKey" } },
+    "identification": { "enum": ["name", "externalId", "mixed"] },
+    "flag": {
+      "type": "object",
+      "required": ["code", "key", "previous", "current"],
+      "additionalProperties": false,
+      "properties": {
+        "code": { "enum": ["FL-KEY-SCHEME-CHANGED", "FL-TERMS-CHANGED"] },
+        "key": { "type": "null" },
+        "previous": { "type": "string" },
+        "current": { "type": "string" }
+      },
+      "if": { "properties": { "code": { "const": "FL-KEY-SCHEME-CHANGED" } } },
+      "then": { "properties": { "previous": { "$ref": "#/$defs/identification" }, "current": { "$ref": "#/$defs/identification" } } },
+      "else": { "properties": { "previous": { "$ref": "#/$defs/sha256" }, "current": { "$ref": "#/$defs/sha256" } } }
+    }
+  }
+}

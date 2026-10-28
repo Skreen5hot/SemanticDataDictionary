@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skreen5hot.github.io/SemanticDataDictionary/schemas/inventory-v1.schema.json",
+  "title": "SDD Inventory, version 1",
+  "description": "Authoritative shape of a C-S1 Inventory (SDD R-S1, R-S2, R-S3, R-S4, R-S19; OS-1). Property order is the R-S1 canonical key order. An inventory with errors has empty objectTypes, attributes and flags (R-S3); one without errors has a schemaName. Source identification 'name' means no item carries an externalId and 'externalId' means every item does (R-S2).",
+  "type": "object",
+  "required": ["@context", "@type", "source", "objectTypes", "attributes", "flags", "errors"],
+  "additionalProperties": false,
+  "properties": {
+    "@context": { "$ref": "#/$defs/context" },
+    "@type": { "const": "Inventory" },
+    "source": {
+      "type": "object",
+      "required": ["format", "sha256", "schemaName", "identification"],
+      "additionalProperties": false,
+      "properties": {
+        "format": { "const": "jira-assets-import/2021_09_15" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "schemaName": { "type": ["string", "null"] },
+        "identification": { "$ref": "#/$defs/identification" }
+      }
+    },
+    "objectTypes": { "type": "array", "items": { "$ref": "#/$defs/objectType" } },
+    "attributes": { "type": "array", "items": { "$ref": "#/$defs/attribute" } },
+    "flags": { "type": "array", "items": { "$ref": "#/$defs/flag" } },
+    "errors": { "type": "array", "items": { "$ref": "#/$defs/error" } }
+  },
+  "if": { "properties": { "errors": { "items": false } } },
+  "then": { "properties": { "source": { "properties": { "schemaName": { "type": "string" } } } } },
+  "else": {
+    "properties": {
+      "objectTypes": { "items": false },
+      "attributes": { "items": false },
+      "flags": { "items": false }
+    }
+  },
+  "$ref": "#/$defs/identificationRule",
+  "$defs": {
+    "context": { "const": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "identification": { "enum": ["name", "externalId", "mixed"] },
+    "otKey": { "type": "string", "pattern": "^ot:([^~/]|~[01])*$" },
+    "atKey": { "type": "string", "pattern": "^at:([^~/]|~[01])*(/([^~/]|~[01])*)?$" },
+    "slotKey": { "type": "string", "pattern": "^(ot:([^~/]|~[01])*|at:([^~/]|~[01])*(/([^~/]|~[01])*)?|ct:ot:([^~/]|~[01])*)$" },
+    "jiraType": {
+      "enum": ["text", "textarea", "integer", "double", "boolean", "date", "time", "date_time", "url", "email", "select", "ipaddress", "referenced_object"]
+    },
+    "identificationRule": {
+      "if": { "properties": { "source": { "properties": { "identification": { "const": "name" } } } } },
+      "then": {
+        "properties": {
+          "objectTypes": { "items": { "properties": { "externalId": { "type": "null" } } } },
+          "attributes": { "items": { "properties": { "externalId": { "type": "null" } } } }
+        }
+      },
+      "else": {
+        "if": { "properties": { "source": { "properties": { "identification": { "const": "externalId" } } } } },
+        "then": {
+          "properties": {
+            "objectTypes": { "items": { "properties": { "externalId": { "type": "string" } } } },
+            "attributes": { "items": { "properties": { "externalId": { "type": "string" } } } }
+          }
+        }
+      }
+    },
+    "objectType": {
+      "type": "object",
+      "required": ["key", "name", "externalId", "description", "parent", "label", "identity", "selectors"],
+      "additionalProperties": false,
+      "properties": {
+        "key": { "$ref": "#/$defs/otKey" },
+        "name": { "type": "string" },
+        "externalId": { "type": ["string", "null"] },
+        "description": { "type": "string" },
+        "parent": { "type": ["string", "null"], "pattern": "^ot:([^~/]|~[01])*$" },
+        "label": { "type": ["string", "null"], "pattern": "^at:([^~/]|~[01])*(/([^~/]|~[01])*)?$" },
+        "identity": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/atKey" } },
+        "selectors": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }
+      }
+    },
+    "attribute": {
+      "type": "object",
+      "required": ["key", "name", "externalId", "owner", "description", "type", "target", "isLabel", "isIdentityPart", "locators"],
+      "additionalProperties": false,
+      "properties": {
+        "key": { "$ref": "#/$defs/atKey" },
+        "name": { "type": "string" },
+        "externalId": { "type": ["string", "null"] },
+        "owner": { "$ref": "#/$defs/otKey" },
+        "description": { "type": "string" },
+        "type": { "$ref": "#/$defs/jiraType" },
+        "target": { "type": ["string", "null"], "pattern": "^ot:([^~/]|~[01])*$" },
+        "isLabel": { "type": "boolean" },
+        "isIdentityPart": { "type": "boolean" },
+        "locators": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }
+      },
+      "if": { "properties": { "type": { "const": "referenced_object" } } },
+      "then": { "properties": { "target": { "type": "string" } } },
+      "else": { "properties": { "target": { "type": "null" } } }
+    },
+    "flag": {
+      "type": "object",
+      "required": ["code", "key"],
+      "properties": {
+        "code": { "enum": ["FL-CONTAINMENT", "FL-INHERITED-USE", "FL-NO-LABEL", "FL-SELECT-VALUES-UNKNOWN", "FL-UNMAPPED-TYPE"] }
+      },
+      "if": { "properties": { "code": { "const": "FL-CONTAINMENT" } } },
+      "then": {
+        "required": ["code", "key", "container", "selector"],
+        "additionalProperties": false,
+        "properties": {
+          "code": { "const": "FL-CONTAINMENT" },
+          "key": { "$ref": "#/$defs/otKey" },
+          "container": { "$ref": "#/$defs/otKey" },
+          "selector": { "type": "string", "minLength": 1 }
+        }
+      },
+      "else": {
+        "if": { "properties": { "code": { "const": "FL-INHERITED-USE" } } },
+        "then": {
+          "required": ["code", "key", "attributes"],
+          "additionalProperties": false,
+          "properties": {
+            "code": { "const": "FL-INHERITED-USE" },
+            "key": { "$ref": "#/$defs/otKey" },
+            "attributes": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } }
+          }
+        },
+        "else": {
+          "if": { "properties": { "code": { "const": "FL-SELECT-VALUES-UNKNOWN" } } },
+          "then": {
+            "required": ["code", "key"],
+            "additionalProperties": false,
+            "properties": {
+              "code": { "const": "FL-SELECT-VALUES-UNKNOWN" },
+              "key": { "$ref": "#/$defs/atKey" }
+            }
+          },
+          "else": {
+            "required": ["code", "key"],
+            "additionalProperties": false,
+            "properties": {
+              "code": { "enum": ["FL-NO-LABEL", "FL-UNMAPPED-TYPE"] },
+              "key": { "$ref": "#/$defs/otKey" }
+            }
+          }
+        }
+      }
+    },
+    "error": {
+      "type": "object",
+      "required": ["code"],
+      "properties": {
+        "code": {
+          "enum": ["E-SRC-SHAPE", "E-SRC-REF-TARGET", "E-SRC-MAP-TYPE", "E-SRC-MAP-ATTR", "E-SRC-DUP-TYPE", "E-SRC-DUP-ATTR", "E-SRC-KEY-COLLISION"]
+        }
+      },
+      "if": { "properties": { "code": { "const": "E-SRC-SHAPE" } } },
+      "then": {
+        "required": ["code", "pointer", "keyword", "detail"],
+        "additionalProperties": false,
+        "properties": {
+          "code": { "const": "E-SRC-SHAPE" },
+          "pointer": { "type": "string", "pattern": "^(/([^~/]|~[01])*)*$" },
+          "keyword": {
+            "enum": ["json", "type", "enum", "const", "minLength", "maxLength", "pattern", "required", "additionalProperties", "minItems", "false schema"]
+          },
+          "detail": true
+        },
+        "if": { "properties": { "keyword": { "enum": ["required", "type", "additionalProperties"] } } },
+        "then": { "properties": { "detail": { "type": "string" } } },
+        "else": {
+          "if": { "properties": { "keyword": { "enum": ["json", "false schema"] } } },
+          "then": { "properties": { "detail": { "type": "null" } } }
+        }
+      },
+      "else": {
+        "if": { "properties": { "code": { "const": "E-SRC-REF-TARGET" } } },
+        "then": {
+          "required": ["code", "key", "value"],
+          "additionalProperties": false,
+          "properties": {
+            "code": { "const": "E-SRC-REF-TARGET" },
+            "key": { "$ref": "#/$defs/atKey" },
+            "value": { "type": "string" }
+          }
+        },
+        "else": {
+          "if": { "properties": { "code": { "const": "E-SRC-MAP-TYPE" } } },
+          "then": {
+            "required": ["code", "key", "value"],
+            "additionalProperties": false,
+            "properties": {
+              "code": { "const": "E-SRC-MAP-TYPE" },
+              "key": { "type": "null" },
+              "value": { "type": "string" }
+            }
+          },
+          "else": {
+            "if": { "properties": { "code": { "const": "E-SRC-MAP-ATTR" } } },
+            "then": {
+              "required": ["code", "key", "value"],
+              "additionalProperties": false,
+              "properties": {
+                "code": { "const": "E-SRC-MAP-ATTR" },
+                "key": { "$ref": "#/$defs/otKey" },
+                "value": { "type": "string" }
+              }
+            },
+            "else": {
+              "if": { "properties": { "code": { "const": "E-SRC-DUP-TYPE" } } },
+              "then": {
+                "required": ["code", "key"],
+                "additionalProperties": false,
+                "properties": { "code": { "const": "E-SRC-DUP-TYPE" }, "key": { "$ref": "#/$defs/otKey" } }
+              },
+              "else": {
+                "if": { "properties": { "code": { "const": "E-SRC-DUP-ATTR" } } },
+                "then": {
+                  "required": ["code", "key"],
+                  "additionalProperties": false,
+                  "properties": { "code": { "const": "E-SRC-DUP-ATTR" }, "key": { "$ref": "#/$defs/atKey" } }
+                },
+                "else": {
+                  "required": ["code", "key"],
+                  "additionalProperties": false,
+                  "properties": { "code": { "const": "E-SRC-KEY-COLLISION" }, "key": { "$ref": "#/$defs/slotKey" } }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skreen5hot.github.io/SemanticDataDictionary/schemas/prompt-set-v1.schema.json",
+  "title": "SDD PromptSet, version 1",
+  "description": "Authoritative shape of a C-S3 PromptSet (SDD R-S1, R-S11, R-S12; OS-1): the round-1 prompts written for one skeleton, their batch labels, byte sizes (UTF-8) and sha256, the budget, and W-PROMPT-OVERSIZE warnings in group order. Property order is the R-S1 canonical key order.",
+  "type": "object",
+  "required": ["@context", "@type", "skeletonSha256", "round", "budget", "prompts", "warnings"],
+  "additionalProperties": false,
+  "properties": {
+    "@context": { "const": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld" },
+    "@type": { "const": "PromptSet" },
+    "skeletonSha256": { "$ref": "#/$defs/sha256" },
+    "round": { "const": 1 },
+    "budget": { "type": "integer", "minimum": 1 },
+    "prompts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["batch", "file", "bytes", "sha256"],
+        "additionalProperties": false,
+        "properties": {
+          "batch": { "type": "string", "pattern": "^[1-9][0-9]*/[1-9][0-9]*$" },
+          "file": { "type": "string", "pattern": "^prompt-[1-9][0-9]*-of-[1-9][0-9]*\\.txt$" },
+          "bytes": { "type": "integer", "minimum": 1 },
+          "sha256": { "$ref": "#/$defs/sha256" }
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "key", "bytes", "budget"],
+        "additionalProperties": false,
+        "properties": {
+          "code": { "const": "W-PROMPT-OVERSIZE" },
+          "key": { "type": "string", "pattern": "^ot:([^~/]|~[01])*$" },
+          "bytes": { "type": "integer", "minimum": 1 },
+          "budget": { "type": "integer", "minimum": 1 }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  }
+}

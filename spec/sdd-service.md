@@ -323,7 +323,7 @@ execution against the implementation in a clean environment before a gate consum
 files are authored, with hashes computed by the author's reference generator (not an implementation); none is
 validated.*
 
-`Disposition: per method §6` · `Acceptance readiness: BLOCKED — OS-1, OS-3, OS-4, OS-6; SDD-operator OO-2`
+`Disposition: per method §6` · `Acceptance readiness: BLOCKED — OS-3, OS-4, OS-6; SDD-operator OO-2`
 
 ## SDD §11: Change discipline
 
@@ -397,6 +397,12 @@ prop-001 are retained under `fixtures/witnesses/superseded/v1/` with their v1 ha
 | `fixtures/witnesses/minimal/sdd.jsonld` | 4 | `d311d909a03fe3bb193dd60f51c6086127c18fc86764420de4004fc3ce4e07f3` | OS-1, S-O6, S-S7, W-CS6-N, W-CS6-Δ10, W-CS7-N, W-CS7-Δ1, W-CS7-Δ3, W-JO1, W-JO3, W-JS1, W-JS3, W-PRO1-N |
 | `fixtures/witnesses/minimal/skeleton-v2.jsonld` | 4 | `60411c630940a686335e005622284427b07384650c4668721216a392d5196bef` | W-CS6-Δ8, W-JS3 |
 | `fixtures/witnesses/minimal/skeleton.jsonld` | 3 | `e990dbb36831aa769a09a7d5df64d396698511482c3ba849064353500ff9de57` | S-S2, W-CS2-N, W-CS3-N, W-CS4-Δ18, W-JS1 |
+| `schemas/inventory-v1.schema.json` | 4.1 | `d99750e46f7a0ea7e5b5ec7712168cab65b2b5d972580763f87f5daf5c10b080` | OS-1 |
+| `schemas/skeleton-v1.schema.json` | 4.1 | `b0dae470dc9bcb8b3a857d624376287af28d185cf400683e2beea1c2ed7b006d` | OS-1 |
+| `schemas/prompt-set-v1.schema.json` | 4.1 | `6f78b0ca38274d52758ffb691369b1e32176d8eff48d5befc7ec812b65f72b45` | OS-1 |
+| `schemas/check-report-v1.schema.json` | 4.1 | `e1605720e831110077265fd20ccdf2732e0f1c152d5972ce18114b9f2377f7f9` | OS-1 |
+| `schemas/rerun-plan-v1.schema.json` | 4.1 | `49f3b3bf9ba6c6273061a4fe2f6583995f2b5cee9e52e30428ac4b96a6ad2119` | OS-1 |
+| `schemas/sdd-v1.schema.json` | 4.1 | `13e207f8e20afe7c5f5174d6ea6451b80fc93a6a8eeb6b7e6aaf9acc025fe2af` | OS-1 |
 | `schemas/proposal-v1.schema.json` | 2 | `c722a5cc7ba3c04233302698f0efb42701e373ade153e0a87c628ada73f7f631` | R-S13 |
 | `spec/prompt-template-v2.txt` | 2 | `78c0635dd8f2c20de38d3f74a0a39e70d747231b95d81783a06c7ca45914cd59` | R-S11 |
 | `ontology/term-list.json` | ADR-005 | `terms_sha256` `a9e01756d749655a53088833bb97612791caf9a19220065848c826f99985cd39` | S-S3, every term-bearing witness |
@@ -464,7 +470,6 @@ enumerated from both documents:
 | NG-S1 | NP-O0 |
 | NG-S4 | PR-O2, SDD-operator §2 |
 | NG-S5 | NP-O2, PR-O1, SDD-operator §2 |
-| OS-1 | SDD-operator §14, SDD-operator §15 |
 | OS-3 | SDD-operator §14, SDD-operator §15 |
 | OS-4 | SDD-operator §14, SDD-operator §15 |
 | OS-6 | SDD-operator §14, SDD-operator §15 |
@@ -517,7 +522,7 @@ warnings with a checker written from the spec by an isolated rater (`tools/oracl
 outputs are not validated only by the generator that produced them.
 
 **Open items.**
-- **OS-1:** author `schemas/*.schema.json` for the remaining artifacts (the proposal schema is done and pinned), the bundled `context/sdd-v1.jsonld` (hash-pinned), and **SHACL shapes for the SemanticDataDictionary** (`shapes/sdd-v1.shacl.ttl`, ADR-006), with `minimal/sdd.jsonld` as the conforming witness.
+- **OS-1:** *closed (2026-10-28, milestone 4).* JSON Schemas `schemas/inventory-v1.schema.json`, `schemas/skeleton-v1.schema.json`, `schemas/prompt-set-v1.schema.json`, `schemas/check-report-v1.schema.json`, `schemas/rerun-plan-v1.schema.json`, `schemas/sdd-v1.schema.json` and the SDD shapes `shapes/sdd-v1.shacl.ttl` (term lists pinned to `terms_sha256` `a9e01756`); the context `context/sdd-v1.jsonld` is served at its IRI (milestone 3). Every current witness validates against its schema and every SDD witness conforms to the shapes, under the author's test (`src/test/schemas.mjs`) and an independent judge (`harness/os1_judge.py`: Python jsonschema and pyshacl, with spec-derived corruptions rejected). Was: author `schemas/*.schema.json` for the remaining artifacts (the proposal schema is done and pinned), the bundled `context/sdd-v1.jsonld` (hash-pinned), and **SHACL shapes for the SemanticDataDictionary** (`shapes/sdd-v1.shacl.ttl`, ADR-006), with `minimal/sdd.jsonld` as the conforming witness.
 - **OS-2:** *closed (v0.3).* The term list carries every named `rdfs:domain` / `rdfs:range` the pins state: of 225 CCO object properties, 112 have at least one named domain and 110 at least one named range; of 40 BFO object properties, 28 and 31 (the rest have none, or only anonymous expressions, NG-S9). In the source files: CCO 148 named domain and 149 named range edges plus 15 and 15 anonymous; BFO 28 and 31. The reader matches rdflib 7.1.1 exactly on all six edge sets (`tools/verify-hierarchy.py`). The new `terms_sha256` superseded every term-bearing witness; the version-2 files are retained under `fixtures/witnesses/superseded/v2/`. W-CS4-Δ5 and Δ15 are literal.
 - **OS-3:** implement G1 and K1.
 - **OS-4:** build the core and CLI; execute every witness under H-S1.

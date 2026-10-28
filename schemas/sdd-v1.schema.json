@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skreen5hot.github.io/SemanticDataDictionary/schemas/sdd-v1.schema.json",
+  "title": "SDD SemanticDataDictionary, version 1",
+  "description": "Authoritative shape of a C-S6 SemanticDataDictionary (SDD R-S1, R-S2, R-S5, R-S7, R-S9, R-S14, R-S15, R-S17, R-S18; OS-1). Each mapping is closed per kind (type, attribute, reference, containment) and carries its source element, item hash, provenance and acceptance record; attribute datatype and valueProperty follow the R-S9 table; retired entries are mappings moved there with their last acceptance record. Term membership, ICE ancestry and kind are checked by the SHACL shapes (shapes/sdd-v1.shacl.ttl). Property order is the R-S1 canonical key order.",
+  "type": "object",
+  "required": ["@context", "@type", "sddVersion", "source", "environment", "absenceKinds", "mappings", "open", "retired"],
+  "additionalProperties": false,
+  "properties": {
+    "@context": { "$ref": "#/$defs/context" },
+    "@type": { "const": "SemanticDataDictionary" },
+    "sddVersion": { "const": 1 },
+    "source": {
+      "type": "object",
+      "required": ["format", "sha256", "schemaName", "identification", "inventorySha256"],
+      "additionalProperties": false,
+      "properties": {
+        "format": { "const": "jira-assets-import/2021_09_15" },
+        "sha256": { "$ref": "#/$defs/sha256" },
+        "schemaName": { "type": "string" },
+        "identification": { "enum": ["name", "externalId", "mixed"] },
+        "inventorySha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "required": ["termListSha256", "ontologyTemplateCommit", "contextIri"],
+      "additionalProperties": false,
+      "properties": {
+        "termListSha256": { "$ref": "#/$defs/sha256" },
+        "ontologyTemplateCommit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "contextIri": { "$ref": "#/$defs/context" }
+      }
+    },
+    "absenceKinds": { "const": ["missing", "explicit_null", "empty_string", "indistinguishable"] },
+    "mappings": { "type": "array", "items": { "$ref": "#/$defs/mapping" } },
+    "open": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/slotKey" } },
+    "retired": { "type": "array", "items": { "$ref": "#/$defs/mapping" } }
+  },
+  "if": { "properties": { "source": { "properties": { "identification": { "const": "name" } } } } },
+  "then": {
+    "properties": { "mappings": { "items": { "properties": { "source": { "properties": { "externalId": { "type": "null" } } } } } } }
+  },
+  "else": {
+    "if": { "properties": { "source": { "properties": { "identification": { "const": "externalId" } } } } },
+    "then": {
+      "properties": { "mappings": { "items": { "properties": { "source": { "properties": { "externalId": { "type": "string" } } } } } } }
+    }
+  },
+  "$defs": {
+    "context": { "const": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld" },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "otKey": { "type": "string", "pattern": "^ot:([^~/]|~[01])*$" },
+    "atKey": { "type": "string", "pattern": "^at:([^~/]|~[01])*(/([^~/]|~[01])*)?$" },
+    "ctKey": { "type": "string", "pattern": "^ct:ot:([^~/]|~[01])*$" },
+    "slotKey": { "type": "string", "pattern": "^(ot:([^~/]|~[01])*|at:([^~/]|~[01])*(/([^~/]|~[01])*)?|ct:ot:([^~/]|~[01])*)$" },
+    "curie": { "type": "string", "pattern": "^(bfo:BFO_[0-9]{7}|cco:ont[0-9]{8})$" },
+    "provenance": {
+      "type": "object",
+      "required": ["round", "batch", "promptSha256", "proposalSha256", "checkReportSha256"],
+      "additionalProperties": false,
+      "properties": {
+        "round": { "type": "integer", "minimum": 1 },
+        "batch": { "type": "string", "pattern": "^[1-9][0-9]*/[1-9][0-9]*$" },
+        "promptSha256": { "$ref": "#/$defs/sha256" },
+        "proposalSha256": { "$ref": "#/$defs/sha256" },
+        "checkReportSha256": { "$ref": "#/$defs/sha256" }
+      }
+    },
+    "acceptance": {
+      "type": "object",
+      "required": ["decision", "by", "at"],
+      "additionalProperties": false,
+      "properties": {
+        "decision": { "const": "accepted" },
+        "by": { "type": "string", "minLength": 1 },
+        "at": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]Z$"
+        }
+      }
+    },
+    "mapping": {
+      "type": "object",
+      "required": ["key", "kind"],
+      "properties": { "kind": { "enum": ["type", "attribute", "reference", "containment"] } },
+      "if": { "properties": { "kind": { "const": "type" } } },
+      "then": { "$ref": "#/$defs/typeMapping" },
+      "else": {
+        "if": { "properties": { "kind": { "const": "attribute" } } },
+        "then": { "$ref": "#/$defs/attributeMapping" },
+        "else": {
+          "if": { "properties": { "kind": { "const": "reference" } } },
+          "then": { "$ref": "#/$defs/referenceMapping" },
+          "else": { "$ref": "#/$defs/containmentMapping" }
+        }
+      }
+    },
+    "typeMapping": {
+      "type": "object",
+      "required": ["key", "kind", "source", "recordClass", "referentClass", "rationale", "provenance", "acceptance"],
+      "additionalProperties": false,
+      "properties": {
+        "key": { "$ref": "#/$defs/otKey" },
+        "kind": { "const": "type" },
+        "source": {
+          "type": "object",
+          "required": ["name", "externalId", "itemSha256"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string" },
+            "externalId": { "type": ["string", "null"] },
+            "itemSha256": { "$ref": "#/$defs/sha256" }
+          }
+        },
+        "recordClass": { "$ref": "#/$defs/curie" },
+        "referentClass": { "$ref": "#/$defs/curie" },
+        "rationale": { "type": "string" },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "acceptance": { "$ref": "#/$defs/acceptance" }
+      }
+    },
+    "attributeMapping": {
+      "type": "object",
+      "required": ["key", "kind", "source", "iceClass", "datatype", "valueProperty", "nullEquivalents", "rationale", "provenance", "acceptance"],
+      "additionalProperties": false,
+      "properties": {
+        "key": { "$ref": "#/$defs/atKey" },
+        "kind": { "const": "attribute" },
+        "source": {
+          "type": "object",
+          "required": ["name", "externalId", "owner", "jiraType", "itemSha256"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string" },
+            "externalId": { "type": ["string", "null"] },
+            "owner": { "$ref": "#/$defs/otKey" },
+            "jiraType": { "enum": ["text", "textarea", "integer", "double", "boolean", "date", "time", "date_time", "url", "email", "select", "ipaddress"] },
+            "itemSha256": { "$ref": "#/$defs/sha256" }
+          }
+        },
+        "iceClass": { "$ref": "#/$defs/curie" },
+        "datatype": { "enum": ["xsd:string", "xsd:anyURI", "xsd:integer", "xsd:double", "xsd:boolean", "xsd:date", "xsd:dateTime"] },
+        "valueProperty": { "enum": ["cco:ont00001765", "cco:ont00001768", "cco:ont00001773", "cco:ont00001770", "cco:ont00001772", "cco:ont00001771", "cco:ont00001767"] },
+        "nullEquivalents": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+        "rationale": { "type": "string" },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "acceptance": { "$ref": "#/$defs/acceptance" }
+      },
+      "$ref": "#/$defs/valueTable"
+    },
+    "referenceMapping": {
+      "type": "object",
+      "required": ["key", "kind", "source", "relation", "rationale", "provenance", "acceptance"],
+      "additionalProperties": false,
+      "properties": {
+        "key": { "$ref": "#/$defs/atKey" },
+        "kind": { "const": "reference" },
+        "source": {
+          "type": "object",
+          "required": ["name", "externalId", "owner", "jiraType", "target", "itemSha256"],
+          "additionalProperties": false,
+          "properties": {
+            "name": { "type": "string" },
+            "externalId": { "type": ["string", "null"] },
+            "owner": { "$ref": "#/$defs/otKey" },
+            "jiraType": { "const": "referenced_object" },
+            "target": { "$ref": "#/$defs/otKey" },
+            "itemSha256": { "$ref": "#/$defs/sha256" }
+          }
+        },
+        "relation": { "$ref": "#/$defs/curie" },
+        "rationale": { "type": "string" },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "acceptance": { "$ref": "#/$defs/acceptance" }
+      }
+    },
+    "containmentMapping": {
+      "type": "object",
+      "required": ["key", "kind", "source", "relation", "rationale", "provenance", "acceptance"],
+      "additionalProperties": false,
+      "properties": {
+        "key": { "$ref": "#/$defs/ctKey" },
+        "kind": { "const": "containment" },
+        "source": {
+          "type": "object",
+          "required": ["child", "container", "selector", "itemSha256"],
+          "additionalProperties": false,
+          "properties": {
+            "child": { "$ref": "#/$defs/otKey" },
+            "container": { "$ref": "#/$defs/otKey" },
+            "selector": { "type": "string", "minLength": 1 },
+            "itemSha256": { "$ref": "#/$defs/sha256" }
+          }
+        },
+        "relation": {
+          "type": "string",
+          "pattern": "^(bfo:BFO_[0-9]{7}|cco:ont[0-9]{8}|sdd:NoRelation)$"
+        },
+        "rationale": { "type": "string" },
+        "provenance": { "$ref": "#/$defs/provenance" },
+        "acceptance": { "$ref": "#/$defs/acceptance" }
+      }
+    },
+    "valueTable": {
+      "description": "R-S9: datatype and valueProperty are fixed by the source Jira type.",
+      "if": { "properties": { "source": { "properties": { "jiraType": { "enum": ["text", "textarea", "email", "select", "ipaddress", "time"] } } } } },
+      "then": { "properties": { "datatype": { "const": "xsd:string" }, "valueProperty": { "const": "cco:ont00001765" } } },
+      "else": {
+        "if": { "properties": { "source": { "properties": { "jiraType": { "const": "url" } } } } },
+        "then": { "properties": { "datatype": { "const": "xsd:anyURI" }, "valueProperty": { "const": "cco:ont00001768" } } },
+        "else": {
+          "if": { "properties": { "source": { "properties": { "jiraType": { "const": "integer" } } } } },
+          "then": { "properties": { "datatype": { "const": "xsd:integer" }, "valueProperty": { "const": "cco:ont00001773" } } },
+          "else": {
+            "if": { "properties": { "source": { "properties": { "jiraType": { "const": "double" } } } } },
+            "then": { "properties": { "datatype": { "const": "xsd:double" }, "valueProperty": { "const": "cco:ont00001770" } } },
+            "else": {
+              "if": { "properties": { "source": { "properties": { "jiraType": { "const": "boolean" } } } } },
+              "then": { "properties": { "datatype": { "const": "xsd:boolean" }, "valueProperty": { "const": "cco:ont00001772" } } },
+              "else": {
+                "if": { "properties": { "source": { "properties": { "jiraType": { "const": "date" } } } } },
+                "then": { "properties": { "datatype": { "const": "xsd:date" }, "valueProperty": { "const": "cco:ont00001771" } } },
+                "else": { "properties": { "datatype": { "const": "xsd:dateTime" }, "valueProperty": { "const": "cco:ont00001767" } } }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

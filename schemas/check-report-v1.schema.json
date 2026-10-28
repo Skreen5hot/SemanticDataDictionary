@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skreen5hot.github.io/SemanticDataDictionary/schemas/check-report-v1.schema.json",
+  "title": "SDD CheckReport, version 1",
+  "description": "Authoritative shape of a C-S4 CheckReport (SDD R-S1, R-S5-R-S8, R-S10, R-S13, R-S14, R-S20, R-S21; OS-1). status is 'validated' iff errors is empty (R-S14). Every error and warning is {code, key, field, value, rule, message}; per code, the rule, which members are null, the admissible fields and the R-S21 message template are fixed. Property order is the R-S1 canonical key order.",
+  "type": "object",
+  "required": ["@context", "@type", "skeletonSha256", "batch", "round", "promptSha256", "proposalSha256", "termListSha256", "status", "errors", "warnings"],
+  "additionalProperties": false,
+  "properties": {
+    "@context": { "const": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld" },
+    "@type": { "const": "CheckReport" },
+    "skeletonSha256": { "$ref": "#/$defs/sha256" },
+    "batch": { "$ref": "#/$defs/batch" },
+    "round": { "type": "integer", "minimum": 1 },
+    "promptSha256": { "$ref": "#/$defs/sha256" },
+    "proposalSha256": { "$ref": "#/$defs/sha256" },
+    "termListSha256": { "$ref": "#/$defs/sha256" },
+    "status": { "enum": ["validated", "rejected"] },
+    "errors": { "type": "array", "items": { "$ref": "#/$defs/error" } },
+    "warnings": { "type": "array", "items": { "$ref": "#/$defs/warning" } }
+  },
+  "if": { "properties": { "errors": { "items": false } } },
+  "then": { "properties": { "status": { "const": "validated" } } },
+  "else": { "properties": { "status": { "const": "rejected" } } },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "batch": { "type": "string", "pattern": "^[1-9][0-9]*/[1-9][0-9]*$" },
+    "curie": { "type": "string", "pattern": "^(bfo:BFO_[0-9]{7}|cco:ont[0-9]{8})$" },
+    "slotKey": { "type": "string", "pattern": "^(ot:([^~/]|~[01])*|at:([^~/]|~[01])*(/([^~/]|~[01])*)?|ct:ot:([^~/]|~[01])*)$" },
+    "mappingField": { "enum": ["recordClass", "referentClass", "iceClass", "relation"] },
+    "entry": {
+      "type": "object",
+      "required": ["code", "key", "field", "value", "rule", "message"],
+      "additionalProperties": false,
+      "properties": {
+        "code": { "type": "string" },
+        "key": { "type": ["string", "null"] },
+        "field": { "type": ["string", "null"] },
+        "value": { "type": ["string", "null"] },
+        "rule": { "enum": ["R-S5", "R-S6", "R-S7", "R-S8", "R-S10", "R-S13", "R-S20"] },
+        "message": { "type": "string", "minLength": 1 }
+      }
+    },
+    "error": {
+      "$ref": "#/$defs/entry",
+      "properties": {
+        "code": {
+          "enum": ["E-CHK-JSON", "E-CHK-SHAPE", "E-CHK-SKELETON", "E-CHK-BATCH", "E-CHK-MISSING", "E-CHK-DUPLICATE", "E-CHK-UNKNOWN-KEY", "E-CHK-HUMAN-FIELD", "E-CHK-FIELDS", "E-CHK-TERM", "E-CHK-KIND", "E-CHK-CATEGORY", "E-CHK-RANGE"]
+        }
+      },
+      "if": { "properties": { "code": { "const": "E-CHK-JSON" } } },
+      "then": {
+        "properties": {
+          "key": { "type": "null" }, "field": { "type": "null" }, "value": { "type": "null" }, "rule": { "const": "R-S13" },
+          "message": { "const": "The reply does not contain exactly one JSON object." }
+        }
+      },
+      "else": {
+        "if": { "properties": { "code": { "const": "E-CHK-SHAPE" } } },
+        "then": {
+          "properties": {
+            "key": { "type": "null" }, "field": { "type": "null" },
+            "value": { "type": "string", "pattern": "^(/([^~/]|~[01])*)*$" },
+            "rule": { "const": "R-S13" },
+            "message": { "type": "string", "pattern": "^The reply does not match the proposal schema at (/([^~/]|~[01])*)* \\([A-Za-z ]+\\)\\.$" }
+          }
+        },
+        "else": {
+          "if": { "properties": { "code": { "const": "E-CHK-SKELETON" } } },
+          "then": {
+            "properties": {
+              "key": { "type": "null" }, "field": { "type": "null" },
+              "value": { "$ref": "#/$defs/sha256" },
+              "rule": { "const": "R-S13" },
+              "message": { "const": "The reply names a different skeleton than the prompt." }
+            }
+          },
+          "else": {
+            "if": { "properties": { "code": { "const": "E-CHK-BATCH" } } },
+            "then": {
+              "properties": {
+                "key": { "type": "null" }, "field": { "type": "null" },
+                "value": { "$ref": "#/$defs/batch" },
+                "rule": { "const": "R-S13" },
+                "message": { "type": "string", "pattern": "^The reply names batch [1-9][0-9]*/[1-9][0-9]*; the prompt is batch [1-9][0-9]*/[1-9][0-9]*\\.$" }
+              }
+            },
+            "else": {
+              "if": { "properties": { "code": { "const": "E-CHK-MISSING" } } },
+              "then": {
+                "properties": {
+                  "key": { "$ref": "#/$defs/slotKey" }, "field": { "type": "null" }, "value": { "type": "null" }, "rule": { "const": "R-S6" },
+                  "message": { "type": "string", "pattern": "^Slot [\\s\\S]+ has no mapping in this batch\\.$" }
+                }
+              },
+              "else": {
+                "if": { "properties": { "code": { "const": "E-CHK-DUPLICATE" } } },
+                "then": {
+                  "properties": {
+                    "key": { "$ref": "#/$defs/slotKey" }, "field": { "type": "null" }, "value": { "type": "null" }, "rule": { "const": "R-S6" },
+                    "message": { "type": "string", "pattern": "^Slot [\\s\\S]+ is mapped more than once\\.$" }
+                  }
+                },
+                "else": {
+                  "if": { "properties": { "code": { "const": "E-CHK-UNKNOWN-KEY" } } },
+                  "then": {
+                    "properties": {
+                      "key": { "type": "string", "minLength": 1 }, "field": { "type": "null" }, "value": { "type": "null" }, "rule": { "const": "R-S6" },
+                      "message": { "type": "string", "pattern": "^[\\s\\S]+ is not a slot in this batch\\.$" }
+                    }
+                  },
+                  "else": {
+                    "if": { "properties": { "code": { "const": "E-CHK-HUMAN-FIELD" } } },
+                    "then": {
+                      "properties": {
+                        "key": { "$ref": "#/$defs/slotKey" },
+                        "field": { "enum": ["nullEquivalents", "acceptance", "decision", "datatype", "valueProperty"] },
+                        "value": { "type": "null" }, "rule": { "const": "R-S10" },
+                        "message": { "type": "string", "pattern": "^(nullEquivalents|acceptance|decision|datatype|valueProperty) can only be set by a person at acceptance\\.$" }
+                      }
+                    },
+                    "else": {
+                      "if": { "properties": { "code": { "const": "E-CHK-FIELDS" } } },
+                      "then": {
+                        "properties": {
+                          "key": { "$ref": "#/$defs/slotKey" }, "field": { "type": "null" }, "value": { "type": "null" }, "rule": { "const": "R-S20" },
+                          "message": { "type": "string", "pattern": "^[\\s\\S]+ must have exactly the fields (key, recordClass, referentClass, rationale|key, iceClass, rationale|key, relation, rationale)\\.$" }
+                        }
+                      },
+                      "else": {
+                        "if": { "properties": { "code": { "const": "E-CHK-TERM" } } },
+                        "then": {
+                          "properties": {
+                            "key": { "$ref": "#/$defs/slotKey" }, "field": { "$ref": "#/$defs/mappingField" }, "value": { "type": "string" }, "rule": { "const": "R-S7" },
+                            "message": { "type": "string", "pattern": "^(recordClass|referentClass|iceClass|relation) [\\s\\S]* is not in the term list\\.$" }
+                          }
+                        },
+                        "else": {
+                          "if": { "properties": { "code": { "const": "E-CHK-KIND" } } },
+                          "then": {
+                            "properties": {
+                              "key": { "$ref": "#/$defs/slotKey" }, "field": { "$ref": "#/$defs/mappingField" }, "value": { "type": "string" }, "rule": { "const": "R-S7" },
+                              "message": { "type": "string", "pattern": "^((recordClass|referentClass|iceClass) [\\s\\S]* is not a permitted class term|relation [\\s\\S]* is not a permitted object property term)\\.$" }
+                            }
+                          },
+                          "else": {
+                            "if": { "properties": { "code": { "const": "E-CHK-CATEGORY" } } },
+                            "then": {
+                              "properties": {
+                                "key": { "type": "string", "pattern": "^(ot:([^~/]|~[01])*|at:([^~/]|~[01])*(/([^~/]|~[01])*)?)$" },
+                                "field": { "enum": ["recordClass", "iceClass"] },
+                                "value": { "$ref": "#/$defs/curie" }, "rule": { "const": "R-S5" },
+                                "message": { "type": "string", "pattern": "^(recordClass|iceClass) (bfo:BFO_[0-9]{7}|cco:ont[0-9]{8}) \\([\\s\\S]*\\) is not cco:ont00000958 \\(Information Content Entity\\) or a subclass of it\\.$" }
+                              }
+                            },
+                            "else": {
+                              "properties": {
+                                "code": { "const": "E-CHK-RANGE" },
+                                "key": { "type": "string", "pattern": "^(at:([^~/]|~[01])*(/([^~/]|~[01])*)?|ct:ot:([^~/]|~[01])*)$" },
+                                "field": { "const": "relation" },
+                                "value": { "$ref": "#/$defs/curie" }, "rule": { "const": "R-S8" },
+                                "message": { "type": "string", "pattern": "^relation (bfo:BFO_[0-9]{7}|cco:ont[0-9]{8}) does not admit the referent classes it connects \\(domain/range\\)\\.$" }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "warning": {
+      "$ref": "#/$defs/entry",
+      "properties": {
+        "code": { "enum": ["W-CHK-GENERIC", "W-CHK-ICE-REFERENT", "W-CHK-RANGE-UNRESOLVED"] }
+      },
+      "if": { "properties": { "code": { "const": "W-CHK-GENERIC" } } },
+      "then": {
+        "properties": {
+          "key": { "type": "string", "pattern": "^(ot:([^~/]|~[01])*|at:([^~/]|~[01])*(/([^~/]|~[01])*)?)$" },
+          "field": { "enum": ["recordClass", "referentClass", "iceClass"] },
+          "value": { "$ref": "#/$defs/curie" }, "rule": { "const": "R-S5" },
+          "message": { "type": "string", "pattern": "^(recordClass|referentClass|iceClass) (bfo:BFO_[0-9]{7}|cco:ont[0-9]{8}) \\([\\s\\S]*\\) is a top-level class; check it is specific enough\\.$" }
+        }
+      },
+      "else": {
+        "if": { "properties": { "code": { "const": "W-CHK-ICE-REFERENT" } } },
+        "then": {
+          "properties": {
+            "key": { "type": "string", "pattern": "^ot:([^~/]|~[01])*$" },
+            "field": { "const": "referentClass" },
+            "value": { "$ref": "#/$defs/curie" }, "rule": { "const": "R-S5" },
+            "message": { "type": "string", "pattern": "^referentClass (bfo:BFO_[0-9]{7}|cco:ont[0-9]{8}) \\([\\s\\S]*\\) is information content; check the record is about information\\.$" }
+          }
+        },
+        "else": {
+          "properties": {
+            "code": { "const": "W-CHK-RANGE-UNRESOLVED" },
+            "key": { "type": "string", "pattern": "^(at:([^~/]|~[01])*(/([^~/]|~[01])*)?|ct:ot:([^~/]|~[01])*)$" },
+            "field": { "const": "relation" },
+            "value": { "$ref": "#/$defs/curie" }, "rule": { "const": "R-S8" },
+            "message": { "type": "string", "pattern": "^relation (bfo:BFO_[0-9]{7}|cco:ont[0-9]{8}): the domain/range check needs a referentClass not yet mapped\\.$" }
+          }
+        }
+      }
+    }
+  }
+}
