@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SDD CLI (C-S1 parse, C-S2 skeleton, C-S3 prompt, C-S4 check). Reads files, passes bytes to the pure core,
+// SDD CLI (C-S1 parse, C-S2 skeleton, C-S3 prompt, C-S4 check, C-S5 repair). Reads files, passes bytes to the pure core,
 // writes canonical bytes. Exit codes per R-S23: 0 success; 1 domain report of errors; 2 usage / I/O.
 
 import fs from 'node:fs';
@@ -11,6 +11,7 @@ import { parseSchema } from '../core/parse.mjs';
 import { buildSkeleton, DomainError, UsageError } from '../core/skeleton.mjs';
 import { buildPrompts, DEFAULT_BUDGET } from '../core/prompt.mjs';
 import { checkProposal } from '../core/check.mjs';
+import { buildRepairPrompt } from '../core/repair.mjs';
 import { indexTerms } from '../core/terms.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
@@ -35,6 +36,7 @@ const COMMANDS = {
   skeleton: { positional: 1, options: ['--out'] },
   prompt: { positional: 2, options: ['--keys', '--budget', '--out-dir'], required: ['--out-dir'] },
   check: { positional: 3, options: ['--out'] },
+  repair: { positional: 4, options: ['--out'] },
 };
 
 function parseArgs(argv) {
@@ -147,6 +149,16 @@ function run(argv) {
         });
         emit(opts['--out'], canonicalBytes(report));
         return report.status === 'validated' ? 0 : 1;
+      }
+      case 'repair': {
+        const skeletonBytes = readInput(positional[0]);
+        const inventoryBytes = readInput(positional[1]);
+        const reportBytes = readInput(positional[2]);
+        const promptBytes = readInput(positional[3]);
+        const template = fromUtf8(readInput(RES.template));
+        const { bytes } = buildRepairPrompt({ skeletonBytes, inventoryBytes, reportBytes, promptBytes, template, terms: loadTerms() });
+        emit(opts['--out'], bytes);
+        return 0;
       }
     }
   } catch (e) {

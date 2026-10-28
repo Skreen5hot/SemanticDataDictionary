@@ -17,7 +17,7 @@ const FIELD_SETS = {
 };
 const FIELD_ORDER = ['recordClass', 'referentClass', 'iceClass', 'relation'];
 
-/** Read the prompt's header (skeleton, batch, round) and its DATA lines. */
+/** Read the prompt's header (skeleton, terms, batch, round) and its DATA lines (parsed, and as raw text). */
 export function parsePrompt(promptBytes) {
   const text = fromUtf8(toU8(promptBytes));
   const lines = text.split('\n');
@@ -35,13 +35,14 @@ export function parsePrompt(promptBytes) {
     throw new UsageError('E-USAGE', 'the prompt is not an SDD mapping request');
   }
   const data = [];
-  for (const l of lines.slice(begin + 1, end)) {
+  const dataLines = lines.slice(begin + 1, end);
+  for (const l of dataLines) {
     let obj;
     try { obj = JSON.parse(l); } catch { throw new UsageError('E-USAGE', 'the prompt has a DATA line that is not JSON'); }
     if (!obj || typeof obj.key !== 'string' || typeof obj.kind !== 'string') throw new UsageError('E-USAGE', 'the prompt has a malformed DATA line');
     data.push(obj);
   }
-  return { skeletonSha256, batch, round: Number(roundText), data };
+  return { skeletonSha256, termsSha256: header('terms'), batch, round: Number(roundText), data, dataLines };
 }
 
 /** R-S13 answer extraction: the whole trimmed paste if it is one JSON object, else exactly one ```json block. */

@@ -1,0 +1,107 @@
+{
+  "$schema": "https://api.atlassian.com/jsm/assets/imports/external/schema/versions/2021_09_15",
+  "schema": {
+    "objectSchema": {
+      "name": "Synthetic IT Asset Register",
+      "description": "INVALID (Decision C, v1 limitation): Hard Drive is mapped under two containers, so two containment slots share the key ct:ot:Hard Drive",
+      "objectTypes": [
+        {
+          "name": "Server",
+          "description": "A server",
+          "attributes": [
+            {
+              "name": "Hostname",
+              "description": "Host name",
+              "type": "text",
+              "label": true
+            }
+          ]
+        },
+        {
+          "name": "Laptop",
+          "description": "A laptop",
+          "attributes": [
+            {
+              "name": "Asset Tag",
+              "description": "Asset tag",
+              "type": "text",
+              "label": true
+            }
+          ]
+        },
+        {
+          "name": "Hard Drive",
+          "description": "A storage drive",
+          "attributes": [
+            {
+              "name": "Serial Number",
+              "description": "Drive serial",
+              "type": "text",
+              "label": true
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "mapping": {
+    "objectTypeMappings": [
+      {
+        "objectTypeName": "Server",
+        "selector": "servers",
+        "description": "Servers",
+        "attributesMapping": [
+          {
+            "attributeName": "Hostname",
+            "attributeLocators": [
+              "hostname"
+            ],
+            "externalIdPart": true
+          }
+        ]
+      },
+      {
+        "objectTypeName": "Laptop",
+        "selector": "laptops",
+        "description": "Laptops",
+        "attributesMapping": [
+          {
+            "attributeName": "Asset Tag",
+            "attributeLocators": [
+              "assetTag"
+            ],
+            "externalIdPart": true
+          }
+        ]
+      },
+      {
+        "objectTypeName": "Hard Drive",
+        "selector": "servers.disks",
+        "description": "Drives inside a server entry",
+        "attributesMapping": [
+          {
+            "attributeName": "Serial Number",
+            "attributeLocators": [
+              "serial"
+            ],
+            "externalIdPart": true
+          }
+        ]
+      },
+      {
+        "objectTypeName": "Hard Drive",
+        "selector": "laptops.drives",
+        "description": "Drives inside a laptop entry",
+        "attributesMapping": [
+          {
+            "attributeName": "Serial Number",
+            "attributeLocators": [
+              "serial"
+            ],
+            "externalIdPart": true
+          }
+        ]
+      }
+    ]
+  }
+}

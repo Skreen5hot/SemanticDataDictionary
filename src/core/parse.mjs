@@ -58,6 +58,26 @@ function identificationOf(types) {
 }
 
 /**
+ * FL-CONTAINMENT flags (R-S4), in mapping order: a selector nested under another mapped type's selector
+ * ("P.rest"); the longest such P names the container; the type's own mappings are not candidates.
+ */
+function containmentsOf(resolvedMappings) {
+  const out = [];
+  for (const { m, type: t } of resolvedMappings) {
+    let best = null;
+    for (const other of resolvedMappings) {
+      if (other.type === t) continue;
+      const p = other.m.selector;
+      if (m.selector.startsWith(p + '.') && (!best || p.length > best.m.selector.length)) best = other;
+    }
+    if (best && !out.some((f) => f.key === t.key && f.selector === m.selector)) {
+      out.push({ code: 'FL-CONTAINMENT', key: t.key, container: best.type.key, selector: m.selector });
+    }
+  }
+  return out;
+}
+
+/**
  * C-S1. `schemaBytes`: the source file bytes. `atlassianSchema`: the vendored JSON Schema (parsed value).
  * Returns the Inventory value (errors, if any, are inside it; R-S3).
  */
@@ -164,6 +184,14 @@ export function parseSchema(schemaBytes, atlassianSchema) {
   for (const [k, n] of keyCount) {
     if (n > 1 && !dupKeys.has(k)) errColl.push({ code: 'E-SRC-KEY-COLLISION', key: k });
   }
+  // R-S2 (Decision C): each FL-CONTAINMENT becomes one containment slot keyed `ct:` + the contained type's key,
+  // so two of them for one type (e.g. a type mapped under two containers) collide on that key.
+  const containments = containmentsOf(resolvedMappings);
+  const ctCount = new Map();
+  for (const c of containments) ctCount.set('ct:' + c.key, (ctCount.get('ct:' + c.key) || 0) + 1);
+  for (const [k, n] of ctCount) {
+    if (n > 1 && !dupKeys.has(k)) errColl.push({ code: 'E-SRC-KEY-COLLISION', key: k });
+  }
 
   const errors = [...errRef, ...errMapType, ...errMapAttr, ...errDupType, ...errDupAttr, ...errColl];
   if (errors.length) {
@@ -188,18 +216,7 @@ export function parseSchema(schemaBytes, atlassianSchema) {
 
   // ---- flags (R-S4, R-S19) ----
   const flags = [];
-  // Containment: a selector nested under another mapped type's selector ("P.rest"); the longest such P wins.
-  for (const { m, type: t } of resolvedMappings) {
-    let best = null;
-    for (const other of resolvedMappings) {
-      if (other.type === t) continue;
-      const p = other.m.selector;
-      if (m.selector.startsWith(p + '.') && (!best || p.length > best.m.selector.length)) best = other;
-    }
-    if (best && !flags.some((f) => f.code === 'FL-CONTAINMENT' && f.key === t.key && f.selector === m.selector)) {
-      flags.push({ code: 'FL-CONTAINMENT', key: t.key, container: best.type.key, selector: m.selector });
-    }
-  }
+  flags.push(...containments);
   for (const t of types) {
     if (t.inherited.size) flags.push({ code: 'FL-INHERITED-USE', key: t.key, attributes: [...t.inherited].sort(cmp) });
   }

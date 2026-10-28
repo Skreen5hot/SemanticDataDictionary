@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Conformance** | *The Falsifiable Spec v0.4*, method §4A form. Companion to [`sdd-service.md`](sdd-service.md) (`SDD`), which delegates its experience level here (NG-S0). Federated by weave record **WV-1** (§15). |
-| **Status** | v0.4.1 (correction pass 2026-10-28: adopts SDD §11's normative citation rule; CAP-2 active). v0.4 (prop-002, merged 2026-10-28): v0.3 plus the dispositions of cycle-3 findings SDD-F50–F66. Supersedes v0.1 @ `b4aab5b` and v0.3 @ `5e5b4cc`. Nothing built; no scene executed. |
+| **Status** | v0.4.1 (correction pass 2026-10-28: adopts SDD §11's normative citation rule; CAP-2 lifted by the registrar, Decision B). v0.4 (prop-002, merged 2026-10-28): v0.3 plus the dispositions of cycle-3 findings SDD-F50–F66. Supersedes v0.1 @ `b4aab5b` and v0.3 @ `5e5b4cc`. Nothing built; no scene executed. |
 | **Hash citation convention** | As SDD: 8-hex-character prefixes in prose; full values in the SDD §11 registry only. |
 | **Stable identifiers** | Promises PR-O\*; journeys J-O\*; surface capabilities CV-O\*; rules RV-O\*; scenes W-PRO\*, W-JO\*; seams S-O\* (shared with SDD); invariants V-O\*; envelopes E-O\*; non-promises NP-O\* (NP-O0 is the terminal declaration); harnesses H-O\*; open items OO-\*. |
 
@@ -313,8 +313,8 @@ Citations follow the normative citation rule in SDD §11 (identifiers, attributi
 | Every joint chain scene names its harness and owner (W-JO1, W-JO2, W-JO4 → H-O1; W-JO3 → H-O2; SDD W-JS\* → H-S1) | met |
 | Joint acceptance housed in both change-discipline sections | met |
 
-**CAP-2 remains active** until gates 1 and 2 are verified independently of the author (registrar decision, cycle 3). **Joint
-disposition** = min(SDD, SDD-operator), capped at D-2. Joint acceptance readiness: BLOCKED (SDD OS-1, OS-3, OS-4, OS-6; OO-1, OO-2).
+**CAP-2 was lifted** by the registrar (Decision B, 2026-10-28) after gates 1 and 2 were verified independently of the author (SDD §11). **Joint
+disposition** = min(SDD, SDD-operator), no longer capped by CAP-2; it is reassessed only at the next authorized grading. Joint acceptance readiness: BLOCKED (SDD OS-1, OS-3, OS-4, OS-6; OO-1, OO-2).
 
 **Open items.** **OO-1:** build `site/` and `harness/netguard.mjs`; execute every scene under H-O1/H-O2. **OO-2:**
 implement G2 and K2.

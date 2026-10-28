@@ -1,11 +1,12 @@
-// Witness runner for the minimal core (C-S1 parse, C-S2 skeleton, C-S3 prompt, C-S4 check). It executes an
-// implementation's CLI against every C-S1–C-S4 witness in spec/sdd-service.md and judges the ACTUAL output: byte
+// Witness runner for the built core (C-S1 parse, C-S2 skeleton, C-S3 prompt, C-S4 check, C-S5 repair). It executes an
+// implementation's CLI against every C-S1–C-S5 witness in spec/sdd-service.md and judges the ACTUAL output: byte
 // equality with the witness file where one exists, else the outcome the witness states (exit code, exact codes/keys).
 // The runner is written from the spec text; it shares no code with the implementation under test.
 //
 //   node tools/run-witnesses.mjs [--impl <path to sdd.mjs>]     default: src/cli/sdd.mjs
 import { readFileSync, writeFileSync, mkdtempSync, rmSync, existsSync, readdirSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
+import { createHash } from 'node:crypto';
 import { join, dirname } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
@@ -45,7 +46,8 @@ src('W-CS1-Δ8', 'reference-without-target.json', [{ code: 'E-SRC-SHAPE', pointe
 src('W-CS1-Δ9', 'mapping-unknown-type.json', [{ code: 'E-SRC-MAP-TYPE', key: null, value: 'Printer' }]);
 src('W-CS1-Δ10', 'duplicate-attribute-name.json', [{ code: 'E-SRC-DUP-ATTR', key: 'at:Organization/Cost Center' }]);
 src('W-CS1-Δ11', 'key-collision.json', [{ code: 'E-SRC-KEY-COLLISION', key: 'ot:object-type~1organization' }]);
-check('W-CS1-Δ12', () => { const r = sdd('parse', join(TMP, 'missing.json')); return all(exitIs(r, 2), codeIn(r, 'E-IO'), r.out === '' ? true : 'wrote output'); });
+check('W-CS1-Δ13', () => { const r = sdd('parse', F('jira-assets/invalid/two-containers.json')); if (r.code !== 1) return exitIs(r, 1); const o = JSON.parse(r.out); return all(deq(o.errors, [{ code: 'E-SRC-KEY-COLLISION', key: 'ct:ot:Hard Drive' }], 'errors'), deq([o.objectTypes, o.attributes], [[], []], 'objectTypes/attributes')); });
+check('W-CS1-Δ12',() => { const r = sdd('parse', join(TMP, 'missing.json')); return all(exitIs(r, 2), codeIn(r, 'E-IO'), r.out === '' ? true : 'wrote output'); });
 for (const [id, fx, w] of [['inventory (W-JS3 v2)', 'minimal-organization-v2.json', 'minimal/inventory-v2.jsonld'], ['inventory (W-CS7-Δ1 v3)', 'minimal-organization-v3-removed.json', 'minimal/inventory-v3.jsonld'], ['inventory (W-CS3-Δ6 hostile)', 'hostile-separators.json', 'hostile/inventory.jsonld']])
   check('C-S1 ' + id, () => { const r = sdd('parse', F('jira-assets/' + fx)); return all(exitIs(r, 0), sameFile(r.out, W(w))); });
 
@@ -137,8 +139,66 @@ check('W-CS4-Δ10', () => {
 check('W-CS4-Δ18', () => { const r = sdd('check', W('minimal/skeleton.jsonld')); return all(exitIs(r, 2), codeIn(r, 'E-USAGE'), r.out === '' ? true : 'wrote output'); });
 check('R-S23 E-OUT-EXISTS (check --out)', () => { const out = tmp('exists.jsonld', 'KEEP'); const r = sdd('check', W('minimal/skeleton.jsonld'), W('minimal/prompt.txt'), W('minimal/proposal-pasted.txt'), '--out', out); return all(exitIs(r, 2), codeIn(r, 'E-OUT-EXISTS'), rd(out) === 'KEEP' ? true : 'existing file was changed'); });
 
+// ---------------- C-S5 repair ----------------
+// R-S22, judged from the spec text: removing the ERRORS block (its fixed lead text, then one JSON.stringify line per
+// report error joined by LF, then LF) and restoring the round must give back the checked prompt byte for byte, so the
+// DATA lines, catalogue, skeleton and batch are all preserved.
+const ERR_HEAD = '\nERRORS IN YOUR PREVIOUS REPLY\nYour previous reply for this batch was rejected for the reasons below. Return the complete corrected mapping set for every DATA line, not only the lines named here.\n';
+function repairOf(prompt, report, repair) {
+  const block = ERR_HEAD + report.errors.map((e) => JSON.stringify(e)).join('\n') + '\n';
+  const i = repair.indexOf(block);
+  if (i < 0) return 'ERRORS block (R-S22) not found with exactly the report\'s errors in report order';
+  if (!new RegExp(`^round: ${report.round + 1}$`, 'm').test(repair)) return `round is not ${report.round + 1}`;
+  const back = (repair.slice(0, i) + repair.slice(i + block.length)).replace(new RegExp(`^round: ${report.round + 1}$`, 'm'), `round: ${report.round}`);
+  return back === prompt ? true : 'without its ERRORS block and round, the repair prompt is not the checked prompt' + firstDiff(back, prompt);
+}
+const repair = (...a) => sdd('repair', ...a);
+const nothingAt = (p) => existsSync(p) ? `wrote ${p}` : true;
+check('W-CS5-N', () => {
+  const r = repair(W('minimal/skeleton.jsonld'), W('minimal/inventory.jsonld'), W('minimal/bad-check-report.jsonld'), W('minimal/prompt.txt'));
+  return all(exitIs(r, 0), repairOf(rd(W('minimal/prompt.txt')), JSON.parse(rd(W('minimal/bad-check-report.jsonld'))), r.out), sameFile(r.out, W('minimal/repair-prompt.txt')));
+});
+check('W-CS5-Δ1', () => {
+  const out = join(TMP, `${n++}-never.txt`);
+  const r = repair(W('minimal/skeleton.jsonld'), W('minimal/inventory.jsonld'), W('minimal/check-report.jsonld'), W('minimal/prompt.txt'), '--out', out);
+  return all(exitIs(r, 1), codeIn(r, 'E-REPAIR-NOTHING'), r.out === '' ? true : 'wrote to stdout', nothingAt(out));
+});
+for (const [id, args, code, exit] of [
+  ['report does not answer the prompt', [W('minimal/skeleton.jsonld'), W('minimal/inventory.jsonld'), W('minimal/bad-check-report.jsonld'), W('minimal/prompt-open.txt')], 'E-USAGE', 2],
+  ['skeleton not built from the inventory', [W('full/skeleton.jsonld'), W('minimal/inventory.jsonld'), W('minimal/bad-check-report.jsonld'), W('minimal/prompt.txt')], 'E-USAGE', 2],
+  ['report for another skeleton', [W('full/skeleton.jsonld'), W('full/inventory.jsonld'), W('minimal/bad-check-report.jsonld'), W('minimal/prompt.txt')], 'E-USAGE', 2],
+  ['missing argument', [W('minimal/skeleton.jsonld'), W('minimal/inventory.jsonld'), W('minimal/bad-check-report.jsonld')], 'E-USAGE', 2],
+  ['unreadable report', [W('minimal/skeleton.jsonld'), W('minimal/inventory.jsonld'), join(TMP, 'missing.jsonld'), W('minimal/prompt.txt')], 'E-IO', 2],
+  ['foreign @context', [W('minimal/skeleton.jsonld'), W('minimal/inventory.jsonld'), tmp('foreign-report.jsonld', rd(W('minimal/bad-check-report.jsonld')).replace('https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld', 'https://example.org/ctx.jsonld')), W('minimal/prompt.txt')], 'E-CTX-EXTERNAL', 1],
+]) check(`C-S5 refusal (R-S23): ${id}`, () => { const out = join(TMP, `${n++}-never.txt`); const r = repair(...args, '--out', out); return all(exitIs(r, exit), codeIn(r, code), r.out === '' ? true : 'wrote to stdout', nothingAt(out)); });
+check('C-S5 E-OUT-EXISTS (R-S23)', () => { const out = tmp('exists.txt', 'KEEP'); const r = repair(W('minimal/skeleton.jsonld'), W('minimal/inventory.jsonld'), W('minimal/bad-check-report.jsonld'), W('minimal/prompt.txt'), '--out', out); return all(exitIs(r, 2), codeIn(r, 'E-OUT-EXISTS'), rd(out) === 'KEEP' ? true : 'existing file was changed'); });
+
+// End-to-end repair loops, every step through the CLI from the source schema: rejected proposal → repair prompt →
+// complete corrected proposal → validated report; then a repair of that validated report is refused.
+function loop(fixture, rejected, corrected, files) {
+  const inv = tmp('inv.jsonld', sdd('parse', F('jira-assets/' + fixture)).out);
+  const sk = tmp('sk.jsonld', sdd('skeleton', inv).out);
+  const dir = join(TMP, `${n++}-loop`); const p = sdd('prompt', sk, inv, '--out-dir', dir);
+  if (p.code !== 0) return exitIs(p, 0);
+  const prompt = join(dir, 'prompt-1-of-1.txt');
+  const c1 = sdd('check', sk, prompt, W(rejected)); if (c1.code !== 1) return 'round 1: ' + exitIs(c1, 1);
+  const rep1 = JSON.parse(c1.out); if (rep1.status !== 'rejected' || rep1.round !== 1) return 'round 1 report is not rejected/round 1';
+  const r = repair(sk, inv, tmp('rep1.jsonld', c1.out), prompt); if (r.code !== 0) return 'repair: ' + exitIs(r, 0);
+  const prop = repairOf(rd(prompt), rep1, r.out); if (prop !== true) return prop;
+  const rp = tmp('repair.txt', r.out);
+  const c2 = sdd('check', sk, rp, W(corrected)); if (c2.code !== 0) return 'round 2: ' + exitIs(c2, 0);
+  const rep2 = JSON.parse(c2.out);
+  const none = repair(sk, inv, tmp('rep2.jsonld', c2.out), rp);
+  return all(deq([rep2.status, rep2.round, rep2.errors.length], ['validated', 2, 0], 'round 2 status/round/errors'),
+    deq(rep2.promptSha256, createHash('sha256').update(Buffer.from(r.out, 'utf8')).digest('hex'), 'round 2 report names the repair prompt'),
+    ...(files ? [sameFile(c1.out, W(files[0])), sameFile(r.out, W(files[1])), sameFile(c2.out, W(files[2]))] : []),
+    exitIs(none, 1), codeIn(none, 'E-REPAIR-NOTHING'));
+}
+check('C-S5 end-to-end (W-JS2, minimal)', () => loop('minimal-organization.json', 'minimal/bad-proposal.txt', 'minimal/proposal-pasted.txt', ['minimal/bad-check-report.jsonld', 'minimal/repair-prompt.txt', 'minimal/check-report-round2.jsonld']));
+check('C-S5 end-to-end (full fixture, no witness file)', () => loop('synthetic-it-assets.json', 'full/proposal-range.txt', 'full/proposal-valid.txt', null));
+
 rmSync(TMP, { recursive: true, force: true });
-const caps = { 'C-S1': [], 'C-S2': [], 'C-S3': [], 'C-S4': [], other: [] };
+const caps = { 'C-S1': [], 'C-S2': [], 'C-S3': [], 'C-S4': [], 'C-S5': [], other: [] };
 for (const r of results) (caps[(/W-CS(\d)/.exec(r.id) ? 'C-S' + /W-CS(\d)/.exec(r.id)[1] : /^C-S\d/.exec(r.id)?.[0]) || 'other'] || caps.other).push(r);
 for (const [cap, rs] of Object.entries(caps)) {
   if (!rs.length) continue;

@@ -1,4 +1,4 @@
-// Witness runner for C-S1..C-S4 (and the W-JS1/W-JS2 steps using only those capabilities).
+// Witness runner for C-S1..C-S5 (and the W-JS1/W-JS2 chain steps using only those capabilities).
 // Runs the CLI as a subprocess and compares outputs byte for byte, or checks the stated expectation.
 // Usage: node src/test/witnesses.mjs   (from the repository root). Writes only under src/.witness-tmp (removed).
 
@@ -87,6 +87,7 @@ errCase('W-CS1-Δ8', 'invalid/reference-without-target.json', [{ code: 'E-SRC-SH
 errCase('W-CS1-Δ9', 'invalid/mapping-unknown-type.json', [{ code: 'E-SRC-MAP-TYPE', key: null, value: 'Printer' }]);
 errCase('W-CS1-Δ10', 'invalid/duplicate-attribute-name.json', [{ code: 'E-SRC-DUP-ATTR', key: 'at:Organization/Cost Center' }]);
 errCase('W-CS1-Δ11', 'invalid/key-collision.json', [{ code: 'E-SRC-KEY-COLLISION', key: 'ot:object-type~1organization' }]);
+errCase('W-CS1-Δ13', 'invalid/two-containers.json', [{ code: 'E-SRC-KEY-COLLISION', key: 'ct:ot:Hard Drive' }]);
 witness('W-CS1-Δ12', () => {
   const out = tmp('never.jsonld');
   const r = sdd('parse', path.join(TMP, 'missing.json'), '--out', out);
@@ -362,6 +363,93 @@ witness('W-JS4 (prompt/check steps)', () => {
   return all(expect(r.status === 0, 'prompt exit'), expect(same(read(path.join(d, 'prompt-1-of-1.txt')), read(W('minimal/prompt-open.txt'))), 'prompt-open'),
     expect(c.status === 0 && same(c.stdout, read(W('minimal/check-report-open.jsonld'))), 'check-report-open'));
 });
+// ---------- C-S5 ----------
+const MIN = W('minimal/inventory.jsonld');
+const repair = (sk, inv, rep, pr, ...extra) => sdd('repair', sk, inv, rep, pr, ...extra);
+const errOf = (r) => { try { return json(Buffer.from(r.stderr)).code; } catch { return `stderr ${JSON.stringify(r.stderr)}`; } };
+const refused = (r, status, code, out) => all(expect(r.status === status, `exit ${r.status} ${r.stderr}`), expect(errOf(r) === code, `code ${errOf(r)}`),
+  expect(r.stdout.length === 0 && (out === undefined || !fs.existsSync(out)), 'something written'),
+  expect(r.stderr.trimEnd().split('\n').length === 1, 'stderr not one line'));
+witness('W-CS5-N', () => {
+  const out = tmp('repair-prompt.txt');
+  const r = repair(MSK, MIN, W('minimal/bad-check-report.jsonld'), MPR, '--out', out);
+  const text = read(out).toString('utf8');
+  return all(expect(r.status === 0, `exit ${r.status} ${r.stderr}`), expect(same(read(out), read(W('minimal/repair-prompt.txt'))), 'bytes differ'),
+    expect(text.split('\n')[4] === 'round: 2', 'round'), expect(eq(dataLinesOf(text), dataLinesOf(read(MPR).toString('utf8'))), 'DATA lines differ'),
+    expect(same(repair(MSK, MIN, W('minimal/bad-check-report.jsonld'), MPR).stdout, read(out)), 'stdout differs from --out'));
+});
+witness('W-CS5-Δ1', () => {
+  const out = tmp('never.txt');
+  return refused(repair(MSK, MIN, W('minimal/check-report.jsonld'), MPR, '--out', out), 1, 'E-REPAIR-NOTHING', out);
+});
+// R-S23: readable inputs that do not belong together are E-USAGE (exit 2); nothing written.
+witness('C-S5 mismatch: report/prompt', () => {
+  const out = tmp('never.txt');
+  return refused(repair(MSK, MIN, W('minimal/bad-check-report.jsonld'), W('minimal/prompt-open.txt'), '--out', out), 2, 'E-USAGE', out);
+});
+witness('C-S5 mismatch: prompt/skeleton', () => {
+  const out = tmp('never.txt');
+  return refused(repair(W('minimal/skeleton-v2.jsonld'), W('minimal/inventory-v2.jsonld'), W('minimal/bad-check-report.jsonld'), MPR, '--out', out), 2, 'E-USAGE', out);
+});
+witness('C-S5 mismatch: skeleton/inventory', () => {
+  const out = tmp('never.txt');
+  return refused(repair(MSK, W('minimal/inventory-v2.jsonld'), W('minimal/bad-check-report.jsonld'), MPR, '--out', out), 2, 'E-USAGE', out);
+});
+witness('C-S5 mismatch: tampered report', () => {
+  const rep = json(read(W('minimal/bad-check-report.jsonld'))); rep.round = 2;
+  return refused(repair(MSK, MIN, put('rep.jsonld', JSON.stringify(rep, null, 2) + '\n'), MPR), 2, 'E-USAGE');
+});
+witness('C-S5 wrong kinds (report as skeleton; prompt as report)', () => all(
+  refused(repair(W('minimal/bad-check-report.jsonld'), MIN, W('minimal/bad-check-report.jsonld'), MPR), 2, 'E-USAGE'),
+  refused(repair(MSK, MIN, MPR, MPR), 2, 'E-IO')));
+witness('C-S5 E-CTX-EXTERNAL (R-S16)', () => {
+  const rep = json(read(W('minimal/bad-check-report.jsonld'))); rep['@context'] = 'https://example.org/ctx.jsonld';
+  return refused(repair(MSK, MIN, put('foreign.jsonld', JSON.stringify(rep, null, 2) + '\n'), MPR), 1, 'E-CTX-EXTERNAL');
+});
+witness('C-S5 E-IO / E-USAGE / E-OUT-EXISTS', () => {
+  const existing = put('exists.txt', 'keep');
+  return all(refused(repair(MSK, MIN, path.join(TMP, 'missing.jsonld'), MPR), 2, 'E-IO'),
+    refused(sdd('repair', MSK, MIN, W('minimal/bad-check-report.jsonld')), 2, 'E-USAGE'),
+    refused(repair(MSK, MIN, W('minimal/bad-check-report.jsonld'), MPR, '--out', existing), 2, 'E-OUT-EXISTS'),
+    expect(read(existing).toString() === 'keep', 'file changed'));
+});
+witness('C-S5 round 3 (repair of a repair prompt)', () => {
+  const rp = W('minimal/repair-prompt.txt');
+  const c = sdd('check', MSK, rp, W('minimal/bad-proposal.txt'));
+  const r = repair(MSK, MIN, put('rep2.jsonld', c.stdout), rp);
+  const text = r.stdout.toString('utf8');
+  const c3 = sdd('check', MSK, put('rp3.txt', r.stdout), W('minimal/proposal-pasted.txt'));
+  return all(expect(c.status === 1 && json(c.stdout).round === 2, 'round-2 rejection'), expect(r.status === 0, `exit ${r.status} ${r.stderr}`),
+    expect(text.split('\n')[4] === 'round: 3', 'round'), expect(eq(dataLinesOf(text), dataLinesOf(read(MPR).toString('utf8'))), 'DATA'),
+    expect(text.split('ERRORS IN YOUR PREVIOUS REPLY').length === 2, 'ERRORS block count'),
+    expect(c3.status === 0 && json(c3.stdout).round === 3 && json(c3.stdout).status === 'validated', 'round-3 check'));
+});
+witness('C-S5 placeholder text in an error stays inert (R-S11 single pass)', () => {
+  const p = nProposal(); p.mappings[1].iceClass = '{{CATALOGUE}}';
+  const { r: c } = check(MSK, MPR, p);
+  const r = repair(MSK, MIN, put('rep.jsonld', c.stdout), MPR);
+  const text = r.stdout.toString('utf8');
+  return all(expect(c.status === 1, 'check'), expect(r.status === 0, `exit ${r.status} ${r.stderr}`),
+    expect(text.split('\n').filter((l) => l === '-----BEGIN CATALOGUE-----').length === 1, 'catalogue count'),
+    expect(text.includes('"value":"{{CATALOGUE}}"'), 'placeholder not verbatim'));
+});
+witness('W-JS2 (full chain through the CLI)', () => {
+  const inv = tmp('inventory.jsonld'), sk = tmp('skeleton.jsonld'), rep1 = tmp('bad-check-report.jsonld');
+  const rp = tmp('repair-prompt.txt'), rep2 = tmp('check-report-round2.jsonld');
+  const s1 = sdd('parse', F('minimal-organization.json'), '--out', inv);
+  const s2 = sdd('skeleton', inv, '--out', sk);
+  const { r: s3, d } = promptDir(sk, inv);
+  const pr = path.join(d, 'prompt-1-of-1.txt');
+  const s5 = sdd('check', sk, pr, W('minimal/bad-proposal.txt'), '--out', rep1);
+  const s6 = sdd('repair', sk, inv, rep1, pr, '--out', rp);
+  const s8 = sdd('check', sk, rp, W('minimal/proposal-pasted.txt'), '--out', rep2);
+  return all(expect([s1, s2, s3, s6, s8].every((x) => x.status === 0) && s5.status === 1, `exit codes ${[s1, s2, s3, s5, s6, s8].map((x) => x.status)}`),
+    expect(same(read(pr), read(W('minimal/prompt.txt'))), 'prompt'),
+    expect(same(read(rep1), read(W('minimal/bad-check-report.jsonld'))), 'round-1 report'),
+    expect(same(read(rp), read(W('minimal/repair-prompt.txt'))), 'repair prompt'),
+    expect(same(read(rep2), read(W('minimal/check-report-round2.jsonld'))), 'round-2 report'));
+});
+
 // R-S23 refusals for these four commands.
 witness('R-S23 E-OUT-EXISTS', () => {
   const existing = put('exists.txt', 'keep');

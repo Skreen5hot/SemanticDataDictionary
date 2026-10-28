@@ -471,3 +471,36 @@ The item (7) jira-assets base-name reading was made explicit.
 - the unseen-input difftest agrees 28/28.
 
 **Register state:** F67–F70 corrected and F71 triaged. Open: Decision C (registrar) and the CAP-2 lift (registrar).
+
+## Registrar decisions B and C; C-S5 built (2026-10-28, appended; sections above unamended)
+
+- **Decision B: CAP-2 LIFTED** on the round-2 independent verification (gate 1 MET; gate 2 MET, 107 pairs). Evidence:
+  `review/core-v0/evidence/cap2-round2/`. Recorded in SDD §11, SDD-operator §15 and both status rows. CAP-2 is
+  reinstated only on new evidence.
+- **Decision C (Option 1): implemented.** Two containment slots with one key → E-SRC-KEY-COLLISION under R-S2, which
+  makes it a v1 limitation. The key format is unchanged. New negative witness **W-CS1-Δ13** uses
+  `invalid/two-containers.json`. Before the fix it exited 0 with two `ct:ot:Hard Drive` slots; now it exits 1 with
+  exactly that error. A single-container control still parses. The implementer's reading: one type under *one*
+  container through two nested selectors also yields two `ct:` slots, so it is refused too, under R-S2 as written.
+- **C-S5 repair: built** by the independent implementer (`src/core/repair.mjs`, the CLI command `sdd repair`). The
+  independent judge (`tools/run-witnesses.mjs`) now covers C-S5. It checks R-S22 from the spec text, not only witness
+  bytes: removing the ERRORS block and restoring the round must give back the checked prompt byte for byte. Its
+  results:
+  - W-CS5-N passes;
+  - W-CS5-Δ1 passes;
+  - 6 R-S23 refusals pass, each with nothing written;
+  - E-OUT-EXISTS passes;
+  - **two end-to-end loops** pass: the minimal W-JS2 chain (byte-equal at every step) and the full fixture
+    (rejected E-CHK-RANGE → repair → validated round 2, with no witness file).
+
+  Judge total: **69/69**; the implementer's runner: 61/61.
+- **Readings recorded, no spec change** (not blocking):
+  - R-S22's ERRORS lines are joined by LF and end with one final LF. The witness bytes fix this, and the judge and
+    the implementer chose it independently.
+  - A validated report is refused before the input-chain checks. Either way nothing is written.
+  - Non-JSON input gives E-IO.
+  - Error lines escape U+2028/U+2029 (R-S11).
+- **All other checks pass:**
+  - registry-check, witness-check, oracle-check, citations and build-term-list;
+  - the mutation test detects 84 corruptions with their expected checkers, and the control case behaves correctly;
+  - the unseen-input difftest agrees 28/28.
