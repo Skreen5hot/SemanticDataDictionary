@@ -565,3 +565,41 @@ The item (7) jira-assets base-name reading was made explicit.
   corruptions detected, control correct) and the difftest (28/28).
 - **`project/PLAN.md`** now shows the five-milestone path to v1. Milestones 1–2 are complete and the offline HTML
   application is next.
+
+## Milestone 3: offline HTML application (2026-10-28, appended; sections above unamended)
+
+- **Decision F72 approved by the registrar:** the term-list change re-opens mappings for decision; no outright refusal.
+- **Built by the independent implementer:**
+  - `site/` (`app.mjs` view, `session.mjs` state) over the unchanged `src/core/`;
+  - `tools/build-site.mjs`, which makes one self-contained `dist/index.html` (902,685 bytes, deterministic, CSP
+    `connect-src 'none'`);
+  - `context/sdd-v1.jsonld`;
+  - `.github/workflows/pages.yml`.
+- **Core and CLI:** `src/core` and the CLI are unchanged in git.
+- **Independent harnesses** (the author's; written from the operator spec and `harness/UI-CONTRACT.md`, a locator-only
+  contract):
+  - **H-O1** (`harness/h-o1.mjs`, Playwright/Chromium) covers every W-PRO\* and W-JO1/2/4 scene, workflow 7 (previous
+    SDD + changed schema), browser/CLI parity, E-O1 (saved copy, `file://`, offline throughout), E-O2 (5 runs, worst
+    binds) and E-O3.
+  - **H-O2** (`harness/h-o2.mjs` + `harness/netguard.mjs`) runs the whole CLI judge with every node process guarded.
+    It has a positive control that proves the guard blocks and logs.
+- **Results:**
+  - **Locally (Windows, Chromium 141):** H-O1 passes 24/24, H-O2 3/3, with E-O2 at worst 192 ms.
+  - **Reference runner** (`ubuntu-24.04`, Node 22; run 40760792190): H-O2 passes inside `docker --network none` and
+    H-O1 passes against `dist/`.
+  - **Published page:** H-O1 passes 23/23 locally and on the runner (run 40760873398). The page is byte-identical to
+    the local build, and the context is served at its IRI as `application/ld+json`.
+  - **JSON-LD context:** all 30 witness artifacts expand under rdflib with no key dropped, and class and relation
+    fields become IRIs.
+- **Harness correction (one):** W-PRO1-Δ5 had assumed that an undecided open key is shown as an empty row. The page
+  shows no row until a reply covers the key, which also satisfies "no new decision exists". The assertion was
+  widened to accept either form.
+- **Implementer's readings, recorded with no spec change:**
+  - On Windows, copying uses a copy event: Chromium's async clipboard turns LF into CRLF there, which would break
+    PR-O6(a).
+  - Decisions stay changeable after a save; every save is a new file.
+  - Accept and Reject need a typed name first.
+  - "Accept all N" counts undecided validated items only, so it never overrides a Reject.
+  - Warnings are shown in their item's row.
+  - Saving needs a validated report, as the CLI requires `--checked`.
+- **OO-1 closed.** Readiness remains BLOCKED on OO-2 and OS-1, OS-3, OS-4 and OS-6 (milestone 4).

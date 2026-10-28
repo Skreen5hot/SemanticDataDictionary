@@ -62,7 +62,7 @@ cycles, architecture or scope unless a demonstrated blocker needs a registrar de
   regression suite is green. This closes the capability part of OS-4.
 - **Blockers:** none.
 
-### 3. Offline HTML application: NEXT
+### 3. Offline HTML application: COMPLETE
 
 - **Deliverables:**
   - `site/`: one offline page reusing `src/core/` unchanged, implementing SDD-operator CV-O1–CV-O3 and PR-O1–PR-O6;
@@ -78,7 +78,7 @@ cycles, architecture or scope unless a demonstrated blocker needs a registrar de
   - the Pages deploy is green.
 - **Blockers:** none known.
 
-### 4. Release verification: PENDING
+### 4. Release verification: NEXT
 
 - **Deliverables:**
   - **OS-1** (remainder): JSON Schemas for the remaining artifacts, plus SHACL shapes for the SDD with

@@ -323,7 +323,7 @@ execution against the implementation in a clean environment before a gate consum
 files are authored, with hashes computed by the author's reference generator (not an implementation); none is
 validated.*
 
-`Disposition: per method §6` · `Acceptance readiness: BLOCKED — OS-1, OS-3, OS-4, OS-6; SDD-operator OO-1, OO-2`
+`Disposition: per method §6` · `Acceptance readiness: BLOCKED — OS-1, OS-3, OS-4, OS-6; SDD-operator OO-2`
 
 ## SDD §11: Change discipline
 
@@ -483,7 +483,7 @@ enumerated from both documents:
 | R-S23 | CV-O3, PR-O3, SDD-operator §2, SDD-operator §12 |
 | SDD §2 | J-O1, J-O2, J-O3, J-O4, WV-1 |
 | SDD §5 | CV-O1, CV-O2, CV-O3 |
-| SDD §10 | OO-1, OO-2, WV-1 |
+| SDD §10 | OO-2, WV-1 |
 | SDD §11 | G2, K2, WV-1 |
 | SDD header | WV-1 |
 | W-CS3-N | W-JO1, W-PRO6-N |

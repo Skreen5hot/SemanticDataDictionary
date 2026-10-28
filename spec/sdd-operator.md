@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Conformance** | *The Falsifiable Spec v0.4*, method §4A form. Companion to [`sdd-service.md`](sdd-service.md) (`SDD`), which delegates its experience level here (NG-S0). Federated by weave record **WV-1** (§15). |
-| **Status** | v0.4.1 (correction pass 2026-10-28: adopts SDD §11's normative citation rule; CAP-2 lifted by the registrar, Decision B). v0.4 (prop-002, merged 2026-10-28): v0.3 plus the dispositions of cycle-3 findings SDD-F50–F66. Supersedes v0.1 @ `b4aab5b` and v0.3 @ `5e5b4cc`. Nothing built; no scene executed. |
+| **Status** | v0.4.1 (correction pass 2026-10-28: adopts SDD §11's normative citation rule; CAP-2 lifted by the registrar, Decision B). v0.4 (prop-002, merged 2026-10-28): v0.3 plus the dispositions of cycle-3 findings SDD-F50–F66. Supersedes v0.1 @ `b4aab5b` and v0.3 @ `5e5b4cc`. The page (`site/`, published by GitHub Pages) is built; every scene is executed by the independent harnesses H-O1 and H-O2, locally and on the reference runner (OO-1 closed). |
 | **Hash citation convention** | As SDD: 8-hex-character prefixes in prose; full values in the SDD §11 registry only. |
 | **Stable identifiers** | Promises PR-O\*; journeys J-O\*; surface capabilities CV-O\*; rules RV-O\*; scenes W-PRO\*, W-JO\*; seams S-O\* (shared with SDD); invariants V-O\*; envelopes E-O\*; non-promises NP-O\* (NP-O0 is the terminal declaration); harnesses H-O\*; open items OO-\*. |
 
@@ -235,9 +235,9 @@ Under H-O1 unless marked H-O2. Expected texts are exact except where masked.
 6. E-O1–E-O3 met.
 
 **Scene-validation precondition (P10.1):** every scene executed against the built page and CLI in a clean
-environment. *Status: pending (OO-1).*
+environment. *Status: met for every W-PRO\* and W-JO\* scene (H-O1 `harness/h-o1.mjs`, H-O2 `harness/h-o2.mjs`, on `ubuntu-24.04` and against the published page, 2026-10-28). V-O1–V-O3 (OO-2) pending.*
 
-`Disposition: per method §6` · `Acceptance readiness: BLOCKED — OO-1, OO-2; SDD OS-1, OS-3, OS-4, OS-6`
+`Disposition: per method §6` · `Acceptance readiness: BLOCKED — OO-2; SDD OS-1, OS-3, OS-4, OS-6`
 
 ## SDD-operator §15: Change discipline
 
@@ -284,7 +284,7 @@ Citations follow the normative citation rule in SDD §11 (identifiers, attributi
 | R-S23 | CV-O3, PR-O3, SDD-operator §2, SDD-operator §12 |
 | SDD §2 | J-O1, J-O2, J-O3, J-O4, WV-1 |
 | SDD §5 | CV-O1, CV-O2, CV-O3 |
-| SDD §10 | OO-1, OO-2, WV-1 |
+| SDD §10 | OO-2, WV-1 |
 | SDD §11 | G2, K2, WV-1 |
 | SDD header | WV-1 |
 | W-CS3-N | W-JO1, W-PRO6-N |
@@ -314,9 +314,9 @@ Citations follow the normative citation rule in SDD §11 (identifiers, attributi
 | Joint acceptance housed in both change-discipline sections | met |
 
 **CAP-2 was lifted** by the registrar (Decision B, 2026-10-28) after gates 1 and 2 were verified independently of the author (SDD §11). **Joint
-disposition** = min(SDD, SDD-operator), no longer capped by CAP-2; it is reassessed only at the next authorized grading. Joint acceptance readiness: BLOCKED (SDD OS-1, OS-3, OS-4, OS-6; OO-1, OO-2).
+disposition** = min(SDD, SDD-operator), no longer capped by CAP-2; it is reassessed only at the next authorized grading. Joint acceptance readiness: BLOCKED (SDD OS-1, OS-3, OS-4, OS-6; OO-2).
 
-**Open items.** **OO-1:** build `site/` and `harness/netguard.mjs`; execute every scene under H-O1/H-O2. **OO-2:**
+**Open items.** **OO-1:** *closed (2026-10-28):* `site/` and `harness/netguard.mjs` built; every scene executed under H-O1/H-O2. **OO-2:**
 implement G2 and K2.
 
 ## SDD-operator §16: Closure report (method P2)
