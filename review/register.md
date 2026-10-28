@@ -400,3 +400,25 @@ Progress against cycle 2: the operator document rose from D-1 (15/22) to D-2 (18
 - **Process change:** after prop-002 is approved, the next priority is a **minimal implementation of the shared
   deterministic core** (parse, skeleton, prompt, check) against real executable witnesses, not another paper cycle.
   Neither cycle 4 nor full Phase 4 starts without authorization.
+
+## prop-002 review, correction and merge: spec v0.4 (2026-10-28, appended; sections above unamended)
+
+- **Registrar review:** prop-002 accepted as meaningful progress. **Decision A approved:** ADR-004 step 4 amended (the
+  repair prompt lists the errors and resends the batch, consistent with R-S22). **Decision B: CAP-2 remains active**
+  until a separate agent, independent of the tools' author, verifies reciprocity during the minimal-core
+  implementation and the result is recorded.
+- **Correction required before merge (done):** the mutation-test harness passed a corruption whenever *any* check
+  failed. Corrected: each corruption names its expected detecting check, and only that check's failure counts.
+  Resynchronised corruptions update the registry row *and* the prose prefixes and require `registry-check` to pass, so
+  detection cannot rest on a hash inconsistency. A control case (a registry-only corruption declared as needing
+  `witness-check`) must be, and is, classified "not detected".
+- **Verification after the correction:** baseline clean; **76/76 corruptions detected by their expected check**;
+  control correctly classified. Changed results: every resynchronised corruption is now detected with
+  `registry-check` passing (previously stale prose prefixes also tripped it; the F52 replay is now caught by
+  `oracle-check` alone). No substantive new defect. All existing checks green: `build-term-list --check`,
+  `communications`, `registry-check` (93 rows), `witness-check` (44 files, 359 digests, 8 prompts), `oracle-check`
+  (8/8), `citations` (97), `verify-hierarchy.py` (6/6), `mutation-test`.
+- **Merged** to `main` as `4d19818` (branch `prop-002` @ `eb181df`). Cycle-3 findings SDD-F50–F66 are dispositioned as
+  in `review/proposals/prop-002/prop-002.md` (F63 completed by Decision A). **CAP-2 active.**
+- **Next (authorized):** a bounded minimal-core implementation of C1–C4 against the executable witnesses, with an
+  independent CAP-2 verification. Not authorized: the complete application, or cycle 4.

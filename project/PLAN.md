@@ -76,7 +76,12 @@ Draft journeys: **J1** first dictionary (C1→C6) · **J2** repair loop (C4→C5
   files with computed hashes (`fixtures/witnesses/minimal/`). All 24 cycle-1 findings are dispositioned
   (`review/register.md`). Self-identified gaps: crossing examples S-S6 and S-S7 pending (OS-4); W-CS4-Δ5 literal
   pending (OS-2).
-- **Phase 3: in progress.** Cycle 2 graded v0.1 at joint D-1; prop-001 was merged as v0.2 (Decisions A and B); OS-2
+- **Spec v0.4 merged (2026-10-28, prop-002).** CAP-2 active pending independent reciprocity verification. Checks to run
+  before any change to `spec/` or `fixtures/`: `registry-check`, `witness-check`, `oracle-check`, `citations`,
+  `build-term-list --check`, and `mutation-test` when any check changes.
+- **Minimal core (C1–C4): authorized 2026-10-28,** bounded: parse, skeleton, prompt, check against the executable
+  witnesses. Not the full application; no cycle 4.
+- **Phase 3 (history):** Cycle 2 graded v0.1 at joint D-1; prop-001 was merged as v0.2 (Decisions A and B); OS-2
   and OS-7 were completed as v0.3 (see `review/register.md`). **Cycle 3 awaits the registrar's authorization.**
   Before any commit to `spec/`, run: `node tools/registry-check.mjs`, `node tools/citations.mjs`,
   `node tools/build-term-list.mjs --check`.
