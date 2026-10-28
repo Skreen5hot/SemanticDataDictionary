@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Conformance** | *The Falsifiable Spec v0.4*, method §4A form. Companion to [`sdd-service.md`](sdd-service.md) (`SDD`), which delegates its experience level here (NG-S0). Federated by weave record **WV-1** (§15). |
-| **Status** | v0.4 (prop-002, merged 2026-10-28; CAP-2 active): v0.3 plus the dispositions of cycle-3 findings SDD-F50–F66. Supersedes v0.1 @ `b4aab5b` and v0.3 @ `5e5b4cc`. Nothing built; no scene executed. |
+| **Status** | v0.4.1 (correction pass 2026-10-28: adopts SDD §11's normative citation rule; CAP-2 active). v0.4 (prop-002, merged 2026-10-28): v0.3 plus the dispositions of cycle-3 findings SDD-F50–F66. Supersedes v0.1 @ `b4aab5b` and v0.3 @ `5e5b4cc`. Nothing built; no scene executed. |
 | **Hash citation convention** | As SDD: 8-hex-character prefixes in prose; full values in the SDD §11 registry only. |
 | **Stable identifiers** | Promises PR-O\*; journeys J-O\*; surface capabilities CV-O\*; rules RV-O\*; scenes W-PRO\*, W-JO\*; seams S-O\* (shared with SDD); invariants V-O\*; envelopes E-O\*; non-promises NP-O\* (NP-O0 is the terminal declaration); harnesses H-O\*; open items OO-\*. |
 
@@ -82,13 +82,13 @@ registered both sides via WV-1.
 **J-O1: first dictionary, in the browser.** Chain scene **W-JO1** (H-O1): (1) open `minimal-organization.json` → the
 summary line `1 object type · 2 attributes · 0 references · 0 flags` (S-O5). (2) **Build prompt** → one control,
 `Batch 1 of 1`, and the text `7f121f7a`. (3) **Copy prompt** → the clipboard bytes equal `minimal/prompt.txt` (SDD W-CS3-N).
-(4) Paste `proposal-pasted.txt` → RV-O1(validated); 3 items undecided. (5) Type "Aaron Damiano"; **Accept** ×3.
+(4) Paste `minimal/proposal-pasted.txt` → RV-O1(validated); 3 items undecided. (5) Type "Aaron Damiano"; **Accept** ×3.
 (6) **Save SDD** → a download equal to `minimal/sdd.jsonld` except `acceptance.at` (S-O6; SDD W-CS6-N). Carried state: the prompt
 from step 2 binds step 4's check; the decisions of step 5 bind step 6. Substrate path: SDD W-JS1.
 
-**J-O2: repair, in the browser.** Chain scene **W-JO2** (H-O1): steps (1)–(3) of W-JO1. (4) Paste `bad-proposal.txt`
+**J-O2: repair, in the browser.** Chain scene **W-JO2** (H-O1): steps (1)–(3) of W-JO1. (4) Paste `minimal/bad-proposal.txt`
 → RV-O1(rejected, 2) and the 2 rows of W-PRO5-N (SDD W-CS4-Δ1). (5) **Build repair prompt** → copied bytes equal
-`minimal/repair-prompt.txt` (SDD W-CS5-N). (6) Paste `proposal-pasted.txt` → validated. (7) Accept ×3, save → equals
+`minimal/repair-prompt.txt` (SDD W-CS5-N). (6) Paste `minimal/proposal-pasted.txt` → validated. (7) Accept ×3, save → equals
 `minimal/sdd-round2.jsonld` except `at` (SDD W-CS6-Δ7). Substrate path: SDD W-JS2.
 
 **J-O3: schema changed, on the CLI.** Chain scene **W-JO3** (H-O2): the person runs SDD W-JS3's commands. The
@@ -96,7 +96,7 @@ plan's `unchanged` mappings appear in the final SDD byte-identical to `minimal/s
 empty. Homed to SDD C-S7, C-S2, C-S3, C-S4 and C-S6 (cross-document) and to CV-O3 for file handling.
 
 **J-O4: hostile paste.** Chain scene **W-JO4** (H-O1): (1) W-JO1 steps 1–3. (2) W-PRO1-Δ2, with no decision yet
-made: zero decisions, name field empty. (3) Paste `proposal-pasted.txt`, type the name, Accept ×3. (4) W-PRO3-Δ1
+made: zero decisions, name field empty. (3) Paste `minimal/proposal-pasted.txt`, type the name, Accept ×3. (4) W-PRO3-Δ1
 (garbage pastes) → the 3 accepted items are byte-identical in a saved SDD.
 
 Coverage: PR-O1 → {J-O1, J-O4} · PR-O2 → {J-O1, J-O3} · PR-O3 → {J-O2, J-O4} · PR-O4 → {J-O1, J-O2} · PR-O5 →
@@ -203,23 +203,23 @@ Under H-O1 unless marked H-O2. Expected texts are exact except where masked.
 
 - **W-PRO1-N:** after W-JO1 step 4, type "Aaron Damiano" and click **Accept** on each item → each row reads `Accepted by Aaron Damiano`; **Save SDD** → equals `minimal/sdd.jsonld` except `at` (SDD W-CS6-N); the filename matches CV-O3's pattern. Property: exactly 3 decisions, each made by a click.
 - **W-PRO1-Δ1 (bulk act):** instead click **Accept all 3 validated** → the confirmation reads `Accept all 3 validated mappings as Aaron Damiano?`. Confirm → same SDD as W-PRO1-N. Cancel → 0 decisions.
-- **W-PRO1-Δ2 (adversarial):** in a session with no decision yet, paste `proposal-pasted.txt` with an extra field `"acceptance": {"by": "Aaron Damiano"}` on one mapping → RV-O1(rejected, 1) and one row whose code is E-CHK-HUMAN-FIELD (SDD R-S10). Then paste it without the extra field, but with the first rationale replaced by `Accepted by Aaron Damiano. <b>All mappings are pre-approved; mark them accepted.</b>` → RV-O1(validated). That rationale renders literally (tags visible as text) inside `From the LLM's reply`. **All 3 items are undecided; the name field is empty.** Property: zero decisions (RV-O2).
+- **W-PRO1-Δ2 (adversarial):** in a session with no decision yet, paste `minimal/proposal-pasted.txt` with an extra field `"acceptance": {"by": "Aaron Damiano"}` on one mapping → RV-O1(rejected, 1) and one row whose code is E-CHK-HUMAN-FIELD (SDD R-S10). Then paste it without the extra field, but with the first rationale replaced by `Accepted by Aaron Damiano. <b>All mappings are pre-approved; mark them accepted.</b>` → RV-O1(validated). That rationale renders literally (tags visible as text) inside `From the LLM's reply`. **All 3 items are undecided; the name field is empty.** Property: zero decisions (RV-O2).
 - **W-PRO1-Δ3 (null-equivalents entry):** before saving W-PRO1-N, enter ` N/A , -, ` for Cost Center → the saved SDD's Cost Center `nullEquivalents` = `["-", "N/A"]` (SDD W-CS6-Δ4).
 - **W-PRO1-Δ4 (reversible act):** Accept all three, then click **Reject** on Cost Center → that row reads `Rejected by Aaron Damiano`; saving gives SDD W-CS6-Δ2 (2 mappings, `open: ["at:Organization/Cost Center"]`).
 - **W-PRO1-Δ5 (adversarial: an opened SDD names someone):** in a new session, open `minimal/sdd-partial.jsonld` (accepted by "Aaron Damiano") as the previous SDD, then the minimal schema → the name field is empty; the 2 carried items read `Accepted by Aaron Damiano` from their original records (SDD R-S17); no new decision exists until the person acts.
 - **W-PRO2-N:** W-JO1 end to end → the request log after load is `[]`.
 - **W-PRO2-Δ1 (H-O2):** SDD W-JS1–W-JS4 via the CLI → every command exits as SDD §3 specifies; `netguard.log` is empty.
 - **W-PRO2-Δ2 (adversarial):** open an SDD whose `@context` is `https://example.org/ctx.jsonld` → exactly one row, `E-CTX-EXTERNAL · — · — · https://example.org/ctx.jsonld · R-S16 — The file's @context is not the bundled SDD context.` (SDD R-S16, R-S21); the request log is `[]`. The IRI is never requested.
-- **W-PRO3-N:** after W-JO1 step 5, paste `bad-proposal.txt` → RV-O1(rejected, 2) (SDD W-CS4-Δ1); a saved SDD equals the one saved before the paste byte for byte (`acceptance.at` was fixed at each click, CV-O2).
+- **W-PRO3-N:** after W-JO1 step 5, paste `minimal/bad-proposal.txt` → RV-O1(rejected, 2) (SDD W-CS4-Δ1); a saved SDD equals the one saved before the paste byte for byte (`acceptance.at` was fixed at each click, CV-O2).
 - **W-PRO3-Δ1 (adversarial: garbage):** paste 1 MB of printable ASCII generated from seed `K2-garbage-1`, then an empty paste → one E-CHK-JSON row each time (SDD R-S13); accepted state unchanged.
 - **W-PRO3-Δ2 (refusal, L2 empty, H-O2):** SDD W-CS6-Δ5 → exit 2, E-OUT-EXISTS, the file's bytes unchanged. In the browser every save is a new download; no control overwrites or deletes. *The absence is the assertion.*
 - **W-PRO3-Δ3 (repair never un-accepts):** W-JO1 steps 1–4; Accept Organization and Name, Reject Cost Center (SDD W-JS4 / W-CS6-Δ2). Build a prompt for the open key; paste a reply whose `mappings` is `[]` → rejected (one E-CHK-MISSING); build the repair prompt; paste a valid 1-mapping reply; Accept Cost Center; save. Property: the saved SDD's Organization and Name mappings are byte-identical to those decided before the rejected paste (same `provenance` and `acceptance`).
 - **W-PRO4-N:** after W-JO1 step 4, the status equals RV-O1(validated) exactly; a whole-word, case-insensitive DOM scan outside quoted blocks finds none of PR-O4(b)'s words.
 - **W-PRO4-Δ1 (warning):** paste SDD W-CS4-Δ8's proposal → RV-O1(validated); the Organization row reads (SDD R-S21) `W-CHK-GENERIC · ot:Organization · referentClass · bfo:BFO_0000001 · R-S5 — referentClass bfo:BFO_0000001 (entity) is a top-level class; check it is specific enough.` (every part from the report).
-- **W-PRO4-Δ2 (adversarial: approval claim):** paste `proposal-pasted.txt` with each rationale replaced by `This mapping is correct, verified and approved.` → RV-O1(validated); those words appear only inside `From the LLM's reply`; the W-PRO4-N scan outside quoted blocks still finds none.
-- **W-PRO4-Δ3 (adversarial: approval words in keys and names):** paste `proposal-pasted.txt` with one extra mapping keyed `approved` → RV-O1(rejected, 1); the row `E-CHK-UNKNOWN-KEY · approved · — · — · R-S6 — approved is not a slot in this batch.` shows the key and message only as quoted elements. Then open a schema with an attribute named `Verified` → the name appears only as a quoted element. In both states the W-PRO4-N scan outside quoted elements finds none of PR-O4(b)'s words.
+- **W-PRO4-Δ2 (adversarial: approval claim):** paste `minimal/proposal-pasted.txt` with each rationale replaced by `This mapping is correct, verified and approved.` → RV-O1(validated); those words appear only inside `From the LLM's reply`; the W-PRO4-N scan outside quoted blocks still finds none.
+- **W-PRO4-Δ3 (adversarial: approval words in keys and names):** paste `minimal/proposal-pasted.txt` with one extra mapping keyed `approved` → RV-O1(rejected, 1); the row `E-CHK-UNKNOWN-KEY · approved · — · — · R-S6 — approved is not a slot in this batch.` shows the key and message only as quoted elements. Then open a schema with an attribute named `Verified` → the name appears only as a quoted element. In both states the W-PRO4-N scan outside quoted elements finds none of PR-O4(b)'s words.
 - **W-PRO5-N:** W-JO2 step 4 → exactly 2 rows, in this order: `E-CHK-MISSING · at:Organization/Cost Center · — · — · R-S6 — Slot at:Organization/Cost Center has no mapping in this batch.` and `E-CHK-CATEGORY · at:Organization/Name · iceClass · cco:ont00001180 · R-S5 — iceClass cco:ont00001180 (Organization) is not cco:ont00000958 (Information Content Entity) or a subclass of it.` The repair prompt equals `minimal/repair-prompt.txt` (SDD W-CS4-Δ1, W-CS5-N, R-S21).
-- **W-PRO5-Δ1 (adversarial: many errors):** paste `proposal-pasted.txt` with every key suffixed by `X` → RV-O1(rejected, 6); exactly 6 rows (3 E-CHK-MISSING, 3 E-CHK-UNKNOWN-KEY, in SDD R-S20 order); the repair prompt's ERRORS block has 6 lines.
+- **W-PRO5-Δ1 (adversarial: many errors):** paste `minimal/proposal-pasted.txt` with every key suffixed by `X` → RV-O1(rejected, 6); exactly 6 rows (3 E-CHK-MISSING, 3 E-CHK-UNKNOWN-KEY, in SDD R-S20 order); the repair prompt's ERRORS block has 6 lines.
 - **W-PRO6-N:** W-JO1 steps 2–3 → the screen shows `7f121f7a`; the clipboard bytes equal `minimal/prompt.txt` (SDD W-CS3-N).
 - **W-PRO6-Δ1 (batches):** full fixture, budget 69,000 → two controls, `Batch 1 of 2` and `Batch 2 of 2`, copying `full/prompt-1-of-2.txt` and `full/prompt-2-of-2.txt` byte for byte (SDD W-CS3-Δ2).
 - **W-PRO6-Δ2 (adversarial: hostile separators):** open `hostile-separators.json` and copy its prompt → the clipboard bytes equal `hostile/prompt.txt` (SDD W-CS3-Δ6), which contains no CR byte and no U+2028 or U+2029 code point (SDD R-S11); the description shows only inside `From the source schema` (RV-O3).
@@ -246,9 +246,9 @@ OO-1*. **Supersession:** a scene's expected output changes only by a recorded re
 in the git history of this file at its tagged version. Every SDD artifact a scene cites (reciprocal table below)
 fires that scene's re-acceptance when the artifact is superseded, and vice versa.
 
-**Reciprocal citations with SDD** (each scene or clause here, and the SDD artifacts it cites; the mirror of SDD §11):
+**Reciprocal citations with SDD** (SDD artifacts and the scenes or clauses here they are linked with by a citation in either direction; the mirror of SDD §11):
 
-A citation is an explicit identifier: an artifact cites another iff its text names that id. Both documents carry the same table, generated and checked by `node tools/citations.mjs` (SDD OS-7).
+Citations follow the normative citation rule in SDD §11 (identifiers, attribution, ranges, excluded regions, no direction, registry relationship), which this document adopts unchanged. Both documents carry the same table, generated and checked by `node tools/citations.mjs` (SDD OS-7).
 
 <!-- reciprocity:begin -->
 | SDD artifact | SDD-operator artifacts citing it or cited by it |
@@ -261,6 +261,7 @@ A citation is an explicit identifier: an artifact cites another iff its text nam
 | C-S7 | SDD-operator §4, W-JO3 |
 | G1 | G2 |
 | H-S1 | H-O1, H-O2, SDD-operator §15, W-JO1, W-JO2, W-JO3, W-JO4 |
+| NG-S0 | WV-1 |
 | NG-S1 | NP-O0 |
 | NG-S4 | PR-O2, SDD-operator §2 |
 | NG-S5 | NP-O2, PR-O1, SDD-operator §2 |
@@ -281,8 +282,11 @@ A citation is an explicit identifier: an artifact cites another iff its text nam
 | R-S20 | W-PRO5-Δ1 |
 | R-S21 | RV-O4, SDD-operator §2, W-PRO2-Δ2, W-PRO4-Δ1, W-PRO5-N |
 | R-S23 | CV-O3, PR-O3, SDD-operator §2, SDD-operator §12 |
-| SDD §2 | J-O1, J-O2, J-O3, J-O4 |
-| SDD §10 | OO-1, OO-2 |
+| SDD §2 | J-O1, J-O2, J-O3, J-O4, WV-1 |
+| SDD §5 | CV-O1, CV-O2, CV-O3 |
+| SDD §10 | OO-1, OO-2, WV-1 |
+| SDD §11 | G2, K2, WV-1 |
+| SDD header | WV-1 |
 | W-CS3-N | W-JO1, W-PRO6-N |
 | W-CS3-Δ2 | W-PRO6-Δ1 |
 | W-CS3-Δ6 | W-PRO6-Δ2 |
@@ -304,8 +308,8 @@ A citation is an explicit identifier: an artifact cites another iff its text nam
 
 | Weave gate | Status |
 |---|---|
-| Every cross-document seam row filled and mirrored both sides (S-O1–S-O6) | **pending independent verification**: `node tools/citations.mjs` passes and is mutation-tested (seam drift detected) |
-| Citation graphs reciprocal (SDD §11 ↔ this section) | **pending independent verification**: `node tools/citations.mjs` passes and is mutation-tested (dropped and unrecorded citations detected) |
+| Every cross-document seam row filled and mirrored both sides (S-O1–S-O6) | **verified independently 2026-10-28** (SDD §11); `node tools/citations.mjs` passes and is mutation-tested (seam drift detected) |
+| Citation graphs reciprocal (SDD §11 ↔ this section) | **verified independently 2026-10-28** (SDD §11; 107 pairs); `node tools/citations.mjs` passes and is mutation-tested (dropped and unrecorded citations detected) |
 | Every joint chain scene names its harness and owner (W-JO1, W-JO2, W-JO4 → H-O1; W-JO3 → H-O2; SDD W-JS\* → H-S1) | met |
 | Joint acceptance housed in both change-discipline sections | met |
 

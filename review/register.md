@@ -441,3 +441,33 @@ Full report: `review/core-v0/milestone-report.md`.
 | **SDD-F71** | Minor | **Implementation-surfaced gaps** (the implementer's list, items 1–25): inventory field rules only in witnesses (OS-1); containment-key clash; refusal vs "report still written"; the stderr object shape; uncoded mismatched inputs; the W-PROMPT-OVERSIZE shape; R-S8's previous SDD with no `check` input; shape-error keyword order; catalogue headers defined only by example. | independent implementer |
 
 **Register state:** F67–F71 open, awaiting the registrar's direction. No spec change has been made.
+
+## Targeted correction pass F67–F70, F71 triage, CAP-2 re-verification (2026-10-28, appended; sections above unamended)
+
+Registrar direction: correct F67–F70 in one bounded pass; independent verification preserved; triage F71; no cycle 4.
+Spec v0.4.1.
+
+| Id | Disposition | Regression (expected checker, `tools/mutation-test.mjs`) |
+|---|---|---|
+| **SDD-F69** | **Corrected.** R-S11 now requires single-pass placeholder substitution, so source text stays inert. `witness-check.mjs` is single-pass. New fixture `hostile-placeholders.json` and witness **W-CS3-Δ7** (inventory, skeleton, prompt). These were produced by the independent implementation and are byte-identical to the single-pass reference. The judge also checks R-S11's property from the spec text. The pre-fix witness-check falsely rejects the correct prompt (demonstrated). The review aid `prop-002/aids/gen.cjs` keeps its chained fill as a historical record; it is not used by any check. | "chained fill expands `{{CATALOGUE}}` inside DATA" (resynced) → witness-check |
+| **SDD-F67** | **Corrected.** Exclusion is by region (§11 registry tables), not by a cell's leading backtick. The SDD §5 `html` row ↔ CV-O1–CV-O3 is now in both tables, as is WV-1. On the exact failure, the pre-fix tool stays silent and the corrected one names all three pairs (demonstrated). | "SDD §5 row missing from both tables" → citations |
+| **SDD-F68** | **Corrected.** "Cited by" is derived by whole relative path, and `registry-check.mjs` verifies the column (`--write` regenerates it). Bare `minimal/` base names in the journeys and scenes are now prefixed, and the hostile/full intermediates are named in their witnesses. | "full/ row copies minimal/ Cited by" → registry-check |
+| **SDD-F70** | **Corrected.** The normative citation rule is in SDD §11, items (1)–(7): identifiers, blocks, attribution, citation and ranges, excluded regions, no direction, and the registry relationship. SDD-operator §15 adopts it. One shared reader (`tools/lib/spec-blocks.mjs`) serves both tools. **Round 1** (independent verifier): gate 2 NOT MET, because the rule text under-determined attribution (own-document bold span), the W-PRO id forms and code spans, and "Cited by" missed W-CS4-Δ18. The rule *text* was corrected, not the tables. The whole-path matcher then reproduced the single W-CS4-Δ18 miss on its own. **Round 2** (fresh verifier, no knowledge of round 1): gate 1 MET, gate 2 MET. | (F67 and F68 rows) |
+| **SDD-F71** | **Triaged** (`review/core-v0/gap-triage.md`). 4 Blocking: #3 escalated as **Decision C**, #11, #13 and #18 resolved by clarification. 18 Clarification, of which 7 are sentences in existing rules (R-S3, R-S4, R-S11, R-S12, R-S23) and the rest recorded only. 2 Deferred (#1 → OS-1, #24); #25 = F68. | — |
+
+**CAP-2:** both WV-1 gates have now been demonstrated by an independent verifier. Its scripts are in
+`review/core-v0/evidence/cap2-round2/`, and round 1's in `evidence/cap2-round1-verify.mjs`. **Lifting CAP-2 is left to
+the registrar.** Residual notes from round 2, which do not affect the gates:
+- the Stable-identifiers row lists codes that rule item (1) excludes;
+- weave-table rows attribute to "SDD-operator §15", not WV-1.
+
+The item (7) jira-assets base-name reading was made explicit.
+
+**Checks:**
+- registry-check, witness-check, oracle-check, citations and build-term-list `--check` are ok;
+- the independent judge passes 57/57 C-S1–C-S4 witnesses (54 before, plus 3 for W-CS3-Δ7);
+- the implementation's own runner passes 48/48;
+- the mutation test detects 83 corruptions with their expected checkers, and the control case behaves correctly;
+- the unseen-input difftest agrees 28/28.
+
+**Register state:** F67–F70 corrected and F71 triaged. Open: Decision C (registrar) and the CAP-2 lift (registrar).

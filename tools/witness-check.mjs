@@ -123,8 +123,9 @@ for (const r of witnesses.filter((x) => x.endsWith('.txt'))) {
   const eStart = t.indexOf(RULE4_END) + RULE4_END.length, eEnd = t.indexOf('ANSWER FORMAT\n');
   const errors = t.slice(eStart, eEnd).replace(/\n$/, '');
   const hd = promptHeader(t);
-  const fill = TEMPLATE.replace('{{SKELETON}}', hd.skeleton).replace('{{TERMS}}', TL).replace('{{BATCH}}', hd.batch).replace('{{ROUND}}', String(hd.round))
-    .replace('{{ERRORS}}', errors).replace('{{SKELETON2}}', hd.skeleton).replace('{{BATCH2}}', hd.batch).replace('{{DATA}}', data).replace('{{CATALOGUE}}', CATALOGUE);
+  // Single-pass substitution (R-S11, SDD-F69): inserted text is never rescanned, so placeholder-like source text stays inert.
+  const vals = { SKELETON: hd.skeleton, TERMS: TL, BATCH: hd.batch, ROUND: String(hd.round), ERRORS: errors, SKELETON2: hd.skeleton, BATCH2: hd.batch, DATA: data, CATALOGUE };
+  const fill = TEMPLATE.replace(/\{\{([A-Z0-9]+)\}\}/g, (m, k) => (k in vals ? vals[k] : m));
   if (fill !== t) problems.push(`${r}: does not equal the template filled from its own header (R-S11)`);
 }
 if (problems.length) { for (const p of problems) console.log(p); process.exit(1); }

@@ -70,6 +70,24 @@ prompt('W-CS3-Δ3', 'minimal/skeleton.jsonld', 'minimal/inventory.jsonld', ['--k
 prompt('W-CS3-Δ4', 'full/skeleton.jsonld', 'full/inventory.jsonld', ['--budget', '63700'], (r, d) => { if (r.code !== 0) return exitIs(r, 0); const ps = JSON.parse(rd(join(d, 'prompt-set.jsonld'))); return all(deq(ps.prompts.length, 10, 'batches'), deq(ps.warnings.map((w) => [w.code, w.key]), ['ot:Person', 'ot:Location', 'ot:Hardware', 'ot:Server', 'ot:Software'].map((k) => ['W-PROMPT-OVERSIZE', k]), 'warnings')); });
 prompt('W-CS3-Δ5', 'minimal/skeleton.jsonld', 'minimal/inventory.jsonld', ['--budget', '50000'], (r, d) => all(exitIs(r, 1), codeIn(r, 'E-PROMPT-BUDGET'), existsSync(d) && readdirSync(d).some((f) => f.startsWith('prompt-') && f.endsWith('.txt')) ? 'a prompt was written' : true));
 prompt('W-CS3-Δ6', 'hostile/skeleton.jsonld', 'hostile/inventory.jsonld', [], (r, d) => all(exitIs(r, 0), sameFile(rd(join(d, 'prompt-1-of-1.txt')), W('hostile/prompt.txt'))));
+// W-CS3-Δ7 (SDD-F69): the whole chain from the hostile-placeholders fixture, then R-S11's single-pass property judged
+// from the spec text itself, not only by byte equality with a witness the implementation produced.
+check('W-CS3-Δ7 parse', () => { const r = sdd('parse', F('jira-assets/hostile-placeholders.json')); return all(exitIs(r, 0), sameFile(r.out, W('hostile/placeholders-inventory.jsonld'))); });
+check('W-CS3-Δ7 skeleton', () => { const r = sdd('skeleton', W('hostile/placeholders-inventory.jsonld')); return all(exitIs(r, 0), sameFile(r.out, W('hostile/placeholders-skeleton.jsonld'))); });
+prompt('W-CS3-Δ7', 'hostile/placeholders-skeleton.jsonld', 'hostile/placeholders-inventory.jsonld', [], (r, d) => {
+  if (r.code !== 0) return exitIs(r, 0);
+  const text = rd(join(d, 'prompt-1-of-1.txt')), lines = text.split('\n');
+  const count = (s) => lines.filter((l) => l.startsWith(s)).length;
+  const b = lines.findIndex((l) => l.startsWith('-----BEGIN DATA')), e = lines.indexOf('-----END DATA-----');
+  const descs = JSON.parse(rd(F('jira-assets/hostile-placeholders.json'))).schema.objectSchema.objectTypes.flatMap((t) => [t.description, ...(t.attributes || []).map((a) => a.description)]).filter((s) => s && s.includes('{{'));
+  const data = lines.slice(b + 1, e).map((l) => JSON.parse(l));
+  return all(
+    descs.length === 2 ? true : `fixture has ${descs.length} placeholder descriptions, want 2`,
+    deq([count('-----BEGIN DATA'), count('-----END DATA-----'), count('-----BEGIN CATALOGUE'), count('-----END CATALOGUE-----')], [1, 1, 1, 1], 'section delimiters'),
+    lines.some((l, i) => (i <= b || i >= e) && l.includes('{{')) ? 'a {{ placeholder survives outside DATA' : true,
+    deq(descs.map((s) => data.some((o) => o.description === s)), descs.map(() => true), 'source descriptions verbatim in DATA'),
+    sameFile(text, W('hostile/placeholders-prompt.txt')));
+});
 prompt('C-S3 prompt (W-JS3 rerun subset)', 'minimal/skeleton-v2.jsonld', 'minimal/inventory-v2.jsonld', ['--keys', W('minimal/keys-rerun.json')], (r, d) => all(exitIs(r, 0), sameFile(rd(join(d, 'prompt-1-of-1.txt')), W('minimal/prompt-rerun.txt'))));
 
 // ---------------- C-S4 check ----------------

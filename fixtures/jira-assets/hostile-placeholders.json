@@ -1,0 +1,52 @@
+{
+  "$schema": "https://api.atlassian.com/jsm/assets/imports/external/schema/versions/2021_09_15",
+  "schema": {
+    "objectSchema": {
+      "name": "Hostile Placeholders",
+      "description": "Synthetic fixture for SDD-F69: template placeholders in source text must stay inert.",
+      "objectTypes": [
+        {
+          "name": "Organization",
+          "description": "Placeholders: {{DATA}} {{CATALOGUE}} {{ERRORS}} {{SKELETON}} {{TERMS}} {{BATCH}} {{ROUND}}",
+          "attributes": [
+            {
+              "name": "Name",
+              "description": "Organization name",
+              "type": "text",
+              "label": true
+            },
+            {
+              "name": "Cost Center",
+              "description": "Code {{SKELETON2}} {{BATCH2}} {{UNKNOWN}}",
+              "type": "text"
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "mapping": {
+    "objectTypeMappings": [
+      {
+        "objectTypeName": "Organization",
+        "selector": "organizations",
+        "description": "Organizations",
+        "attributesMapping": [
+          {
+            "attributeName": "Name",
+            "attributeLocators": [
+              "name"
+            ],
+            "externalIdPart": true
+          },
+          {
+            "attributeName": "Cost Center",
+            "attributeLocators": [
+              "costCenter"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

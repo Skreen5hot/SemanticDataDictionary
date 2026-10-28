@@ -67,6 +67,19 @@ const MUTATIONS = [
   ['citation added in a scene but not recorded', 'citations', false, () => edit('spec/sdd-operator.md', (s) => s.replace('- **W-PRO6-N:** ', '- **W-PRO6-N:** (see SDD R-S19) '))],
   ['stale 8-hex prefix in prose', 'registry-check', false, () => edit('spec/sdd-service.md', (s) => s.replace(/(skeleton\.jsonld` \*\*`)[0-9a-f]{8}/, '$1' + sha(rd(supSkeleton)).slice(0, 8)))],
   ['governed file added without a registry row', 'registry-check', false, () => wr('fixtures/witnesses/minimal/extra.json', '{}\n')],
+  // Regressions for the C1–C4 milestone defects, each the exact failure found.
+  ['F69 replay: chained fill expands {{CATALOGUE}} inside DATA', 'witness-check', true, witnessMut('fixtures/witnesses/hostile/placeholders-prompt.txt', (s) => {
+    const cat = s.slice(s.indexOf('-----BEGIN CATALOGUE-----\n') + 26, s.indexOf('-----END CATALOGUE-----'));
+    const at = s.indexOf('{{CATALOGUE}}');
+    return s.slice(0, at) + cat + s.slice(at + 13);
+  })],
+  ['F67 replay: SDD §5 html row (CV-O1–CV-O3) missing from both tables', 'citations', false, () => {
+    for (const doc of ['spec/sdd-service.md', 'spec/sdd-operator.md']) edit(doc, (s) => s.replace(/^\| SDD §5 \| [^\n]*\n/m, ''));
+  }],
+  ['F68 replay: full/ registry row copies minimal/ "Cited by"', 'registry-check', false, () => edit('spec/sdd-service.md', (s) => {
+    const minimal = /^\| `fixtures\/witnesses\/minimal\/prompt\.txt` \|[^|]+\|[^|]+\| ([^|]+) \|$/m.exec(s)[1];
+    return s.replace(/^(\| `fixtures\/witnesses\/full\/prompt\.txt` \|[^|]+\|[^|]+\| )[^|]+( \|)$/m, `$1${minimal}$2`);
+  })],
 ];
 const governed = walk(join(T, 'fixtures')).map(rel).filter((r) => !r.includes('/superseded/') && !r.endsWith('README.md')).concat(['spec/prompt-template-v2.txt', 'schemas/proposal-v1.schema.json']);
 for (const r of governed) MUTATIONS.push([`flip one byte: ${r}`, 'registry-check', false, () => { const b = Buffer.from(rd(r)); b[Math.floor(b.length / 2)] ^= 1; wr(r, b); }]);
