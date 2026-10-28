@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Conformance** | *The Falsifiable Spec v0.4*, method §4A form. Companion to [`sdd-service.md`](sdd-service.md) (`SDD`), which delegates its experience level here (NG-S0). Federated by weave record **WV-1** (§15). |
-| **Status** | v0.4 (proposed by prop-002, 2026-10-27): v0.3 plus the dispositions of cycle-3 findings SDD-F50–F66. Supersedes v0.1 @ `b4aab5b` and v0.3 @ `5e5b4cc`. Nothing built; no scene executed. |
+| **Status** | v0.4 (prop-002, merged 2026-10-28; CAP-2 active): v0.3 plus the dispositions of cycle-3 findings SDD-F50–F66. Supersedes v0.1 @ `b4aab5b` and v0.3 @ `5e5b4cc`. Nothing built; no scene executed. |
 | **Hash citation convention** | As SDD: 8-hex-character prefixes in prose; full values in the SDD §11 registry only. |
 | **Stable identifiers** | Promises PR-O\*; journeys J-O\*; surface capabilities CV-O\*; rules RV-O\*; scenes W-PRO\*, W-JO\*; seams S-O\* (shared with SDD); invariants V-O\*; envelopes E-O\*; non-promises NP-O\* (NP-O0 is the terminal declaration); harnesses H-O\*; open items OO-\*. |
 

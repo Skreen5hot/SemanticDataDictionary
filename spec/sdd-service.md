@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Conformance** | Authored under *The Falsifiable Spec, Method Specification v0.4* (Specification-Refinement-System). Document pair: this file (`SDD`, substrate, method §4 form) and [`sdd-operator.md`](sdd-operator.md) (`SDD-operator`, experience companion, method §4A form), federated by weave record **WV-1** (housed in SDD-operator §15). |
-| **Status** | v0.4 (proposed by prop-002, 2026-10-27): v0.3 plus the dispositions of cycle-3 findings SDD-F50–F66. Supersedes v0.1 @ `b4aab5b` (cycle 2: joint D-1) and v0.3 @ `5e5b4cc` (cycle 3: joint D-2). Nothing built; no witness executed. |
+| **Status** | v0.4 (prop-002, merged 2026-10-28 with registrar Decision A; CAP-2 active): v0.3 plus the dispositions of cycle-3 findings SDD-F50–F66. Supersedes v0.1 @ `b4aab5b` (cycle 2: joint D-1) and v0.3 @ `5e5b4cc` (cycle 3: joint D-2). Nothing built; no witness executed. |
 | **Governing decisions** | [`../project/DECISIONS.md`](../project/DECISIONS.md) ADR-001 to ADR-008. SDD v2.0 ([`../SDD-V2.0-SPEC.md`](../SDD-V2.0-SPEC.md)) is rationale only. Findings and dispositions are in `../review/register.md`. |
 | **Registrar / authority** | Aaron Damiano (author of record). |
 | **Normative language** | BCP 14 keywords (MUST, MUST NOT, SHOULD, MAY …) per RFC 2119 / RFC 8174, uppercase only. |
