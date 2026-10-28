@@ -1,0 +1,16 @@
+{
+  "purpose": "Reference environment for SDD envelopes E-S1–E-S3 (SDD §8) and E-O2 (SDD-operator §10), registrar decision 2026-10-28.",
+  "referenceEnvironment": {
+    "runner": "GitHub-hosted standard Linux x64 runner",
+    "image": "ubuntu-24.04",
+    "node": "Node.js 22 LTS (actions/setup-node, node-version 22; exact version recorded per run)",
+    "browser": "Chromium as installed by Playwright (harness/package.json pins the Playwright version, and with it the Chromium build); exact version recorded per run",
+    "hardware": "Not fixed. A hosted runner's CPU model, core count and memory vary between runs; each result file records the values the run actually observed. No result claims fixed hardware."
+  },
+  "recordedPerRun": ["runner image (ImageOS, ImageVersion)", "CPU model and logical core count", "total memory in bytes", "Node.js version", "Chromium version", "OS release", "measurement conditions and raw timings"],
+  "measurementConditions": {
+    "E-O2": "H-O1 (harness/h-o1.mjs): headless Chromium, page served from dist/ on 127.0.0.1, browser context offline after load. Full fixture, default budget, paste fixtures/witnesses/full/proposal-valid.txt; timer from the 'Check reply' click (performance.now() in the harness) until the status shows the validated text and exactly 1 problem row is rendered. 5 measurements in one session; the envelope (≤ 1000 ms) binds the worst.",
+    "E-S1–E-S3": "Milestone 4 (OS-6): CLI, cold process start, same runner."
+  },
+  "results": "Each acceptance run uploads its result files (h-o1-results.json, h-o2-results.json) as workflow artifacts; release measurements are taken on this same environment."
+}

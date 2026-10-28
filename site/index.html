@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; form-action 'none'; base-uri 'none'">
+<title>SDD Service</title>
+<link rel="icon" href="data:,">
+<style>
+/*@@STYLE@@*/
+</style>
+<script>
+/*@@SCRIPT@@*/
+</script>
+</head>
+<body>
+<header>
+  <h1>Semantic Data Dictionary</h1>
+  <p class="lede">Carry each prompt to your LLM and paste its reply back. This page works offline and sends nothing anywhere. A check that passes covers structure, coverage, terms and categories; what each mapping means is your call.</p>
+</header>
+<main>
+  <section class="step" aria-labelledby="h-files">
+    <h2 id="h-files">1. Open</h2>
+    <div class="controls">
+      <label class="file">Schema <input type="file" id="open-schema" aria-label="Open schema" accept=".json,application/json"></label>
+      <label class="file">Previous SDD (optional) <input type="file" id="open-previous" aria-label="Open previous SDD" accept=".jsonld,.json,application/ld+json,application/json"></label>
+    </div>
+    <div id="inventory"></div>
+  </section>
+  <section class="step" aria-labelledby="h-prompts">
+    <h2 id="h-prompts">2. Prompt</h2>
+    <div class="controls">
+      <label>Budget (bytes) <input type="text" id="budget" aria-label="Budget (bytes)" inputmode="numeric" autocomplete="off" placeholder="200000"></label>
+      <button type="button" id="build">Build prompt</button>
+    </div>
+    <div id="batches"></div>
+  </section>
+  <section class="step" aria-labelledby="h-reply">
+    <h2 id="h-reply">3. Reply</h2>
+    <textarea id="paste" aria-label="Paste reply" rows="8" spellcheck="false" autocomplete="off" placeholder="Paste the LLM's whole reply here"></textarea>
+    <div class="controls"><button type="button" id="check">Check reply</button></div>
+    <div id="outcome"></div>
+  </section>
+  <section class="step" aria-labelledby="h-decide">
+    <h2 id="h-decide">4. Decide</h2>
+    <div class="controls">
+      <label>Your name <input type="text" id="name" aria-label="Your name" autocomplete="off" spellcheck="false"></label>
+      <div id="bulk"></div>
+    </div>
+    <div id="items"></div>
+  </section>
+  <section class="step" aria-labelledby="h-save">
+    <h2 id="h-save">5. Save</h2>
+    <div class="controls"><button type="button" id="save">Save SDD</button></div>
+    <div id="saved"></div>
+  </section>
+</main>
+<div id="message" data-testid="message" role="status" aria-live="polite"></div>
+<div id="dialog-host"></div>
+</body>
+</html>

@@ -1,0 +1,76 @@
+name: Operator acceptance (H-O1, H-O2)
+
+# Runs the independent harnesses on the reference environment (bench/config.json): ubuntu-24.04, Node 22,
+# Chromium via Playwright. H-O2 runs inside a container with networking disabled. After a Pages deploy, H-O1 also
+# runs against the published page.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["pages"]
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  local:
+    if: github.event_name != 'workflow_run'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Core and CLI checks
+        run: |
+          node tools/run-witnesses.mjs
+          node src/test/witnesses.mjs
+          node tools/registry-check.mjs
+          node tools/citations.mjs
+      - name: Build the page
+        run: node tools/build-site.mjs
+      - name: Install the harness (test-only)
+        working-directory: harness
+        run: |
+          npm ci --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: H-O2 in a container with networking disabled
+        run: docker run --rm --network none -v "$PWD":/w -w /w node:22 node harness/h-o2.mjs --out h-o2-results.json
+      - name: H-O1 (page served from dist/, offline after load; E-O1, E-O2, E-O3)
+        run: node harness/h-o1.mjs --out h-o1-results.json
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: acceptance-results-local
+          path: |
+            h-o1-results.json
+            h-o2-results.json
+
+  published:
+    if: github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install the harness (test-only)
+        working-directory: harness
+        run: |
+          npm ci --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: H-O1 against the published page
+        run: node harness/h-o1.mjs --url https://skreen5hot.github.io/SemanticDataDictionary/ --out h-o1-published-results.json
+      - name: The context document is served at its IRI
+        run: |
+          curl -fsS https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld -o ctx.jsonld
+          node -e "const c=JSON.parse(require('fs').readFileSync('ctx.jsonld','utf8')); if(!c['@context']) throw new Error('no @context'); console.log('context ok')"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: acceptance-results-published
+          path: h-o1-published-results.json

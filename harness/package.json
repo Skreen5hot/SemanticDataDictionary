@@ -1,0 +1,9 @@
+{
+  "name": "sdd-harness",
+  "private": true,
+  "description": "H-O1 (Playwright, browser scenes) and H-O2 (CLI under the network guard) acceptance harnesses for SDD-operator. Test-only: the product (src/, dist/) has no dependencies.",
+  "type": "module",
+  "devDependencies": {
+    "playwright": "1.56.1"
+  }
+}
