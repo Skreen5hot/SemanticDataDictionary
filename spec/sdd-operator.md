@@ -245,9 +245,9 @@ Under H-O1 unless marked H-O2. Expected texts are exact except where masked.
 6. E-O1–E-O3 met.
 
 **Scene-validation precondition (P10.1):** every scene executed against the built page and CLI in a clean
-environment. *Status: met for every W-PRO\* and W-JO\* scene (H-O1 `harness/h-o1.mjs`, H-O2 `harness/h-o2.mjs`, on `ubuntu-24.04` and against the published page, 2026-10-28). V-O1–V-O3 (OO-2) pending.*
+environment. *Status: met for every W-PRO\* and W-JO\* scene (H-O1 `harness/h-o1.mjs`, H-O2 `harness/h-o2.mjs`, on `ubuntu-24.04` and against the published page, 2026-10-28). V-O1–V-O3 (OO-2): met (2026-10-29), each 300/300 at n = 300 on `ubuntu-24.04` with fresh seed `rc-vo-12cbb83…` (Release verification run 40911400026), request log and `netguard.log` empty.*
 
-`Disposition: per method §6` · `Acceptance readiness: BLOCKED — OO-2`
+`Disposition: per method §6` · `Acceptance readiness: READY — §14 gates 1–6 hold (2026-10-29; review/register.md, release candidate v1.0.0-rc.1)`
 
 ## SDD-operator §15: Change discipline
 
@@ -290,7 +290,7 @@ Citations follow the normative citation rule in SDD §11 (identifiers, attributi
 | R-S23 | CV-O3, PR-O3, SDD-operator §2, SDD-operator §12 |
 | SDD §2 | J-O1, J-O2, J-O3, J-O4, WV-1 |
 | SDD §5 | CV-O1, CV-O2, CV-O3 |
-| SDD §10 | H-O2, OO-2, WV-1 |
+| SDD §10 | H-O2, WV-1 |
 | SDD §11 | G2, K2, WV-1 |
 | SDD header | WV-1 |
 | W-CS3-N | W-JO1, W-PRO6-N |
@@ -320,10 +320,10 @@ Citations follow the normative citation rule in SDD §11 (identifiers, attributi
 | Joint acceptance housed in both change-discipline sections | met |
 
 **CAP-2 was lifted** by the registrar (Decision B, 2026-10-28) after gates 1 and 2 were verified independently of the author (SDD §11). **Joint
-disposition** = min(SDD, SDD-operator), no longer capped by CAP-2; it is reassessed only at the next authorized grading. Joint acceptance readiness: BLOCKED (OO-2).
+disposition** = min(SDD, SDD-operator), no longer capped by CAP-2; it is reassessed only at the next authorized grading. Joint acceptance readiness: READY (2026-10-29); final v1 acceptance remains the registrar's, after the enterprise pilot.
 
-**Open items.** **OO-1:** *closed (2026-10-28):* `site/` and `harness/netguard.mjs` built; every scene executed under H-O1/H-O2. **OO-2:**
-implement G2 and K2.
+**Open items.** **OO-1:** *closed (2026-10-28):* `site/` and `harness/netguard.mjs` built; every scene executed under H-O1/H-O2. **OO-2:** *closed (2026-10-29):* G2, K2 and V-O1–V-O3 in `harness/props/` (independent verifier); V-O1–V-O3 pass
+at n = 300 on the reference runner (run 40911400026), after registrar decisions D1–D3 and product fix P-1.
 
 ## SDD-operator §16: Closure report (method P2)
 

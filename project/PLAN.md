@@ -78,7 +78,7 @@ cycles, architecture or scope unless a demonstrated blocker needs a registrar de
   - the Pages deploy is green.
 - **Blockers:** none known.
 
-### 4. Release verification: NEXT
+### 4. Release verification: COMPLETE
 
 - **Deliverables:**
   - **OS-1** (remainder): JSON Schemas for the remaining artifacts, plus SHACL shapes for the SDD with
@@ -88,11 +88,12 @@ cycles, architecture or scope unless a demonstrated blocker needs a registrar de
   - **OS-6:** `bench/` on the reference machine, covering E-S1–E-S3;
   - **H-S1:** every witness re-run in a clean, network-disabled container (the execution remainder of OS-4);
   - both acceptance conjunctions evaluated (SDD §10, SDD-operator §14), and a release candidate tagged.
-- **Completion condition:** both acceptance conjunctions hold, so readiness is no longer BLOCKED.
-- **Blockers:** none. The registrar must name the reference machine for OS-6 and E-O2 (an input, not a design
-  decision).
+- **Completion condition (met, 2026-10-29):** both acceptance conjunctions hold on the reference runner at
+  `12cbb83` (Release verification run 40911400026; Operator acceptance runs 40911400125 and 40911512747); readiness is
+  READY in both documents. Release candidate tagged `v1.0.0-rc.1`. Evidence: `review/register.md`.
+- **Blockers:** none.
 
-### 5. Enterprise pilot and registrar acceptance: PENDING
+### 5. Enterprise pilot and registrar acceptance: NEXT (registrar)
 
 - **Deliverables:**
   - the release candidate run on the enterprise Jira Assets schema inside the enterprise: the offline page (or its

@@ -700,3 +700,44 @@ The item (7) jira-assets base-name reading was made explicit.
     skeleton now open**; a prompt from another skeleton stays unmatched and fails.
   - *After the fix:* session 281 passes; fresh smoke run (30 sessions, seed `smoke2-2026-10-29`) 30/30; the
     `--inject-faults` self-test still fails every targeted clause.
+
+## Milestone 4 complete: acceptance evaluated, release candidate v1.0.0-rc.1 (2026-10-29, appended; sections above unamended)
+
+All evidence is from commit `12cbb83` on the reference environment (`ubuntu-24.04`, runner image 20261026.354.1,
+Node 22.23.4, Chromium 141.0.7390.37; CPUs as recorded per job, not fixed). Fresh seeds: `rc-12cbb83…` (V-S),
+`rc-vo-12cbb83…` (V-O).
+
+- **Release verification, run 40911400026 (both jobs green):**
+  - V-S1 217/217, V-S2 200/200, V-S3 100/100, V-S4 200/200, V-S5 100/100, V-S6 267/267 (≥ 100 SDDs); 10,714 CLI calls.
+  - E-S1 worst 300 ms (≤ 2 s), E-S2 worst 199 ms on 5,233 slots (≤ 5 s), E-S3 one batch of 70,855 bytes.
+  - **V-O1 300/300, V-O2 300/300, V-O3 300/300** (n = 300; 6,952 screen states, 2,455,182 text nodes, 92,101 item
+    decisions, 2,905 saved mappings, 92 PR-O3(a) comparisons; 3,848 CLI calls; request log and netguard log empty).
+- **Operator acceptance, runs 40911400125 (local) and 40911512747 (published page), both green.** Every step exits
+  non-zero on any failed check:
+  - CLI witnesses 104/104, `src/test/witnesses.mjs`, registry and citation checks;
+  - H-O2 in a container with `--network none` (H-S1);
+  - H-O1 with every scene, including W-PRO1-Δ6 and E-O1/E-O2/E-O3, against `dist/` and against the published page;
+  - the context document served at its IRI.
+- **SDD §10 (ordered conjunction):**
+  1. No knockouts; coverage maps clean: registry, citation and witness checks pass (103 cross-document citations).
+  2. Experience gate: discharged by SDD-operator §14 below.
+  3. J-S1–J-S4 via W-JS1–W-JS4 under H-S1: pass.
+  4. C-S1–C-S7, every nominal, delta and negative witness: 104/104.
+  5. S-S1–S-S8 exercised by the witnesses; S-O1–S-O6 by the H-O1 scenes: pass.
+  6. V-S1–V-S6 at their stated n: pass.
+  7. E-S1–E-S3: met.
+
+  **ACCEPT holds** (minimum of the gates). P10: met.
+- **SDD-operator §14 (ordered conjunction):**
+  1. Coverage maps clean: as above.
+  2. PR-O1–PR-O6 via their scenes: H-O1 all scenes pass, clause maps closed.
+  3. J-O1–J-O4 via W-JO1–W-JO4 under H-O1/H-O2: pass.
+  4. S-O1–S-O6 exercised: pass.
+  5. V-O1–V-O3 at n ≥ 300: pass.
+  6. E-O1–E-O3: met.
+
+  **ACCEPT holds.** P10.1: met.
+- **OO-2 closed.** Readiness in both documents is READY. No blocking defect is open: P-1 is fixed, and H-1–H-4 were
+  harness defects, all fixed.
+- **Release candidate `v1.0.0-rc.1`** is tagged on the commit that records this entry. Per the registrar, this is not
+  final v1 acceptance: Milestone 5 (enterprise pilot) and the registrar's acceptance remain.
