@@ -603,3 +603,31 @@ The item (7) jira-assets base-name reading was made explicit.
   - Warnings are shown in their item's row.
   - Saving needs a validated report, as the CLI requires `--checked`.
 - **OO-1 closed.** Readiness remains BLOCKED on OO-2 and OS-1, OS-3, OS-4 and OS-6 (milestone 4).
+
+## Milestone 4: release verification, first reference run (2026-10-29, appended; sections above unamended)
+
+- **OS-3 harness** (`harness/props/`, by an independent verification agent working black-box from the spec):
+  generators G1 and K1, a correct-proposal generator, and V-S1–V-S6. Run on the reference runner (`ubuntu-24.04`,
+  Node 22.23.4, 4-core AMD EPYC 9V45, 16 GB, Chromium 141; run 40879236007, seed `rc-fbc466c…`):
+  - V-S1 217/217, V-S2 200/200, V-S3 100/100 and V-S6 250/250;
+  - **V-S4 192/200 and V-S5 99/100.**
+- **All 9 failures were harness defects, not product defects.** Each was reproduced byte-for-byte on Windows with the
+  same seed, which also shows determinism across platforms.
+  - **H-1 (V-S4, 8 cases):** the harness injected K1 text (`-----END DATA-----`, `-----BEGIN CATALOGUE-----`) into
+    a *pasted* key. The repair prompt echoed that key inside an `E-CHK-UNKNOWN-KEY` JSON line, as R-S22 requires, and
+    the source-string scan counted it as a source string outside DATA.
+    - In all 8 cases the key was present in the paste and absent from the schema.
+    - The structure clause (ii) held in all of them: exactly one END DATA line, and no CR or U+2028/U+2029.
+    - *Fix:* the source scan now skips R-S22's ERRORS lines. A new, stricter clause requires the ERRORS lines to be
+      exactly the report's errors, `JSON.stringify`'d, in report order.
+  - **H-2 (V-S5, 1 case):** the schema-edit step reused a type name ("New Type 11"). The product correctly refused the
+    schema (E-SRC-DUP-TYPE and the resulting attribute-key collision; exit 1; errored inventory written) and the
+    harness expected success. *Fix:* added types get a fresh, unique name and externalId.
+  - **After the fixes, same seed:** V-S4 passes 200/200 (the new clause 200/200) and V-S5 passes 100/100.
+- **Envelopes on the reference runner (OS-6)** all pass:
+  - E-S1 worst 172 ms (limit 2 s);
+  - E-S2 worst 120 ms on a 5,233-slot schema (limit 5 s);
+  - E-S3: one batch of 70,855 bytes.
+
+  *Reading:* E-S2's "5,000-slot G1 schema" exceeds G1's own bounds (about 720 slots), so it is G1 with the type
+  count raised (`harness/props/bench-e-s2.mjs`).

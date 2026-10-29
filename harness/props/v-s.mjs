@@ -381,7 +381,10 @@ async function VS4(results) {
     P.check(c, '(i) every DATA line parses as JSON (R-S11 field set, verbatim JSON-escaped source text)', bad ?? true, info);
     const out = normOutside(p);
     let leak = null;
-    for (const d of descMap.values()) if (d.length >= 6 && out.includes(d) && !baseline.includes(d)) { leak = d; break; }
+    // R-S22's ERRORS lines are excluded here: they echo the report's fields (incl. keys taken from the LLM reply, which
+    // may carry K1-like text), and are checked separately to be exactly the report's errors, JSON-encoded.
+    const outNoErrors = out.split('\n').filter((l) => !l.startsWith('{"code":')).join('\n');
+    for (const d of descMap.values()) if (d.length >= 6 && outNoErrors.includes(d) && !baseline.includes(d)) { leak = d; break; }
     if (!leak && baseline && out.split('\n').filter((l) => !l.startsWith('{"code":') && l !== '' && !/^ERRORS IN YOUR PREVIOUS REPLY|^Your previous reply/.test(l)).join('\n') !== baseline.split('\n').filter((l) => l !== '').join('\n')) leak = 'text outside DATA differs from the plain-description baseline';
     P.check(c, '(i) source strings occur only inside DATA (outside-DATA text independent of descriptions)', leak ? `${what}: ${JSON.stringify(leak).slice(0, 200)}` : true, info);
     return p;
@@ -417,6 +420,8 @@ async function VS4(results) {
             P.check(c, 'repair: same DATA lines as the checked prompt (R-S22, extra)', JSON.stringify(p.dataLines) === JSON.stringify(p1.p.dataLines) ? true : 'DATA lines differ', info);
             const errLines = p.lines.filter((l) => l.startsWith('{"code":'));
             P.check(c, 'repair: every ERRORS line parses as JSON (copied text JSON-escaped)', errLines.length && errLines.every((l) => { try { JSON.parse(l); return true; } catch { return false; } }) ? true : `ERRORS lines ${errLines.length}`, info);
+            const want = JSON.parse(readFileSync(R, 'utf8')).errors.map((e) => escSep(JSON.stringify(e)));
+            P.check(c, 'repair: the ERRORS lines are exactly the report\'s errors, in report order, JSON-encoded (R-S22)', JSON.stringify(errLines) === JSON.stringify(want) ? true : `got ${errLines.length} lines, want ${want.length}; first: ${JSON.stringify(errLines[0]).slice(0, 160)}`, info);
           }
         } else P.check(c, 'repair succeeds on a rejected report', false, info);
       } else P.check(c, 'harness: rejected variant is rejected', false, { command: ck.argv, output: brief(ck) });
