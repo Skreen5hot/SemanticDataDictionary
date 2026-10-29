@@ -248,7 +248,12 @@ async function runSession(i) {
     const o = await observe(); lastObs = o;
     extras.obs = extras.obs || { itemDecisions: 0, nullEqFields: 0, textNodes: 0, steps: 0 };
     extras.obs.steps++; extras.obs.itemDecisions += o.items.length; extras.obs.nullEqFields += o.items.filter((x) => x.ne != null).length; extras.obs.textNodes += o.texts.length;
-    { const shown = o.batches.map((b) => b.sha8); M.prompts = M.prompts.filter((p) => shown.includes(p.sha.slice(0, 8))); }
+    // H-4: the shown batches, matched by sha prefix against every prompt the core built in this session (the page
+    // re-shows a skeleton's prompt set when that schema is reopened, and keeps it when a rebuild is refused)
+    // (only a prompt built on the skeleton now open counts; one from another skeleton stays unmatched and fails)
+    { const shown = o.batches.map((b) => b.sha8); const ownSkel = (p) => !!M.skelText && existsSync(p.skelPath) && readFileSync(p.skelPath, 'utf8') === M.skelText;
+      const found = shown.map((s8) => [...M.allPrompts].reverse().find((p) => p.sha.startsWith(s8) && ownSkel(p)));
+      M.prompts = found.every(Boolean) ? found : M.prompts.filter((p) => shown.includes(p.sha.slice(0, 8))); }
     // V-O2
     if (requests.length) { await fail(P2, c2, 'request log after load is empty', `requests: ${requests.join(', ').slice(0, 500)}`, requests.slice(), []); requests.length = 0; } else pass(P2, c2, 'request log after load is empty');
     // V-O1: decision texts, name field, null-equivalents fields

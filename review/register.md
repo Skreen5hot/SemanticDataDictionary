@@ -678,3 +678,25 @@ The item (7) jira-assets base-name reading was made explicit.
 - **Observations, not blockers:** (1) `nullEquivalents` stay keyed by key across skeletons, as §6 states; an entry
   made under skeleton B for K is what a later save under A writes for K. (2) G2 has not yet reached the carried-
   mapping path (R-S17); W-PRO1-Δ6 (b) and W-JO3 cover it.
+
+## Milestone 4: OO-2 first reference run (2026-10-29, appended; sections above unamended)
+
+- **Run 40905379972 on `0a9e12e`** (reference runner `ubuntu-24.04`, image 20261026.354.1, Node 22.23.4, Chromium 141,
+  AMD EPYC 9V74 for the browser job), seed `rc-vo-0a9e12e…`, n = 300, 1,536 s, 3,754 CLI calls, netguard log 0 lines:
+  - V-O1 300/300 (89,288 item decisions observed, 2,432 saved mappings checked, 92 PR-O3(a) comparisons);
+  - V-O2 300/300;
+  - **V-O3 299/300.**
+
+  The same run's V-S job: V-S1–V-S6 all pass (V-S6 290/290); envelopes E-S1 worst 158 ms, E-S2 worst 114 ms
+  (5,233 slots), E-S3 one batch of 70,855 bytes. Operator acceptance passed locally and against the published page.
+- **The V-O3 failure (session 281) is a harness defect, H-4**, reproduced locally from the seed:
+  - At step 1 schema `k2-source-names` was built at budget 70,000. Other schemas were opened; the same schema bytes
+    were reopened, and the page re-showed that skeleton's prompt set. At step 17 a rebuild at budget 50,000 was refused.
+  - A replay of those steps shows the page displaying the E-PROMPT-BUDGET row with its D3 message, writing no new
+    prompt, and keeping batch `d5285cc8`.
+  - That batch is byte-identical (sha256 `d5285cc8…`) to the CLI's prompt from step 1, so it is in the reliance set.
+  - The judge dropped a prompt from its tracking once it was hidden and never restored it, so it found no CLI match.
+  - *Fix:* shown batches are matched by sha prefix against every prompt the core built in the session **on the
+    skeleton now open**; a prompt from another skeleton stays unmatched and fails.
+  - *After the fix:* session 281 passes; fresh smoke run (30 sessions, seed `smoke2-2026-10-29`) 30/30; the
+    `--inject-faults` self-test still fails every targeted clause.
