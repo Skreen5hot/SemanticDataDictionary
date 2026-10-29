@@ -1,2 +1,4 @@
 dist/
 node_modules/
+harness/props/results-*.json
+harness/props/.netguard-default.log

@@ -1,0 +1,47 @@
+name: Release verification (V-S properties, envelopes)
+
+# Milestone 4 on the reference environment (bench/config.json): ubuntu-24.04, Node 22, Chromium via Playwright.
+# Runs the independent property suite (OS-3: G1/K1, V-S1–V-S6 at the stated n) and the SDD §8 envelopes (OS-6).
+# Results are uploaded as artifacts and summarised as run annotations (::notice::), which are publicly readable.
+on:
+  push:
+    branches: [main]
+    paths: ['src/**', 'site/**', 'tools/build-site.mjs', 'harness/**', 'bench/**', 'ontology/**', 'spec/prompt-template-*.txt', '.github/workflows/release-verification.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build the page
+        run: node tools/build-site.mjs
+      - name: Install the harness (test-only)
+        working-directory: harness
+        run: |
+          npm ci --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Envelopes E-S1–E-S3 (OS-6)
+        run: |
+          node bench/run.mjs --runs 5 | tee bench-out.json
+          node -e "const o=JSON.parse(require('fs').readFileSync('bench/results.jsonl','utf8').trim().split('\n').pop()); console.log('::notice title=bench::'+JSON.stringify(o))"
+      - name: Properties V-S1–V-S6 (OS-3, full n)
+        run: node harness/props/v-s.mjs --seed rc-${{ github.sha }} --out vs-results.json
+      - name: Summarise properties
+        if: always()
+        run: |
+          node -e "const r=JSON.parse(require('fs').readFileSync('vs-results.json','utf8')); const s={env:r.environment,props:Object.fromEntries(Object.entries(r.properties).map(([k,v])=>[k,{n:v.n,pass:v.pass,fail:v.fail}]))}; console.log('::notice title=properties::'+JSON.stringify(s)); for (const [k,v] of Object.entries(r.properties)) for (const f of (v.failures||[]).slice(0,5)) console.log('::warning title='+k+' failure::'+JSON.stringify(f).slice(0,900))"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-verification
+          path: |
+            vs-results.json
+            bench/results.jsonl
