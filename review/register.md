@@ -799,3 +799,27 @@ random stream, and V-O3 accepts the RV-O1 line only where a CLI-validated reply 
 digests (384), citations (109); oracles agree (oracle-b 8, oracle-n 9 reports); mutation test 89/89 corruptions
 detected by their expected check, control correct; OS-1 judge 74/74; H-O1 28/28; H-O2 3/3 (netguard empty);
 V-O smoke (n = 6) and V-S smoke (scale 0.1) pass. The reference-environment runs follow in the next entry.
+
+## v0.5 verified on the reference environment; release candidate v1.0.0-rc.2 (2026-10-29, appended; sections above unamended)
+
+All evidence is from commit `1a45c57` on `ubuntu-24.04` (runner image 20261026.354.1, Node 22.23.4, Chromium
+141.0.7390.37). Fresh seeds: `rc-1a45c57…` (V-S), `rc-vo-1a45c57…` (V-O).
+
+- **Release verification, run 40943966670 (both jobs green):**
+  - OS-1 independent judge (Python jsonschema + pyshacl, version-2 schemas and shapes): 74 checks, 0 failed.
+  - V-S1 217/217, V-S2 200/200, V-S3 100/100, V-S4 200/200, V-S5 100/100, V-S6 259/259; 10,737 CLI calls.
+  - E-S1 worst 174 ms (≤ 2 s), E-S2 worst 144 ms on 5,233 slots (≤ 5 s), E-S3 one batch of 71,027 bytes.
+  - **V-O1 300/300, V-O2 300/300, V-O3 300/300** (7,053 screen states, 2,540,920 text nodes, 99,215 item decisions,
+    1,734 saved mappings of which 204 with a null `iceClass`, 10,566 `iceClass — none asserted` lines grounded in a
+    CLI-validated reply, 100 PR-O3(a) comparisons; 4,008 CLI calls; netguard log empty).
+- **Operator acceptance, runs 40943966662 (local) and 40944067149 (published page), both green:** CLI witnesses
+  115/115, `src/test/witnesses.mjs`, `src/test/schemas.mjs`, registry, embedded-digest, oracle (oracle-b and
+  oracle-n) and citation checks; H-O2 in a container with `--network none`; H-O1 every scene (W-PRO1-Δ7, W-PRO2-Δ3
+  included) against `dist/` and the published page. The published page's sha256 `43d44939…` equals the CI build's.
+- **SDD §10:** gates 1–7 hold (C-S1–C-S7 115/115 judge checks; V-S at stated n; E-S met). **ACCEPT holds.**
+- **SDD-operator §14:** gates 1–6 hold (all scenes; V-O1–V-O3 at n = 300; E-O met). **ACCEPT holds.**
+- Readiness in both documents is READY for v0.5. No blocking defect is open; no product or harness defect was found
+  in this verification. Not blocking: GitHub's Node 20 deprecation warning for the workflow actions (unchanged since
+  rc.1); G2 still never reached the carried path with a null mapping (W-PRO1-Δ6 (b) and W-JS3 cover carrying).
+- **Release candidate `v1.0.0-rc.2`** is tagged on the commit that records this entry; `v1.0.0-rc.1` is unchanged.
+  This is not final v1 acceptance: Milestone 5 (enterprise pilot) and the registrar's acceptance remain.

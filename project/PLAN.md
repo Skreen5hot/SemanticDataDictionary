@@ -93,7 +93,7 @@ cycles, architecture or scope unless a demonstrated blocker needs a registrar de
   READY in both documents. Release candidate tagged `v1.0.0-rc.1`. Evidence: `review/register.md`.
 - **Blockers:** none.
 
-### 4a. Simplified attribute contract (spec v0.5, release candidate v1.0.0-rc.2): IN VERIFICATION
+### 4a. Simplified attribute contract (spec v0.5, release candidate v1.0.0-rc.2): COMPLETE
 
 Registrar-approved after the external ontological review (`review/register.md`, v0.5 entry): no `valueProperty`;
 `iceClass` is a permitted ICE class or `null`; `sddVersion` 2 with a clean break from v1.0.0-rc.1 (unchanged).

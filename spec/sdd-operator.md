@@ -249,9 +249,9 @@ Under H-O1 unless marked H-O2. Expected texts are exact except where masked.
 6. E-O1–E-O3 met.
 
 **Scene-validation precondition (P10.1):** every scene executed against the built page and CLI in a clean
-environment. *Status: met for every W-PRO\* and W-JO\* scene (H-O1 `harness/h-o1.mjs`, H-O2 `harness/h-o2.mjs`, on `ubuntu-24.04` and against the published page, 2026-10-28). V-O1–V-O3 (OO-2): met (2026-10-29), each 300/300 at n = 300 on `ubuntu-24.04` with fresh seed `rc-vo-12cbb83…` (Release verification run 40911400026), request log and `netguard.log` empty.*
+environment. *Status: met for every W-PRO\* and W-JO\* scene (H-O1 `harness/h-o1.mjs`, H-O2 `harness/h-o2.mjs`, on `ubuntu-24.04` and against the published page, 2026-10-28). V-O1–V-O3 (OO-2): met (2026-10-29), each 300/300 at n = 300 on `ubuntu-24.04` with fresh seed `rc-vo-12cbb83…` (Release verification run 40911400026), request log and `netguard.log` empty. Re-met for v0.5 at `1a45c57`: every scene, W-PRO1-Δ7 and W-PRO2-Δ3 included (Operator acceptance runs 40943966662 local and 40944067149 published page); V-O1–V-O3 each 300/300 with fresh seed `rc-vo-1a45c57…` (Release verification run 40943966670).*
 
-`Disposition: per method §6` · `Acceptance readiness: PENDING — v0.5 re-verification on the reference environment (v0.4.1 was READY, release candidate v1.0.0-rc.1)`
+`Disposition: per method §6` · `Acceptance readiness: READY — §14 gates 1–6 hold for v0.5 (2026-10-29; review/register.md, release candidate v1.0.0-rc.2; v0.4.1 was READY as v1.0.0-rc.1)`
 
 ## SDD-operator §15: Change discipline
 
