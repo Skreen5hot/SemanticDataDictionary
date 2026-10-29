@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Conformance** | *The Falsifiable Spec v0.4*, method §4A form. Companion to [`sdd-service.md`](sdd-service.md) (`SDD`), which delegates its experience level here (NG-S0). Federated by weave record **WV-1** (§15). |
-| **Status** | v0.4.1 (correction pass 2026-10-28: adopts SDD §11's normative citation rule; CAP-2 lifted by the registrar, Decision B). v0.4 (prop-002, merged 2026-10-28): v0.3 plus the dispositions of cycle-3 findings SDD-F50–F66. Supersedes v0.1 @ `b4aab5b` and v0.3 @ `5e5b4cc`. The page (`site/`, published by GitHub Pages) is built; every scene is executed by the independent harnesses H-O1 and H-O2, locally and on the reference runner (OO-1 closed). |
+| **Status** | v0.5 (2026-10-29, with SDD v0.5: an attribute mapping whose `iceClass` is `null` is shown with a fixed text; a version-1 previous SDD is refused; release candidate v1.0.0-rc.2). v0.4.1 (correction pass 2026-10-28: adopts SDD §11's normative citation rule; CAP-2 lifted by the registrar, Decision B). v0.4 (prop-002, merged 2026-10-28): v0.3 plus the dispositions of cycle-3 findings SDD-F50–F66. Supersedes v0.1 @ `b4aab5b` and v0.3 @ `5e5b4cc`. The page (`site/`, published by GitHub Pages) is built; every scene is executed by the independent harnesses H-O1 and H-O2, locally and on the reference runner (OO-1 closed). |
 | **Hash citation convention** | As SDD: 8-hex-character prefixes in prose; full values in the SDD §11 registry only. |
 | **Stable identifiers** | Promises PR-O\*; journeys J-O\*; surface capabilities CV-O\*; rules RV-O\*; scenes W-PRO\*, W-JO\*; seams S-O\* (shared with SDD); invariants V-O\*; envelopes E-O\*; non-promises NP-O\* (NP-O0 is the terminal declaration); harnesses H-O\*; open items OO-\*. |
 
@@ -81,7 +81,7 @@ registered both sides via WV-1.
 
 **J-O1: first dictionary, in the browser.** Chain scene **W-JO1** (H-O1): (1) open `minimal-organization.json` → the
 summary line `1 object type · 2 attributes · 0 references · 0 flags` (S-O5). (2) **Build prompt** → one control,
-`Batch 1 of 1`, and the text `7f121f7a`. (3) **Copy prompt** → the clipboard bytes equal `minimal/prompt.txt` (SDD W-CS3-N).
+`Batch 1 of 1`, and the text `8b6516fc`. (3) **Copy prompt** → the clipboard bytes equal `minimal/prompt.txt` (SDD W-CS3-N).
 (4) Paste `minimal/proposal-pasted.txt` → RV-O1(validated); 3 items undecided. (5) Type "Aaron Damiano"; **Accept** ×3.
 (6) **Save SDD** → a download equal to `minimal/sdd.jsonld` except `acceptance.at` (S-O6; SDD W-CS6-N). Carried state: the prompt
 from step 2 binds step 4's check; the decisions of step 5 bind step 6. Substrate path: SDD W-JS1.
@@ -111,7 +111,7 @@ step is homed.
   W-PRO6-N, W-PRO6-Δ1, W-PRO6-Δ2.
 - **CV-O2: decide.** Per-item **Accept** / **Reject** (changeable until saved); **Accept all N validated**; the
   acceptor-name field; per-attribute null-equivalents entry (comma-separated; each value trimmed; empty values
-  dropped; sorted on save). `acceptance.at` is set at the click on Accept, not at save. Scenes: W-PRO1-N, W-PRO1-Δ1–Δ6.
+  dropped; sorted on save). `acceptance.at` is set at the click on Accept, not at save. Scenes: W-PRO1-N, W-PRO1-Δ1–Δ7.
 - **CV-O3: files.** Open a schema or a previous SDD; save each artifact as a new download named
   `sdd-YYYYMMDDTHHMMSSZ.jsonld`. The CLI equivalent obeys SDD R-S23. Scenes: W-PRO3-Δ2, W-PRO1-Δ5, W-JO1 step 6, W-JO3.
 - Determinism note: masks are `acceptance.at` (property as SDD C-S6) and the download filename timestamp (the pattern
@@ -131,8 +131,10 @@ decisions{skeleton → {key → accept|reject}}, acceptorName, nullEquivalents{k
   previous SDD open, `Previous SDD open: {name}, {m} mapping(s), {o} open, {r} retired.` (`{name}` is its
   `source.schemaName`, quoted; `{m}`, `{o}`, `{r}` are the lengths of its `mappings`, `open` and `retired`) · the rerun
   plan's list headings `Unchanged ({n})` · `Changed ({n})` · `Added ({n})` · `Removed ({n})` (`{n}` is the length of the
-  RerunPlan's list of that name). Every count comes from that artifact, never from decisions. None contains
-  a PR-O4(b) word except `Accepted by {name}`, which appears only after a CV-O2 act. Witnesses: W-PRO4-N, W-PRO5-N, W-JO1.
+  RerunPlan's list of that name) · inside `From the LLM's reply`, for an attribute mapping whose `iceClass` is `null`
+  (SDD R-S5), the line `iceClass — none asserted` in place of a CURIE and label. Every count comes from that artifact, never from decisions. None contains
+  a PR-O4(b) word except `Accepted by {name}`, which appears only after a CV-O2 act. Witnesses: W-PRO4-N, W-PRO5-N, W-JO1,
+  W-PRO1-Δ7.
 - **RV-O2: Only acts write decisions.** No paste, report or file load writes `decisions` or `acceptorName`. A decision
   applies only to the skeleton of the report it was made on (SDD R-S18): while another skeleton is current it is neither
   shown nor saved, and it is not rewritten or discarded, so an act under one skeleton never changes a decision held under
@@ -146,8 +148,8 @@ decisions{skeleton → {key → accept|reject}}, acceptorName, nullEquivalents{k
   and rendered as a quoted element; the separators and `—` are the tool's. A refusal outside a CheckReport (for example
   E-CTX-EXTERNAL when a file is opened) is rendered the same way, with its R-S21 message where R-S21 defines one. Two
   refusals have no R-S21 template and use these fixed messages: E-PROMPT-BUDGET `The budget is smaller than a prompt
-  with no DATA lines.` · E-SKEL-ERRORED `The schema has source errors, so no skeleton can be made.` Witnesses: W-PRO4-Δ1,
-  W-PRO5-N, W-PRO2-Δ2.
+  with no DATA lines.` · E-SKEL-ERRORED `The schema has source errors, so no skeleton can be made.` An E-USAGE refusal of an
+  opened file carries the core's detail as its message (SDD R-S24). Witnesses: W-PRO4-Δ1, W-PRO5-N, W-PRO2-Δ2, W-PRO2-Δ3.
 
 ## SDD-operator §7: Decomposition
 
@@ -160,12 +162,12 @@ also works from a saved local copy (E-O1). `harness/netguard.mjs` serves H-O2.
 
 | Seam | Producer → Consumer | Contract | Crossing example (literal) | Status |
 |---|---|---|---|---|
-| S-O1 | SDD C-S3/C-S5 → copy control → clipboard | prompt bytes | `minimal/prompt.txt` → clipboard bytes with sha256 `7f121f7a` | filled |
-| S-O2 | paste box → SDD C-S4 | pasted bytes | `minimal/proposal-pasted.txt` → C-S4 input with sha256 `7d3a9546` | filled |
+| S-O1 | SDD C-S3/C-S5 → copy control → clipboard | prompt bytes | `minimal/prompt.txt` → clipboard bytes with sha256 `8b6516fc` | filled |
+| S-O2 | paste box → SDD C-S4 | pasted bytes | `minimal/proposal-pasted.txt` → C-S4 input with sha256 `06d648cb` | filled |
 | S-O3 | CV-O2 → SDD C-S6 | decisions | `{"by": "Aaron Damiano", "decisions": [{"key": "ot:Organization", "decision": "accept"}, {"key": "at:Organization/Name", "decision": "accept"}, {"key": "at:Organization/Cost Center", "decision": "accept"}], "nullEquivalents": {}}` | filled |
-| S-O4 | SDD C-S4 → rows | CheckReport | `minimal/bad-check-report.jsonld` (`981fe147`) → the 2 rows of W-PRO5-N | filled |
+| S-O4 | SDD C-S4 → rows | CheckReport | `minimal/bad-check-report.jsonld` (`87b5be26`) → the 2 rows of W-PRO5-N | filled |
 | S-O5 | SDD C-S1 → summary line | Inventory | `minimal/inventory.jsonld` (`902ab965`) → `1 object type · 2 attributes · 0 references · 0 flags` | filled |
-| S-O6 | SDD C-S6 → download | SemanticDataDictionary | `minimal/sdd.jsonld` (`d311d909`) → downloaded bytes, equal except `acceptance.at` | filled |
+| S-O6 | SDD C-S6 → download | SemanticDataDictionary | `minimal/sdd.jsonld` (`45152cda`) → downloaded bytes, equal except `acceptance.at` | filled |
 
 No pending rows, so CAP-1 is inactive.
 
@@ -217,9 +219,11 @@ Under H-O1 unless marked H-O2. Expected texts are exact except where masked.
 - **W-PRO1-Δ4 (reversible act):** Accept all three, then click **Reject** on Cost Center → that row reads `Rejected by Aaron Damiano`; saving gives SDD W-CS6-Δ2 (2 mappings, `open: ["at:Organization/Cost Center"]`).
 - **W-PRO1-Δ5 (adversarial: an opened SDD names someone):** in a new session, open `minimal/sdd-partial.jsonld` (accepted by "Aaron Damiano") as the previous SDD, then the minimal schema → the name field is empty; the 2 carried items read `Accepted by Aaron Damiano` from their original records (SDD R-S17); no new decision exists until the person acts.
 - **W-PRO1-Δ6 (adversarial: another skeleton; RV-O2, SDD R-S17/R-S18):** (a) W-JO1 steps 1–5 (3 items accepted by "Aaron Damiano"); open `minimal-organization-v2.json` → no item reads `Accepted by …`; build, paste the correct proposal for its prompt (validated) and click **Accept** on Cost Center; reopen `minimal-organization.json` → the 3 items read `Accepted by Aaron Damiano`; **Save SDD** → equals `minimal/sdd.jsonld` except `at`. (b) In a new session, W-JO1 steps 1–5; open `minimal/sdd.jsonld` as the previous SDD, then `minimal-organization-v2.json` → Organization and Name read `Accepted by Aaron Damiano` (carried, R-S17) and Cost Center is undecided; paste `minimal/proposal-rerun.txt` (validated) → Cost Center is still undecided, and a saved SDD has exactly the 2 carried mappings, byte-identical to `minimal/sdd.jsonld`'s, and `open` = `["at:Organization/Cost Center"]`; **Accept** Cost Center, save → equals `minimal/sdd-v2.jsonld` except `at`. Property: a decision is shown and saved only under its own skeleton; only R-S17 carries across schema versions.
+- **W-PRO1-Δ7 (no specific classification; SDD R-S5, W-CS6-Δ11):** W-JO1 steps 1–3; paste `minimal/proposal-null.txt` → RV-O1(validated) and no row; inside Cost Center's `From the LLM's reply` the line reads `iceClass — none asserted` and no CURIE is shown; all 3 items are undecided. Type "Aaron Damiano"; **Accept** ×3; **Save SDD** → equals `minimal/sdd-null.jsonld` except `at`. Property: a `null` classification is shown, and becomes part of the SDD only by an act.
 - **W-PRO2-N:** W-JO1 end to end → the request log after load is `[]`.
 - **W-PRO2-Δ1 (H-O2):** SDD W-JS1–W-JS4 via the CLI → every command exits as SDD §3 specifies; `netguard.log` is empty.
 - **W-PRO2-Δ2 (adversarial):** open an SDD whose `@context` is `https://example.org/ctx.jsonld` → exactly one row, `E-CTX-EXTERNAL · — · — · https://example.org/ctx.jsonld · R-S16 — The file's @context is not the bundled SDD context.` (SDD R-S16, R-S21); the request log is `[]`. The IRI is never requested.
+- **W-PRO2-Δ3 (refusal: version-1 SDD, SDD R-S24, W-CS6-Δ12):** after W-JO1 step 1, open as the previous SDD `minimal/sdd.jsonld` with its `sddVersion` replaced by `1` → exactly one row, `E-USAGE · — · — · — · — — the previous SDD has sddVersion 1; this release reads only sddVersion 2`; no item reads `Accepted by …`; the request log is `[]`.
 - **W-PRO3-N:** after W-JO1 step 5, paste `minimal/bad-proposal.txt` → RV-O1(rejected, 2) (SDD W-CS4-Δ1); a saved SDD equals the one saved before the paste byte for byte (`acceptance.at` was fixed at each click, CV-O2).
 - **W-PRO3-Δ1 (adversarial: garbage):** paste 1 MB of printable ASCII generated from seed `K2-garbage-1`, then an empty paste → one E-CHK-JSON row each time (SDD R-S13); accepted state unchanged.
 - **W-PRO3-Δ2 (refusal, L2 empty, H-O2):** SDD W-CS6-Δ5 → exit 2, E-OUT-EXISTS, the file's bytes unchanged. In the browser every save is a new download; no control overwrites or deletes. *The absence is the assertion.*
@@ -230,7 +234,7 @@ Under H-O1 unless marked H-O2. Expected texts are exact except where masked.
 - **W-PRO4-Δ3 (adversarial: approval words in keys and names):** paste `minimal/proposal-pasted.txt` with one extra mapping keyed `approved` → RV-O1(rejected, 1); the row `E-CHK-UNKNOWN-KEY · approved · — · — · R-S6 — approved is not a slot in this batch.` shows the key and message only as quoted elements. Then open a schema with an attribute named `Verified` → the name appears only as a quoted element. In both states the W-PRO4-N scan outside quoted elements finds none of PR-O4(b)'s words.
 - **W-PRO5-N:** W-JO2 step 4 → exactly 2 rows, in this order: `E-CHK-MISSING · at:Organization/Cost Center · — · — · R-S6 — Slot at:Organization/Cost Center has no mapping in this batch.` and `E-CHK-CATEGORY · at:Organization/Name · iceClass · cco:ont00001180 · R-S5 — iceClass cco:ont00001180 (Organization) is not cco:ont00000958 (Information Content Entity) or a subclass of it.` The repair prompt equals `minimal/repair-prompt.txt` (SDD W-CS4-Δ1, W-CS5-N, R-S21).
 - **W-PRO5-Δ1 (adversarial: many errors):** paste `minimal/proposal-pasted.txt` with every key suffixed by `X` → RV-O1(rejected, 6); exactly 6 rows (3 E-CHK-MISSING, 3 E-CHK-UNKNOWN-KEY, in SDD R-S20 order); the repair prompt's ERRORS block has 6 lines.
-- **W-PRO6-N:** W-JO1 steps 2–3 → the screen shows `7f121f7a`; the clipboard bytes equal `minimal/prompt.txt` (SDD W-CS3-N).
+- **W-PRO6-N:** W-JO1 steps 2–3 → the screen shows `8b6516fc`; the clipboard bytes equal `minimal/prompt.txt` (SDD W-CS3-N).
 - **W-PRO6-Δ1 (batches):** full fixture, budget 69,000 → two controls, `Batch 1 of 2` and `Batch 2 of 2`, copying `full/prompt-1-of-2.txt` and `full/prompt-2-of-2.txt` byte for byte (SDD W-CS3-Δ2).
 - **W-PRO6-Δ2 (adversarial: hostile separators):** open `hostile-separators.json` and copy its prompt → the clipboard bytes equal `hostile/prompt.txt` (SDD W-CS3-Δ6), which contains no CR byte and no U+2028 or U+2029 code point (SDD R-S11); the description shows only inside `From the source schema` (RV-O3).
 - **Anchors:** none, because there is no rated protocol.
@@ -247,7 +251,7 @@ Under H-O1 unless marked H-O2. Expected texts are exact except where masked.
 **Scene-validation precondition (P10.1):** every scene executed against the built page and CLI in a clean
 environment. *Status: met for every W-PRO\* and W-JO\* scene (H-O1 `harness/h-o1.mjs`, H-O2 `harness/h-o2.mjs`, on `ubuntu-24.04` and against the published page, 2026-10-28). V-O1–V-O3 (OO-2): met (2026-10-29), each 300/300 at n = 300 on `ubuntu-24.04` with fresh seed `rc-vo-12cbb83…` (Release verification run 40911400026), request log and `netguard.log` empty.*
 
-`Disposition: per method §6` · `Acceptance readiness: READY — §14 gates 1–6 hold (2026-10-29; review/register.md, release candidate v1.0.0-rc.1)`
+`Disposition: per method §6` · `Acceptance readiness: PENDING — v0.5 re-verification on the reference environment (v0.4.1 was READY, release candidate v1.0.0-rc.1)`
 
 ## SDD-operator §15: Change discipline
 
@@ -276,7 +280,7 @@ Citations follow the normative citation rule in SDD §11 (identifiers, attributi
 | NG-S4 | PR-O2, SDD-operator §2 |
 | NG-S5 | NP-O2, PR-O1, SDD-operator §2 |
 | OS-7 | SDD-operator §15, SDD-operator §16 |
-| R-S5 | W-PRO4-Δ1, W-PRO5-N |
+| R-S5 | RV-O1, W-PRO1-Δ7, W-PRO4-Δ1, W-PRO5-N |
 | R-S6 | W-PRO4-Δ3, W-PRO5-N |
 | R-S10 | W-PRO1-Δ2 |
 | R-S11 | W-PRO6-Δ2 |
@@ -288,6 +292,7 @@ Citations follow the normative citation rule in SDD §11 (identifiers, attributi
 | R-S20 | W-PRO5-Δ1 |
 | R-S21 | RV-O4, SDD-operator §2, W-PRO2-Δ2, W-PRO4-Δ1, W-PRO5-N |
 | R-S23 | CV-O3, PR-O3, SDD-operator §2, SDD-operator §12 |
+| R-S24 | RV-O4, W-PRO2-Δ3 |
 | SDD §2 | J-O1, J-O2, J-O3, J-O4, WV-1 |
 | SDD §5 | CV-O1, CV-O2, CV-O3 |
 | SDD §10 | H-O2, WV-1 |
@@ -304,6 +309,8 @@ Citations follow the normative citation rule in SDD §11 (identifiers, attributi
 | W-CS6-Δ4 | W-PRO1-Δ3 |
 | W-CS6-Δ5 | W-PRO3-Δ2 |
 | W-CS6-Δ7 | W-JO2 |
+| W-CS6-Δ11 | W-PRO1-Δ7 |
+| W-CS6-Δ12 | W-PRO2-Δ3 |
 | W-JS1 | W-JO1, W-PRO2-Δ1 |
 | W-JS2 | W-JO2, W-PRO2-Δ1 |
 | W-JS3 | W-JO3, W-PRO2-Δ1 |

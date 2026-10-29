@@ -87,11 +87,11 @@ const scriptSafe = (jsonText) => jsonText.replace(/</g, () => LT_ESCAPE);
 
 function resourcesModule() {
   const json = (p) => scriptSafe(JSON.stringify(JSON.parse(readText(p))));
-  const template = scriptSafe(JSON.stringify(readText('spec/prompt-template-v2.txt')));
+  const template = scriptSafe(JSON.stringify(readText('spec/prompt-template-v3.txt')));
   return [
     '__exports.RESOURCES = {',
     `  template: ${template},`,
-    `  proposalSchema: ${json('schemas/proposal-v1.schema.json')},`,
+    `  proposalSchema: ${json('schemas/proposal-v2.schema.json')},`,
     `  atlassianSchema: ${json('vendor/atlassian/assets-import-schema-2021_09_15.json')},`,
     `  context: ${json('context/sdd-v1.jsonld')},`,
     `  termList: ${json('ontology/term-list.json')}`,

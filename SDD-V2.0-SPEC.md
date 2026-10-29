@@ -1,3 +1,9 @@
+> **Historical document — not the v1 contract.** This draft (January 2026) is kept unchanged below as the record
+> that the v1 work started from and that the review register cites (`review/register.md`, reviewed at `c4d04b5`).
+> The v1 contract is `spec/sdd-service.md` and `spec/sdd-operator.md` under `project/DECISIONS.md`; where this draft
+> differs from them, they govern. Its terms and examples are illustrative and are not verified BFO/CCO terms.
+> (Banner added 2026-10-29 with SDD v0.5; nothing below it was changed.)
+
 # **Formalizing Semantic Data Dictionaries for Realist Star Schemas: Version 2.0**
 
 **Aaron Damiano**

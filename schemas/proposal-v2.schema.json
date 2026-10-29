@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skreen5hot.github.io/SemanticDataDictionary/schemas/proposal-v2.schema.json",
+  "title": "SDD proposal (LLM reply), version 2",
+  "description": "Authoritative shape of a proposal object (SDD R-S13). Kind-specific field sets are checked by C-S4 against the prompt's slots (R-S20, E-CHK-FIELDS). Human-only field names are admitted here so that R-S10 reports them as E-CHK-HUMAN-FIELD rather than as a shape error. Version 2 (SDD v0.5): iceClass may be null (R-S5); valueProperty is no longer a field of any artifact and fails this schema (additionalProperties, R-S10).",
+  "type": "object",
+  "required": ["skeletonSha256", "batch", "mappings"],
+  "additionalProperties": false,
+  "properties": {
+    "skeletonSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "batch": { "type": "string", "pattern": "^[1-9][0-9]*/[1-9][0-9]*$" },
+    "mappings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["key", "rationale"],
+        "additionalProperties": false,
+        "properties": {
+          "key": { "type": "string", "minLength": 1 },
+          "recordClass": { "type": "string" },
+          "referentClass": { "type": "string" },
+          "iceClass": { "type": ["string", "null"] },
+          "relation": { "type": "string" },
+          "rationale": { "type": "string" },
+          "nullEquivalents": true,
+          "acceptance": true,
+          "decision": true,
+          "datatype": true
+        }
+      }
+    }
+  }
+}

@@ -15,7 +15,6 @@
       "kind": "attribute",
       "jiraType": "text",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -23,7 +22,6 @@
       "kind": "attribute",
       "jiraType": "text",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     }
   ]

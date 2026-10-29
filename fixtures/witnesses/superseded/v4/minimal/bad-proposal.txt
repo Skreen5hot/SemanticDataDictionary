@@ -1,0 +1,17 @@
+{
+  "skeletonSha256": "e990dbb36831aa769a09a7d5df64d396698511482c3ba849064353500ff9de57",
+  "batch": "1/1",
+  "mappings": [
+    {
+      "key": "ot:Organization",
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00001180",
+      "rationale": "The Assets object is a descriptive record about an organization."
+    },
+    {
+      "key": "at:Organization/Name",
+      "iceClass": "cco:ont00001180",
+      "rationale": "The name of the organization."
+    }
+  ]
+}

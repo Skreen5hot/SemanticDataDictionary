@@ -65,6 +65,10 @@ export function readPrevious(bytes) {
       !isObj(p.source) || !isStr(p.source.identification) || !isObj(p.environment) || !isStr(p.environment.termListSha256)) {
     throw usage('the previous file is not a SemanticDataDictionary');
   }
+  // R-S24: version-1 SDDs (release candidate v1.0.0-rc.1) are historical; they are neither carried nor migrated.
+  if (p.sddVersion !== 2) {
+    throw usage(`the previous SDD has sddVersion ${p.sddVersion === undefined ? 'undefined' : JSON.stringify(p.sddVersion)}; this release reads only sddVersion 2`);
+  }
   return p;
 }
 
@@ -146,7 +150,8 @@ export function acceptMappings({ skeletonBytes, inventoryBytes, decisionsBytes, 
     for (const m of answer.mappings) {
       const slot = isObj(m) && isStr(m.key) ? slotByKey.get(m.key) : undefined;
       const fields = slot && FIELD_SETS[slot.kind];
-      if (!slot || keys.has(m.key) || Object.keys(m).length !== fields.length || !fields.every((f) => isStr(m[f]))) {
+      if (!slot || keys.has(m.key) || Object.keys(m).length !== fields.length ||
+          !fields.every((f) => isStr(m[f]) || (f === 'iceClass' && m[f] === null))) {
         throw usage(`paste ${i + 1} does not hold the reply its check report describes`);
       }
       keys.add(m.key);
@@ -187,11 +192,9 @@ export function acceptMappings({ skeletonBytes, inventoryBytes, decisionsBytes, 
         m.recordClass = p.recordClass;
         m.referentClass = p.referentClass;
       } else if (slot.kind === 'attribute') {
-        const [datatype, valueProperty] = VALUE_TABLE[jiraType];
         const ne = [...new Set(dec.nullEquivalents[slot.key] || [])].sort(cmp);
         m.iceClass = p.iceClass;
-        m.datatype = datatype;
-        m.valueProperty = valueProperty;
+        m.datatype = VALUE_TABLE[jiraType];
         m.nullEquivalents = ne;
       } else {
         m.relation = p.relation;
@@ -217,7 +220,7 @@ export function acceptMappings({ skeletonBytes, inventoryBytes, decisionsBytes, 
   return {
     '@context': CONTEXT_IRI,
     '@type': 'SemanticDataDictionary',
-    sddVersion: 1,
+    sddVersion: 2,
     source: {
       format: inventory.source.format,
       sha256: inventory.source.sha256,

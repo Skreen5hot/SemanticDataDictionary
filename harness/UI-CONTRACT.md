@@ -22,5 +22,6 @@ Visible label texts are the spec's own (CV-O1–CV-O3, RV-O1, RV-O4).
 | An item | element `data-testid="item"` with `data-key="<slot key>"`; buttons `Accept` and `Reject`; decision text in `data-testid="decision"` (`Accepted by {name}` / `Rejected by {name}`, empty when undecided); for attributes `<input aria-label="Null-equivalents">` |
 | Bulk accept | button named `Accept all {N} validated`; confirmation `role="dialog"` with the RV-O1 text and buttons `Confirm` and `Cancel` |
 | Save | button `Save SDD`, a download named `sdd-YYYYMMDDTHHMMSSZ.jsonld` |
+| Unclassified attribute (RV-O1, SDD v0.5) | inside an item's `From the LLM's reply` region, an element `data-testid="none-asserted"` whose text is `iceClass — none asserted` (the field name quoted), shown when the reply or carried record has `"iceClass": null` |
 | Quoted text (RV-O3, RV-O4) | every string copied from an artifact (keys, values, names, descriptions, rationales, codes and messages in rows) is inside an element carrying the attribute `data-quoted`. Rationales sit in a region `aria-label="From the LLM's reply"`, source names and descriptions in a region `aria-label="From the source schema"` |
 | Refusal outside a report (e.g. E-CTX-EXTERNAL on open) | a `data-testid="problem-row"` in RV-O4 format |

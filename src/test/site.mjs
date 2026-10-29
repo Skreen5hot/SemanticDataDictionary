@@ -154,7 +154,7 @@ function jo1(s) {
 const heldCount = (s) => [...s.state.decisions.values()].reduce((n, m) => n + m.size, 0);
 const decideAll = (s, d = 'accept') => s.items().forEach((it, i) => s.decide(it.key, d, T(i)));
 
-test('W-JO1 / W-PRO1-N / W-PRO6-N: summary, 1 batch 7f121f7a, same bytes, validated, 3 clicks -> minimal/sdd.jsonld (at masked)', () => {
+test('W-JO1 / W-PRO1-N / W-PRO6-N: summary, 1 batch 8b6516fc, same bytes, validated, 3 clicks -> minimal/sdd.jsonld (at masked)', () => {
   const s = fresh();
   s.openSchema(minimal());
   const summary = s.summary();
@@ -168,7 +168,7 @@ test('W-JO1 / W-PRO1-N / W-PRO6-N: summary, 1 batch 7f121f7a, same bytes, valida
   const out = s.buildSdd();
   return all(expect(summary === '1 object type · 2 attributes · 0 references · 0 flags', summary),
     expect(prompts.length === 1 && prompts[0].index === 1 && prompts[0].count === 1, 'one batch'),
-    expect(prompts[0].sha256.slice(0, 8) === '7f121f7a', prompts[0].sha256), expect(same(prompts[0].bytes, W('minimal/prompt.txt')), 'prompt bytes'),
+    expect(prompts[0].sha256.slice(0, 8) === '8b6516fc', prompts[0].sha256), expect(same(prompts[0].bytes, W('minimal/prompt.txt')), 'prompt bytes'),
     expect(prompts[0].text === text(W('minimal/prompt.txt')), 'copied text'),
     expect(o.status === M.VALIDATED_TEXT && o.status === 'Validated: structure, coverage, terms and categories checked. Meaning not yet reviewed: accept or reject each mapping.', o.status),
     expect(undecided === 3, `undecided ${undecided}`),

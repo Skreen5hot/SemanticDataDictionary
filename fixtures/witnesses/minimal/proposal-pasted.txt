@@ -2,7 +2,7 @@ Here is the mapping:
 
 ```json
 {
-  "skeletonSha256": "e990dbb36831aa769a09a7d5df64d396698511482c3ba849064353500ff9de57",
+  "skeletonSha256": "07eb4b7dc38cbd90c65556dc906545c68d98ef929e7579507d7bf69ecb81f140",
   "batch": "1/1",
   "mappings": [
     {

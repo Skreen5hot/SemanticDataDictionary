@@ -2,20 +2,20 @@
 
 import { sha256Hex, fromUtf8, toU8, CONTEXT_IRI } from './canonical.mjs';
 
-/** R-S9 value table (the 12 non-reference Jira types). */
+/** R-S9 value table (the 12 non-reference Jira types): the datatype only (v0.5: no value property). */
 export const VALUE_TABLE = {
-  text: ['xsd:string', 'cco:ont00001765'],
-  textarea: ['xsd:string', 'cco:ont00001765'],
-  email: ['xsd:string', 'cco:ont00001765'],
-  select: ['xsd:string', 'cco:ont00001765'],
-  ipaddress: ['xsd:string', 'cco:ont00001765'],
-  url: ['xsd:anyURI', 'cco:ont00001768'],
-  integer: ['xsd:integer', 'cco:ont00001773'],
-  double: ['xsd:double', 'cco:ont00001770'],
-  boolean: ['xsd:boolean', 'cco:ont00001772'],
-  date: ['xsd:date', 'cco:ont00001771'],
-  date_time: ['xsd:dateTime', 'cco:ont00001767'],
-  time: ['xsd:string', 'cco:ont00001765'],
+  text: 'xsd:string',
+  textarea: 'xsd:string',
+  email: 'xsd:string',
+  select: 'xsd:string',
+  ipaddress: 'xsd:string',
+  url: 'xsd:anyURI',
+  integer: 'xsd:integer',
+  double: 'xsd:double',
+  boolean: 'xsd:boolean',
+  date: 'xsd:date',
+  date_time: 'xsd:dateTime',
+  time: 'xsd:string',
 };
 
 export class DomainError extends Error {
@@ -69,9 +69,9 @@ export function buildSlots(inventory) {
       if (a.type === 'referenced_object') {
         slots.push({ key: a.key, kind: 'reference', target: a.target, relation: null });
       } else {
-        const row = VALUE_TABLE[a.type];
-        if (!row) throw new UsageError('E-USAGE', `inventory attribute ${a.key} has unknown type ${a.type}`);
-        slots.push({ key: a.key, kind: 'attribute', jiraType: a.type, datatype: row[0], valueProperty: row[1], iceClass: null });
+        const datatype = VALUE_TABLE[a.type];
+        if (!datatype) throw new UsageError('E-USAGE', `inventory attribute ${a.key} has unknown type ${a.type}`);
+        slots.push({ key: a.key, kind: 'attribute', jiraType: a.type, datatype, iceClass: null });
       }
     }
     for (const f of containments) {

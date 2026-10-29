@@ -15,7 +15,6 @@
       "kind": "attribute",
       "jiraType": "text",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -23,7 +22,6 @@
       "kind": "attribute",
       "jiraType": "text",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -37,7 +35,6 @@
       "kind": "attribute",
       "jiraType": "text",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -45,7 +42,6 @@
       "kind": "attribute",
       "jiraType": "text",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -53,7 +49,6 @@
       "kind": "attribute",
       "jiraType": "email",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -61,7 +56,6 @@
       "kind": "attribute",
       "jiraType": "date",
       "datatype": "xsd:date",
-      "valueProperty": "cco:ont00001771",
       "iceClass": null
     },
     {
@@ -69,7 +63,6 @@
       "kind": "attribute",
       "jiraType": "boolean",
       "datatype": "xsd:boolean",
-      "valueProperty": "cco:ont00001772",
       "iceClass": null
     },
     {
@@ -95,7 +88,6 @@
       "kind": "attribute",
       "jiraType": "text",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -103,7 +95,6 @@
       "kind": "attribute",
       "jiraType": "text",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -111,7 +102,6 @@
       "kind": "attribute",
       "jiraType": "text",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -119,7 +109,6 @@
       "kind": "attribute",
       "jiraType": "textarea",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -127,7 +116,6 @@
       "kind": "attribute",
       "jiraType": "double",
       "datatype": "xsd:double",
-      "valueProperty": "cco:ont00001770",
       "iceClass": null
     },
     {
@@ -135,7 +123,6 @@
       "kind": "attribute",
       "jiraType": "double",
       "datatype": "xsd:double",
-      "valueProperty": "cco:ont00001770",
       "iceClass": null
     },
     {
@@ -149,7 +136,6 @@
       "kind": "attribute",
       "jiraType": "text",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -157,7 +143,6 @@
       "kind": "attribute",
       "jiraType": "text",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -165,7 +150,6 @@
       "kind": "attribute",
       "jiraType": "date",
       "datatype": "xsd:date",
-      "valueProperty": "cco:ont00001771",
       "iceClass": null
     },
     {
@@ -173,7 +157,6 @@
       "kind": "attribute",
       "jiraType": "double",
       "datatype": "xsd:double",
-      "valueProperty": "cco:ont00001770",
       "iceClass": null
     },
     {
@@ -181,7 +164,6 @@
       "kind": "attribute",
       "jiraType": "select",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -189,7 +171,6 @@
       "kind": "attribute",
       "jiraType": "url",
       "datatype": "xsd:anyURI",
-      "valueProperty": "cco:ont00001768",
       "iceClass": null
     },
     {
@@ -215,7 +196,6 @@
       "kind": "attribute",
       "jiraType": "boolean",
       "datatype": "xsd:boolean",
-      "valueProperty": "cco:ont00001772",
       "iceClass": null
     },
     {
@@ -223,7 +203,6 @@
       "kind": "attribute",
       "jiraType": "integer",
       "datatype": "xsd:integer",
-      "valueProperty": "cco:ont00001773",
       "iceClass": null
     },
     {
@@ -237,7 +216,6 @@
       "kind": "attribute",
       "jiraType": "text",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -245,7 +223,6 @@
       "kind": "attribute",
       "jiraType": "ipaddress",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -253,7 +230,6 @@
       "kind": "attribute",
       "jiraType": "time",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -261,7 +237,6 @@
       "kind": "attribute",
       "jiraType": "integer",
       "datatype": "xsd:integer",
-      "valueProperty": "cco:ont00001773",
       "iceClass": null
     },
     {
@@ -269,7 +244,6 @@
       "kind": "attribute",
       "jiraType": "textarea",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -283,7 +257,6 @@
       "kind": "attribute",
       "jiraType": "integer",
       "datatype": "xsd:integer",
-      "valueProperty": "cco:ont00001773",
       "iceClass": null
     },
     {
@@ -304,7 +277,6 @@
       "kind": "attribute",
       "jiraType": "integer",
       "datatype": "xsd:integer",
-      "valueProperty": "cco:ont00001773",
       "iceClass": null
     },
     {
@@ -325,7 +297,6 @@
       "kind": "attribute",
       "jiraType": "text",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -333,7 +304,6 @@
       "kind": "attribute",
       "jiraType": "text",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -341,7 +311,6 @@
       "kind": "attribute",
       "jiraType": "date_time",
       "datatype": "xsd:dateTime",
-      "valueProperty": "cco:ont00001767",
       "iceClass": null
     },
     {
@@ -349,7 +318,6 @@
       "kind": "attribute",
       "jiraType": "url",
       "datatype": "xsd:anyURI",
-      "valueProperty": "cco:ont00001768",
       "iceClass": null
     },
     {
@@ -363,7 +331,6 @@
       "kind": "attribute",
       "jiraType": "textarea",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "iceClass": null
     },
     {
@@ -377,7 +344,6 @@
       "kind": "attribute",
       "jiraType": "date_time",
       "datatype": "xsd:dateTime",
-      "valueProperty": "cco:ont00001767",
       "iceClass": null
     },
     {
@@ -385,7 +351,6 @@
       "kind": "attribute",
       "jiraType": "integer",
       "datatype": "xsd:integer",
-      "valueProperty": "cco:ont00001773",
       "iceClass": null
     }
   ]

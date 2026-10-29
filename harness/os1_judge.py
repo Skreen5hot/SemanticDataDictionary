@@ -14,11 +14,12 @@ from pyshacl import validate
 
 ROOT = sys.argv[1]
 J = lambda p: json.load(open(os.path.join(ROOT, p), encoding='utf-8'))
-SCHEMA = {t: J(f'schemas/{f}-v1.schema.json') for t, f in [('Inventory', 'inventory'), ('Skeleton', 'skeleton'), ('PromptSet', 'prompt-set'), ('CheckReport', 'check-report'), ('RerunPlan', 'rerun-plan'), ('SemanticDataDictionary', 'sdd')]}
+VERSION = {'skeleton': 2, 'check-report': 2, 'sdd': 2}  # SDD v0.5 (R-S24); the others are unchanged version 1
+SCHEMA = {t: J(f'schemas/{f}-v{VERSION.get(f, 1)}.schema.json') for t, f in [('Inventory', 'inventory'), ('Skeleton', 'skeleton'), ('PromptSet', 'prompt-set'), ('CheckReport', 'check-report'), ('RerunPlan', 'rerun-plan'), ('SemanticDataDictionary', 'sdd')]}
 VAL = {t: Draft202012Validator(s) for t, s in SCHEMA.items()}
 for s in SCHEMA.values(): Draft202012Validator.check_schema(s)
 CTX = J('context/sdd-v1.jsonld')['@context']
-SHAPES = Graph().parse(os.path.join(ROOT, 'shapes/sdd-v1.shacl.ttl'), format='turtle')
+SHAPES = Graph().parse(os.path.join(ROOT, 'shapes/sdd-v2.shacl.ttl'), format='turtle')
 fails, n = [], 0
 def ok(cond, what):
     global n; n += 1
@@ -37,7 +38,7 @@ def rejects(t, d, what):
 def mut(t, path, fn, what):
     d = copy.deepcopy(dict(by_type[t][0][1]) if path is None else J(path)); fn(d); rejects(t, d, what)
 
-# Corruptions derived from the spec text (R-S2, R-S3, R-S9, R-S14, R-S15, R-S18, R-S19, R-S21).
+# Corruptions derived from the spec text (R-S2, R-S3, R-S5, R-S9, R-S14, R-S15, R-S18, R-S19, R-S21, R-S24).
 SDD = 'fixtures/witnesses/minimal/sdd.jsonld'; REP = 'fixtures/witnesses/minimal/check-report.jsonld'; BAD = 'fixtures/witnesses/minimal/bad-check-report.jsonld'
 INV = 'fixtures/witnesses/minimal/inventory.jsonld'; SK = 'fixtures/witnesses/minimal/skeleton.jsonld'; PLAN = 'fixtures/witnesses/minimal/rerun-plan.jsonld'; PS = 'fixtures/witnesses/minimal/prompt-set.jsonld'
 attr = lambda d: next(m for m in d['mappings'] if m['kind'] == 'attribute')
@@ -51,6 +52,11 @@ for t, p, fn, what in [
     ('SemanticDataDictionary', SDD, lambda d: d['mappings'][0].update({'confidence': 0.9}), 'extra field on a mapping'),
     ('SemanticDataDictionary', SDD, lambda d: attr(d).update({'datatype': 'xsd:integer'}), 'datatype not the R-S9 value for text'),
     ('SemanticDataDictionary', SDD, lambda d: d['mappings'][0].update({'key': 'Organization'}), 'key without ot:/at:/ct: prefix (R-S2)'),
+    ('SemanticDataDictionary', SDD, lambda d: attr(d).update({'valueProperty': 'cco:ont00001765'}), 'valueProperty on an attribute mapping (R-S9, v0.5)'),
+    ('SemanticDataDictionary', SDD, lambda d: attr(d).pop('iceClass'), 'attribute mapping without an iceClass member (R-S5)'),
+    ('SemanticDataDictionary', SDD, lambda d: attr(d).update({'iceClass': ''}), 'iceClass neither a CURIE nor null (R-S5)'),
+    ('SemanticDataDictionary', SDD, lambda d: d['mappings'][0].update({'referentClass': None}), 'null referentClass (only iceClass may be null, R-S5)'),
+    ('SemanticDataDictionary', SDD, lambda d: d.update({'sddVersion': 1}), 'sddVersion 1 (R-S24)'),
     ('CheckReport', REP, lambda d: d.update({'status': 'rejected'}), 'rejected with no errors (R-S14)'),
     ('CheckReport', BAD, lambda d: d.update({'status': 'validated'}), 'validated with errors (R-S14)'),
     ('CheckReport', BAD, lambda d: d['errors'][0].pop('message'), 'error without message (R-S21)'),
@@ -61,6 +67,7 @@ for t, p, fn, what in [
     ('Inventory', INV, lambda d: d.update({'@type': 'Skeleton'}), 'wrong @type'),
     ('Skeleton', SK, lambda d: d['slots'][0].update({'kind': 'table'}), 'unknown slot kind'),
     ('Skeleton', SK, lambda d: d.pop('slots'), 'slots missing'),
+    ('Skeleton', SK, lambda d: next(s for s in d['slots'] if s['kind'] == 'attribute').update({'valueProperty': 'cco:ont00001765'}), 'valueProperty on an attribute slot (R-S9, v0.5)'),
     ('RerunPlan', PLAN, lambda d: d.pop('removed'), 'removed missing'),
     ('RerunPlan', PLAN, lambda d: d['flags'].append({'code': 'FL-TERMS-CHANGED', 'key': None}), 'FL-TERMS-CHANGED without previous/current (R-S19)'),
     ('PromptSet', PS, lambda d: d.update({'@type': 'PromptSets'}), 'wrong @type'),
@@ -80,6 +87,8 @@ for fn, what in [
     (lambda d: d['mappings'][0].pop('acceptance'), 'mapping without acceptance'),
     (lambda d: d.update({'open': [d['mappings'][0]['key']]}), 'a key both mapped and open'),
     (lambda d: d['mappings'][0]['acceptance'].update({'decision': 'approved'}), 'decision outside the enumeration'),
+    (lambda d: attr(d).update({'valueProperty': 'cco:ont00001765'}), 'a sdd:valueProperty triple (closed attribute shape, v0.5)'),
+    (lambda d: d.update({'sddVersion': 1}), 'sddVersion 1 (R-S24)'),
 ]:
     d = copy.deepcopy(base); fn(d); ok(not shacl(d), f'SHACL: corruption conforms: {what}')
 

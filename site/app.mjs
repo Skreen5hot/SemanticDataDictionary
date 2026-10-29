@@ -144,7 +144,9 @@ function renderItems(o) {
         h('span', { 'data-testid': 'decision', class: 'decision' }, decisionText)),
       m ? h('div', { role: 'region', 'aria-label': "From the LLM's reply", class: 'reply' },
         h('div', { class: 'reply-label' }, "From the LLM's reply"),
-        FIELDS.filter((f) => typeof m[f] === 'string').map((f) => {
+        FIELDS.filter((f) => typeof m[f] === 'string' || (f === 'iceClass' && m[f] === null)).map((f) => {
+          // RV-O1 (v0.5): a null iceClass is shown with a fixed text, never as an empty or missing field.
+          if (m[f] === null) return h('div', { class: 'field', 'data-testid': 'none-asserted' }, q(f, 'field-name'), ' — none asserted');
           const label = session.terms.label(m[f]);
           return h('div', { class: 'field' }, q(f, 'field-name'), ' ', q(m[f]), label ? [' ', q(label, 'label')] : null);
         }),

@@ -81,7 +81,7 @@ const MUTATIONS = [
     return s.replace(/^(\| `fixtures\/witnesses\/full\/prompt\.txt` \|[^|]+\|[^|]+\| )[^|]+( \|)$/m, `$1${minimal}$2`);
   })],
 ];
-const governed = walk(join(T, 'fixtures')).map(rel).filter((r) => !r.includes('/superseded/') && !r.endsWith('README.md')).concat(['spec/prompt-template-v2.txt', 'schemas/proposal-v1.schema.json']);
+const governed = walk(join(T, 'fixtures')).map(rel).filter((r) => !r.includes('/superseded/') && !r.endsWith('README.md')).concat(['spec/prompt-template-v2.txt', 'spec/prompt-template-v3.txt', 'schemas/proposal-v1.schema.json', 'schemas/proposal-v2.schema.json']);
 for (const r of governed) MUTATIONS.push([`flip one byte: ${r}`, 'registry-check', false, () => { const b = Buffer.from(rd(r)); b[Math.floor(b.length / 2)] ^= 1; wr(r, b); }]);
 
 // Control (registrar item 4): a registry-only corruption (stale prose prefix) that DECLARES a semantic expectation.

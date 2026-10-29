@@ -1,0 +1,31 @@
+{
+  "@context": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld",
+  "@type": "CheckReport",
+  "skeletonSha256": "2b309d2d0b201923ae3ce5057e0217d24e339881a963692671c3da206aa78616",
+  "batch": "1/1",
+  "round": 1,
+  "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
+  "proposalSha256": "86f399d9de1e8760e9845188df86c5dc6a7ed731fa9fe377c0686257a6be395c",
+  "termListSha256": "a9e01756d749655a53088833bb97612791caf9a19220065848c826f99985cd39",
+  "status": "rejected",
+  "errors": [
+    {
+      "code": "E-CHK-RANGE",
+      "key": "at:Person/Manager",
+      "field": "relation",
+      "value": "bfo:BFO_0000056",
+      "rule": "R-S8",
+      "message": "relation bfo:BFO_0000056 does not admit the referent classes it connects (domain/range)."
+    }
+  ],
+  "warnings": [
+    {
+      "code": "W-CHK-ICE-REFERENT",
+      "key": "ot:Software",
+      "field": "referentClass",
+      "value": "cco:ont00000853",
+      "rule": "R-S5",
+      "message": "referentClass cco:ont00000853 (Descriptive Information Content Entity) is information content; check the record is about information."
+    }
+  ]
+}

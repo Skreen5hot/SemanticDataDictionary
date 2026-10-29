@@ -1,0 +1,74 @@
+{
+  "skeletonSha256": "2b309d2d0b201923ae3ce5057e0217d24e339881a963692671c3da206aa78616",
+  "batch": "2/2",
+  "mappings": [
+    {
+      "key": "ot:Hard Drive",
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000117",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Hard Drive/Capacity GB",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "ct:ot:Hard Drive",
+      "relation": "bfo:BFO_0000176",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "ot:Software",
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Software/Name",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Software/Version",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Software/Last Scanned",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Software/Vendor Site",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Software/Installed On",
+      "relation": "bfo:BFO_0000084",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Software/Notes",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "ot:Scan Event",
+      "recordClass": "cco:ont00000853",
+      "referentClass": "cco:ont00000037",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Scan Event/Started",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    },
+    {
+      "key": "at:Scan Event/Items Found",
+      "iceClass": "cco:ont00000853",
+      "rationale": "Witness mapping."
+    }
+  ]
+}

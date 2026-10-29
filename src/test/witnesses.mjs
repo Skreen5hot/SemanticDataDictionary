@@ -100,7 +100,8 @@ witness('W-CS2-N', () => {
   const r = sdd('skeleton', W('minimal/inventory.jsonld'));
   return all(expect(r.status === 0, `exit ${r.status}`), expect(same(r.stdout, read(W('minimal/skeleton.jsonld'))), 'bytes differ'));
 });
-const VT = { text: ['xsd:string', 'cco:ont00001765'], textarea: ['xsd:string', 'cco:ont00001765'], email: ['xsd:string', 'cco:ont00001765'], select: ['xsd:string', 'cco:ont00001765'], ipaddress: ['xsd:string', 'cco:ont00001765'], url: ['xsd:anyURI', 'cco:ont00001768'], integer: ['xsd:integer', 'cco:ont00001773'], double: ['xsd:double', 'cco:ont00001770'], boolean: ['xsd:boolean', 'cco:ont00001772'], date: ['xsd:date', 'cco:ont00001771'], date_time: ['xsd:dateTime', 'cco:ont00001767'], time: ['xsd:string', 'cco:ont00001765'] };
+// R-S9 (v0.5): the datatype only; no slot or mapping carries valueProperty.
+const VT = { text: 'xsd:string', textarea: 'xsd:string', email: 'xsd:string', select: 'xsd:string', ipaddress: 'xsd:string', url: 'xsd:anyURI', integer: 'xsd:integer', double: 'xsd:double', boolean: 'xsd:boolean', date: 'xsd:date', date_time: 'xsd:dateTime', time: 'xsd:string' };
 witness('W-CS2-Δ1', () => {
   const r = sdd('skeleton', W('full/inventory.jsonld'));
   const v = json(r.stdout);
@@ -110,7 +111,7 @@ witness('W-CS2-Δ1', () => {
   return all(expect(r.status === 0, `exit ${r.status}`),
     expect(count('type') === 10 && count('attribute') === 35 && count('reference') === 5 && count('containment') === 2, 'counts'),
     expect(eq(cts, ['ct:ot:Blade Server', 'ct:ot:Hard Drive']), JSON.stringify(cts)),
-    expect(attrs.every((s) => eq([s.datatype, s.valueProperty], VT[s.jiraType])), 'value table'),
+    expect(attrs.every((s) => s.datatype === VT[s.jiraType] && !('valueProperty' in s)), 'value table'),
     expect(new Set(attrs.map((s) => s.jiraType)).size === 12, 'not all 12 types'),
     expect(same(r.stdout, read(W('full/skeleton.jsonld'))), 'bytes differ from full/skeleton.jsonld'));
 });
@@ -138,7 +139,7 @@ witness('W-CS3-N', () => {
   const { r, d } = promptDir(W('minimal/skeleton.jsonld'), W('minimal/inventory.jsonld'));
   const files = fs.readdirSync(d).sort();
   return all(expect(r.status === 0, `exit ${r.status}`), expect(eq(files, ['prompt-1-of-1.txt', 'prompt-set.jsonld']), files.join()),
-    expect(read(path.join(d, 'prompt-1-of-1.txt')).length === 63399, 'size'),
+    expect(read(path.join(d, 'prompt-1-of-1.txt')).length === 63571, 'size'),
     expect(same(read(path.join(d, 'prompt-1-of-1.txt')), read(W('minimal/prompt.txt'))), 'prompt bytes differ'),
     expect(same(read(path.join(d, 'prompt-set.jsonld')), read(W('minimal/prompt-set.jsonld'))), 'prompt-set bytes differ'));
 });
@@ -159,14 +160,14 @@ witness('W-CS3-Δ2', () => {
   const p1 = read(path.join(d, 'prompt-1-of-2.txt')), p2 = read(path.join(d, 'prompt-2-of-2.txt'));
   const l1 = dataLinesOf(p1.toString('utf8')), l2 = dataLinesOf(p2.toString('utf8'));
   let range = true;
-  for (const b of [66964, 66965, 70854, 70855]) {
+  for (const b of [67136, 67137, 71026, 71027]) {
     const x = promptDir(W('full/skeleton.jsonld'), W('full/inventory.jsonld'), '--budget', String(b));
     const nb = json(read(path.join(x.d, 'prompt-set.jsonld'))).prompts.length;
-    const want = b >= 66965 && b <= 70854 ? 2 : nb; // outside the stated range: informational only
+    const want = b >= 67137 && b <= 71026 ? 2 : nb; // outside the stated range: informational only
     if (nb !== want) range = `budget ${b}: ${nb} batches`;
   }
   return all(expect(r.status === 0, `exit ${r.status}`), expect(fs.readdirSync(d).length === 3, 'batch count'),
-    expect(p1.length === 68803 && p2.length === 64979, `sizes ${p1.length} ${p2.length}`),
+    expect(p1.length === 68975 && p2.length === 65151, `sizes ${p1.length} ${p2.length}`),
     expect(l1.length === 39 && l2.length === 13, `lines ${l1.length} ${l2.length}`),
     expect(same(p1, read(W('full/prompt-1-of-2.txt'))) && same(p2, read(W('full/prompt-2-of-2.txt'))), 'bytes differ'), range);
 });
@@ -552,12 +553,12 @@ witness('W-CS6-Δ9 (both argument orders)', () => {
   const r2 = accept(MSK, MIN, ALL3(), [R2_PAIR, N_PAIR]);
   return all(sddMatches(r1, r1.stdout, 'minimal/sdd-round2.jsonld'), sddMatches(r2, r2.stdout, 'minimal/sdd-round2.jsonld'));
 });
-witness('C-S6 R-S9/R-S10: datatype, valueProperty from the value table; nullEquivalents default []', () => {
+witness('C-S6 R-S9/R-S10: datatype from the value table, no valueProperty; nullEquivalents default []', () => {
   const r = accept(MSK, MIN, ALL3(), [N_PAIR]);
   const v = json(r.stdout), sk = json(read(MSK));
-  return all(expect(r.status === 0, r.stderr), ...v.mappings.filter((m) => m.kind === 'attribute').map((m) => {
+  return all(expect(r.status === 0, r.stderr), expect(v.sddVersion === 2, 'sddVersion'), ...v.mappings.filter((m) => m.kind === 'attribute').map((m) => {
     const s = sk.slots.find((x) => x.key === m.key);
-    return expect(m.datatype === s.datatype && m.valueProperty === s.valueProperty && eq(m.nullEquivalents, []), m.key);
+    return expect(m.datatype === s.datatype && !('valueProperty' in m) && eq(m.nullEquivalents, []), m.key);
   }));
 });
 witness('C-S6 full fixture: all 52 accepted → full/sdd.jsonld (masked; reference and containment shapes)', () => {

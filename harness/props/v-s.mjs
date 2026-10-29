@@ -508,7 +508,7 @@ async function VS5(results) {
         if (kind === 'invalid') {
           obj = JSON.parse(JSON.stringify(prop)); const m = rng.pick(obj.mappings); const how = rng.pick(['drop', 'dup', 'rename', 'category', 'term', 'kind', 'human', 'fields', 'skeleton', 'batch']);
           if (how === 'drop') obj.mappings = obj.mappings.filter((x) => x !== m); else if (how === 'dup') obj.mappings.push({ ...m }); else if (how === 'rename') m.key += '#x';
-          else if (how === 'category') { if (m.iceClass) m.iceClass = rng.pick(NON_ICE_CLASSES); else if (m.recordClass) m.recordClass = rng.pick(NON_ICE_CLASSES); else m.relation = rng.pick(CLASSES); }
+          else if (how === 'category') { if ('iceClass' in m) m.iceClass = rng.pick(NON_ICE_CLASSES); else if (m.recordClass) m.recordClass = rng.pick(NON_ICE_CLASSES); else m.relation = rng.pick(CLASSES); }
           else if (how === 'term') { const f = Object.keys(m).find((k) => k !== 'key' && k !== 'rationale'); m[f] = 'cco:ont99999999'; }
           else if (how === 'kind') { const f = Object.keys(m).find((k) => k !== 'key' && k !== 'rationale'); m[f] = f === 'relation' ? rng.pick(CLASSES) : rng.pick(OBJECT_PROPERTIES).curie; }
           else if (how === 'human') m[rng.pick(['nullEquivalents', 'acceptance', 'decision', 'datatype', 'valueProperty'])] = rng.pick([['N/A'], { by: 'x' }, 'accepted']);
@@ -691,8 +691,8 @@ async function VS5(results) {
 // V-S6: term closure (on V-S5's SDDs)
 // =====================================================================================================
 function VS6(results) {
-  const P = new Prop('V-S6', 'Every CURIE in the recorded term list, permitted, of its field kind; recordClass/iceClass ICE-descended; absenceKinds present; nullEquivalents sorted; no ISO-8601 date/time except acceptance.at and copied text. Every SDD of V-S5 (≥ 100).');
-  const KIND = { recordClass: 'class', referentClass: 'class', iceClass: 'class', relation: 'object_property', valueProperty: 'datatype_property' };
+  const P = new Prop('V-S6', 'Every CURIE in the recorded term list, permitted, of its field kind; recordClass and every non-null iceClass ICE-descended; every attribute mapping has an iceClass member and no valueProperty (v0.5); absenceKinds present; nullEquivalents sorted; no ISO-8601 date/time except acceptance.at and copied text. Every SDD of V-S5 (≥ 100).');
+  const KIND = { recordClass: 'class', referentClass: 'class', iceClass: 'class', relation: 'object_property' };
   const DATE = /\d{4}-\d{2}-\d{2}|\d{2}:\d{2}:\d{2}|T\d{2}:\d{2}/;
   const EXEMPT = new Set(['at', 'by', 'rationale', 'name', 'key', 'owner', 'target', 'child', 'container', 'externalId', 'selector']);
   for (const s of SDDS) {
@@ -703,14 +703,18 @@ function VS6(results) {
     for (const m of [...(o.mappings || []), ...(o.retired || [])]) {
       for (const [f, kind] of Object.entries(KIND)) {
         if (!(f in m)) continue; const v = m[f];
+        if (f === 'iceClass' && v === null) continue; // R-S5 (v0.5): no specific classification asserted
         if (f === 'relation' && v === 'sdd:NoRelation') { if (m.kind !== 'containment') bad.push(`${m.key} sdd:NoRelation outside containment`); continue; }
         const t = TERMS.get(v); if (!t) { bad.push(`${m.key}.${f} ${v} not in term list`); continue; }
         if (!t.permitted) bad.push(`${m.key}.${f} ${v} not permitted`); if (t.kind !== kind) bad.push(`${m.key}.${f} ${v} kind ${t.kind}`);
       }
     }
     P.check(c, 'every CURIE is in the term list, permitted, and of its field kind', bad.length ? bad.slice(0, 5).join(' | ') : true, info);
-    const ice = (o.mappings || []).flatMap((m) => ['recordClass', 'iceClass'].filter((f) => f in m && !isIceDescended(m[f])).map((f) => `${m.key}.${f} ${m[f]}`));
-    P.check(c, 'every recordClass and iceClass is ICE-descended', ice.length ? ice.join(' | ') : true, info);
+    const ice = (o.mappings || []).flatMap((m) => ['recordClass', 'iceClass'].filter((f) => f in m && m[f] !== null && !isIceDescended(m[f])).map((f) => `${m.key}.${f} ${m[f]}`));
+    P.check(c, 'every recordClass and every non-null iceClass is ICE-descended', ice.length ? ice.join(' | ') : true, info);
+    const shape = [...(o.mappings || []), ...(o.retired || [])].filter((m) => m.kind === 'attribute' && (!('iceClass' in m) || 'valueProperty' in m)).map((m) => m.key);
+    P.check(c, 'every attribute mapping has an iceClass member and no valueProperty (R-S5, R-S9, v0.5)', shape.length ? shape.slice(0, 5).join(' | ') : true, info);
+    P.check(c, 'sddVersion is 2 (R-S24)', o.sddVersion === 2 ? true : JSON.stringify(o.sddVersion), info);
     P.check(c, 'absenceKinds present (R-S15)', JSON.stringify(o.absenceKinds) === JSON.stringify(['missing', 'explicit_null', 'empty_string', 'indistinguishable']) ? true : JSON.stringify(o.absenceKinds), info);
     const ne = (o.mappings || []).filter((m) => m.kind === 'attribute').filter((m) => !Array.isArray(m.nullEquivalents) || JSON.stringify(m.nullEquivalents) !== JSON.stringify([...m.nullEquivalents].sort()));
     P.check(c, 'every attribute mapping carries nullEquivalents, sorted (R-S15)', ne.length ? ne.map((m) => `${m.key} ${JSON.stringify(m.nullEquivalents)}`).join(' | ') : true, info);
@@ -720,7 +724,7 @@ function VS6(results) {
     P.end(c);
   }
   P.notes.push('Copied text exempt from the date scan: members at, by, rationale, name, key, owner, target, child, container, externalId, selector (source names/keys, the acceptor name and the LLM rationale).');
-  P.notes.push('datatype values (xsd:*) are not term-list CURIEs and are not checked against it; valueProperty is checked as a datatype property.');
+  P.notes.push('datatype values (xsd:*) are not term-list CURIEs and are not checked against it; since v0.5 no artifact carries valueProperty, and its absence is checked.');
   results['V-S6'] = P.json();
 }
 

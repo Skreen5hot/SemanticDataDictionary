@@ -117,6 +117,14 @@ const PLAN_HEADING = /^(Unchanged|Changed|Added|Removed) \((\d+)\)$/;
 // RV-O4 fixed messages for the two refusals R-S21 has no template for (registrar decision D3); accepted only inside a
 // problem row of that code.
 const RVO4_FIXED = { 'E-PROMPT-BUDGET': 'The budget is smaller than a prompt with no DATA lines.', 'E-SKEL-ERRORED': 'The schema has source errors, so no skeleton can be made.' };
+// SDD R-S13 answer extraction, written here from the spec: the whole paste (trimmed) if it is one JSON object, else the
+// content of exactly one ```json fence. Used only to learn which keys a CLI-validated reply leaves unclassified.
+function answerOf(text) {
+  const obj = (s) => { try { const o = JSON.parse(s); return o && typeof o === 'object' && !Array.isArray(o) ? o : null; } catch { return null; } };
+  const whole = obj(String(text).trim()); if (whole) return whole;
+  const f = [...String(text).matchAll(/```json\n([\s\S]*?)```/g)];
+  return f.length === 1 ? obj(f[0][1]) : null;
+}
 
 // ---------- session ----------
 let CLIP_LOCK = Promise.resolve();
@@ -144,7 +152,7 @@ async function runSession(i) {
   const staticTexts = new Set(await page.evaluate(() => { const o = []; const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT); for (let n = w.nextNode(); n; n = w.nextNode()) { const t = n.nodeValue.trim(); if (t) o.push(t); } return o; }));
 
   // model: what only CV-O2 acts may change, plus legitimately loaded state
-  const fresh = () => ({ decBySkel: new Map(), name: '', nullEq: new Map(), schema: null, schemaEpoch: 0, prev: null, prevFile: null, plan: null, inv: null, invText: null, skel: null, skelText: null, budget: '', prompts: [], allPrompts: [], corpus: new Corpus(), lastReport: null, pendingSave: null });
+  const fresh = () => ({ decBySkel: new Map(), name: '', nullEq: new Map(), schema: null, schemaEpoch: 0, prev: null, prevFile: null, plan: null, inv: null, invText: null, skel: null, skelText: null, budget: '', prompts: [], allPrompts: [], corpus: new Corpus(), lastReport: null, pendingSave: null, nullIce: new Set() });
   let M = fresh();
   // decisions held under the current skeleton (RV-O2, registrar decision D1), keyed by the CLI skeleton bytes of the open schema
   const dec = () => { const k = M.skelText ?? ''; if (!M.decBySkel.has(k)) M.decBySkel.set(k, new Map()); return M.decBySkel.get(k); };
@@ -209,7 +217,7 @@ async function runSession(i) {
         const el = n.parentElement; if (!el || el.closest('script, style, textarea')) continue;
         const t = n.nodeValue; if (!t.trim()) continue; if (!vis(el)) continue;
         const quoted = !!el.closest('[data-quoted]');
-        const host = el.closest('[data-testid="decision"], [data-testid="problem-row"], [data-testid="summary"], [data-testid="status"], [role="dialog"], [data-testid="batch"], button, label, [data-testid="message"]');
+        const host = el.closest('[data-testid="none-asserted"], [data-testid="decision"], [data-testid="problem-row"], [data-testid="summary"], [data-testid="status"], [role="dialog"], [data-testid="batch"], button, label, [data-testid="message"]');
         const dec = el.closest('[data-testid="decision"]'); const item = el.closest('[data-testid="item"]');
         texts.push({ t, quoted, hostTag: host ? (host.getAttribute('data-testid') || host.getAttribute('role') || host.tagName.toLowerCase()) : null, hostText: host ? host.textContent : null, inDecision: !!dec, itemKey: item ? item.getAttribute('data-key') : null });
       }
@@ -297,6 +305,13 @@ async function runSession(i) {
   function summaryPlural(s) { const m = s.match(/^(\d+) object type(s?) · (\d+) attribute(s?) · (\d+) reference(s?) · (\d+) flag(s?)$/); if (!m) return false; for (let k = 1; k < 9; k += 2) if ((m[k] === '1') !== (m[k + 1] === '')) return false; return true; }
   function classify(t, x, o) {
     if (x.hostTag === 'problem-row') { const code = norm(x.hostText || '').split(' ')[0]; if (RVO4_FIXED[code] === t) return true; }
+    // RV-O1 (SDD v0.5): `iceClass — none asserted`, only where the shown reply or carried record has iceClass null.
+    if (x.hostTag === 'none-asserted' && !x.quoted && t === '— none asserted') {
+      const carriedNull = (M.prevFile?.json?.mappings || []).some((m) => m.key === x.itemKey && m.iceClass === null);
+      const ok = norm(x.hostText || '') === 'iceClass — none asserted' && (M.nullIce.has(x.itemKey) || carriedNull);
+      if (ok) extras.noneAsserted = (extras.noneAsserted || 0) + 1;
+      return ok;
+    }
     if (!x.quoted) {
       { const m = t.match(PREV_COUNTS); if (m) { const j = M.prevFile?.json; return !!j && [j.mappings, j.open, j.retired].every((l, i) => (l || []).length === Number(m[i + 1])); } }
       { const m = t.match(PLAN_HEADING); if (m) return !!M.plan && (M.plan[m[1].toLowerCase()] || []).length === Number(m[2]); }
@@ -352,6 +367,7 @@ async function runSession(i) {
     const problems = [];
     const ms = s.json.mappings || []; const open = s.json.open || [];
     extras.sddMappings = (extras.sddMappings || 0) + ms.length;
+    extras.savedNullIce = (extras.savedNullIce || 0) + ms.filter((m) => m.kind === 'attribute' && m.iceClass === null).length;
     for (const m of ms) {
       const d = dec().get(m.key);
       if (d && d.d === 'accept') {
@@ -389,7 +405,11 @@ async function runSession(i) {
         const wantRows = rep.errors.map((e) => norm(rowText(e))); const wantWarn = rep.warnings.map((e) => norm(rowText(e)));
         tried.push({ batch: rep.batch, round: rep.round, status: rep.status, errors: wantRows.length, warnings: wantWarn.length });
         const pool = all.slice(); const warnOk = wantWarn.every((w) => { const k = pool.indexOf(w); if (k < 0) return false; pool.splice(k, 1); return true; });
-        if (wantStatus === status && JSON.stringify(wantRows) === JSON.stringify(rows) && warnOk) { M.corpus.addJson('check report (C-S4)', r.text); return { report: rep, prompt: p }; }
+        if (wantStatus === status && JSON.stringify(wantRows) === JSON.stringify(rows) && warnOk) {
+          M.corpus.addJson('check report (C-S4)', r.text);
+          if (rep.status === 'validated') for (const m of answerOf(pasteText)?.mappings || []) if (m && m.iceClass === null) M.nullIce.add(m.key);
+          return { report: rep, prompt: p };
+        }
       }
     }
     await fail(P3, c3, 'every text node is RV-O1 vocabulary, a fixed UI label, or a reliance-set substring', `the page's report (status ${JSON.stringify(status.slice(0, 80))}, ${rows.length} error rows, ${all.length} rows on page) equals no CLI check of the paste against a built prompt`, { status, rows: rows.slice(0, 5) }, tried);
@@ -581,7 +601,7 @@ function write(final) {
     pasteMix: sessions.reduce((acc, s) => { for (const [k, v] of Object.entries(s.extras?.pastes || {})) acc[k] = (acc[k] || 0) + v; return acc; }, {}),
     actionMix: sessions.reduce((acc, s) => { for (const e of s.trace || []) acc[e.t] = (acc[e.t] || 0) + 1; return acc; }, {}),
     pr3Comparisons: sessions.reduce((a, s) => a + (s.extras?.pr3 || 0), 0),
-    observationCounts: sessions.reduce((acc, s) => { const o = s.extras?.obs || {}; for (const k of Object.keys(o)) acc[k] = (acc[k] || 0) + o[k]; acc.sddMappingsChecked = (acc.sddMappingsChecked || 0) + (s.extras?.sddMappings || 0); acc.carriedMappingsVerified = (acc.carriedMappingsVerified || 0) + (s.extras?.carriedVerified || 0); return acc; }, {}),
+    observationCounts: sessions.reduce((acc, s) => { const o = s.extras?.obs || {}; for (const k of Object.keys(o)) acc[k] = (acc[k] || 0) + o[k]; acc.sddMappingsChecked = (acc.sddMappingsChecked || 0) + (s.extras?.sddMappings || 0); acc.carriedMappingsVerified = (acc.carriedMappingsVerified || 0) + (s.extras?.carriedVerified || 0); acc.noneAssertedTextsGrounded = (acc.noneAssertedTextsGrounded || 0) + (s.extras?.noneAsserted || 0); acc.savedNullIceMappings = (acc.savedNullIceMappings || 0) + (s.extras?.savedNullIce || 0); return acc; }, {}),
     outcomes: sessions.reduce((acc, s) => { for (const e of s.trace || []) if (e.t === 'paste' || e.t === 'save' || e.t === 'accept' || e.t === 'reject') { const k = `${e.t}: ${String(e.result || e.error || '').replace(/sdd-\d+T\d+Z\.jsonld [0-9a-f]+/, 'file').replace(/by .*/, 'by …').slice(0, 40)}`; acc[k] = (acc[k] || 0) + 1; } return acc; }, {}),
     injectFaults: INJECT,
     sessions: sessions.map((s) => ({ seed: s.seed, len: s.len, schemaMaxTypes: s.schemaMaxTypes, ok: s.ok, crashed: s.crashed, saves: s.saves, notes: s.extras?.notes?.slice(0, 20), trace: s.trace })),

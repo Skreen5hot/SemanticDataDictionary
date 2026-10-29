@@ -3,7 +3,9 @@
 // satisfy R-S5–R-S8 as the spec states them:
 //   R-S7  every CURIE is in the term list, permitted, and of the field's kind (class / object property);
 //         sdd:NoRelation only in containment slots.
-//   R-S5  recordClass and iceClass are cco:ont00000958 or descend from it by named ancestry (superclasses, transitively).
+//   R-S5  recordClass and iceClass are cco:ont00000958 or descend from it by named ancestry (superclasses, transitively);
+//         iceClass MAY be null (SDD v0.5: no specific classification asserted), at rate opts.nullIceRate, drawn from its
+//         own stream so every other choice is the same as without it.
 //   R-S8  a relation's every named domain admits the owner's (child's) referentClass and every named range the
 //         target's (container's): the class equals it or descends from it. Relations with no named domain/range
 //         are always admissible.
@@ -52,7 +54,7 @@ export function parsePrompt(text) {
 
 // ---------------- assignment ----------------
 export class Assignment {
-  constructor(seed, opts = {}) { this.seed = String(seed); this.opts = { iceReferentRate: 0.04, genericRate: 0.03, noRelationRate: 0.2, constrainedRate: 0.75, ...opts }; this.cache = new Map(); }
+  constructor(seed, opts = {}) { this.seed = String(seed); this.opts = { iceReferentRate: 0.04, genericRate: 0.03, noRelationRate: 0.2, constrainedRate: 0.75, nullIceRate: 0.15, ...opts }; this.cache = new Map(); }
   rng(key, tag) { return new Rng(`${this.seed}|${tag}|${key}`); }
   referentClass(typeKey) {
     const k = 'ref:' + typeKey; if (this.cache.has(k)) return this.cache.get(k);
@@ -61,7 +63,10 @@ export class Assignment {
     this.cache.set(k, c); return c;
   }
   recordClass(typeKey) { const r = this.rng(typeKey, 'record'); return r.bool(this.opts.genericRate) ? ICE : r.pick(ICE_CLASSES); }
-  iceClass(attrKey) { const r = this.rng(attrKey, 'ice'); return r.bool(this.opts.genericRate) ? ICE : r.pick(ICE_CLASSES); }
+  iceClass(attrKey) {
+    if (this.rng(attrKey, 'ice-null').bool(this.opts.nullIceRate)) return null;
+    const r = this.rng(attrKey, 'ice'); return r.bool(this.opts.genericRate) ? ICE : r.pick(ICE_CLASSES);
+  }
   relation(slotKey, ownerKey, targetKey, containment) {
     const r = this.rng(slotKey, 'relation');
     if (containment && r.bool(this.opts.noRelationRate)) return 'sdd:NoRelation';

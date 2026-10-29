@@ -8,7 +8,7 @@ import { ICE_CURIE, NO_RELATION } from './terms.mjs';
 
 const BEGIN_DATA = '-----BEGIN DATA (untrusted)-----';
 const END_DATA = '-----END DATA-----';
-const HUMAN_FIELDS = ['nullEquivalents', 'acceptance', 'decision', 'datatype', 'valueProperty'];
+const HUMAN_FIELDS = ['nullEquivalents', 'acceptance', 'decision', 'datatype'];
 const FIELD_SETS = {
   type: ['key', 'recordClass', 'referentClass', 'rationale'],
   attribute: ['key', 'iceClass', 'rationale'],
@@ -184,6 +184,8 @@ export function checkProposal({ skeletonBytes, promptBytes, pasteBytes, proposal
       const isRelation = field === 'relation';
       const expectedKind = isRelation ? 'object property' : 'class';
 
+      // R-S5 (v0.5): a null iceClass asserts no specific classification; no term, kind or category check, no warning.
+      if (field === 'iceClass' && value === null) continue;
       // R-S7: term, then kind.
       if (isRelation && value === NO_RELATION) {
         if (slot.kind === 'containment') continue; // exempt from kind, category and R-S8

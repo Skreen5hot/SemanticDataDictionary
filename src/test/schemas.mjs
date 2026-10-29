@@ -1,11 +1,11 @@
 // Artifact schema test (SDD OS-1). Node, no dependencies. Usage: node src/test/schemas.mjs (from anywhere).
 //
 // 1. Every current witness (fixtures/witnesses/**/*.jsonld outside superseded/) validates against the schema for its
-//    @type: schemas/{inventory,skeleton,prompt-set,check-report,rerun-plan,sdd}-v1.schema.json.
+//    @type: schemas/{inventory,prompt-set,rerun-plan}-v1.schema.json and (SDD v0.5) schemas/{skeleton,check-report,sdd}-v2.schema.json.
 // 2. Artifacts the core emits but no witness file holds (errored inventories, oversize PromptSet warnings, rejected
 //    CheckReports for every R-S21 code family) are produced in-process by src/core and validated too.
 // 3. Corrupted artifacts MUST fail.
-// 4. shapes/sdd-v1.shacl.ttl: its generated term lists equal those re-derived from ontology/term-list.json. (No SHACL
+// 4. shapes/sdd-v2.shacl.ttl: its generated term lists equal those re-derived from ontology/term-list.json. (No SHACL
 //    engine runs here; the shapes are checked by an external engine.)
 //
 // Validation uses the core's own JSON Schema subset (src/core/jsonschema.mjs). The schemas use two keywords it does
@@ -36,7 +36,8 @@ const TYPES = {
   RerunPlan: 'rerun-plan',
   SemanticDataDictionary: 'sdd',
 };
-const SCHEMAS = Object.fromEntries(Object.entries(TYPES).map(([t, n]) => [t, readJson(P('schemas', `${n}-v1.schema.json`))]));
+const VERSION = { skeleton: 2, 'check-report': 2, sdd: 2 }; // SDD v0.5 (R-S24); the rest are unchanged version 1
+const SCHEMAS = Object.fromEntries(Object.entries(TYPES).map(([t, n]) => [t, readJson(P('schemas', `${n}-v${VERSION[n] || 1}.schema.json`))]));
 
 let failures = 0;
 const fail = (msg) => { failures++; console.log('FAIL ' + msg); };
@@ -133,7 +134,7 @@ for (const f of witnessFiles.sort()) {
 const termList = readJson(P('ontology', 'term-list.json'));
 const terms = indexTerms(termList);
 const template = fs.readFileSync(P('spec', 'prompt-template-v2.txt'), 'utf8');
-const proposalSchema = readJson(P('schemas', 'proposal-v1.schema.json'));
+const proposalSchema = readJson(P('schemas', 'proposal-v2.schema.json'));
 const atlassian = readJson(P('vendor', 'atlassian', 'assets-import-schema-2021_09_15.json'));
 const W = (p) => fs.readFileSync(P('fixtures', 'witnesses', p));
 
@@ -240,7 +241,8 @@ const corruptions = [
   // Skeleton
   corrupt('Skeleton: meaning field pre-filled', 'minimal/skeleton.jsonld', (d) => { d.slots[0].recordClass = 'cco:ont00000853'; }),
   corrupt('Skeleton: datatype not by jira type', 'minimal/skeleton.jsonld', (d) => { d.slots[1].datatype = 'xsd:integer'; }),
-  corrupt('Skeleton: valueProperty not by jira type', 'minimal/skeleton.jsonld', (d) => { d.slots[1].valueProperty = 'cco:ont00001773'; }),
+  corrupt('Skeleton: valueProperty present (v0.5, R-S9)', 'minimal/skeleton.jsonld', (d) => { d.slots[1].valueProperty = 'cco:ont00001765'; }),
+  corrupt('Skeleton: iceClass pre-filled', 'minimal/skeleton.jsonld', (d) => { d.slots[1].iceClass = 'cco:ont00001014'; }),
   corrupt('Skeleton: unknown kind', 'minimal/skeleton.jsonld', (d) => { d.slots[0].kind = 'thing'; }),
   corrupt('Skeleton: attribute slot with type key', 'minimal/skeleton.jsonld', (d) => { d.slots[1].key = 'ot:Name'; }),
   corrupt('Skeleton: containment key without ct:', 'full/skeleton.jsonld', (d) => { find(d.slots, (s) => s.kind === 'containment').key = 'ot:Hard Drive'; }),
@@ -277,7 +279,11 @@ const corruptions = [
   corrupt('RerunPlan: inventory flag', 'minimal/rerun-plan.jsonld', (d) => { d.flags.push({ code: 'FL-NO-LABEL', key: 'ot:Organization' }); }),
   corrupt('RerunPlan: terms flag with identification', 'minimal/rerun-plan.jsonld', (d) => { d.flags.push({ code: 'FL-TERMS-CHANGED', key: null, previous: 'name', current: 'externalId' }); }),
   // SemanticDataDictionary
-  corrupt('SDD: sddVersion 2', 'minimal/sdd.jsonld', (d) => { d.sddVersion = 2; }),
+  corrupt('SDD: sddVersion 1 (R-S24)', 'minimal/sdd.jsonld', (d) => { d.sddVersion = 1; }),
+  corrupt('SDD: valueProperty present (v0.5, R-S9)', 'minimal/sdd.jsonld', (d) => { d.mappings[1].valueProperty = 'cco:ont00001765'; }),
+  corrupt('SDD: attribute without iceClass member (R-S5)', 'minimal/sdd-null.jsonld', (d) => { delete d.mappings[2].iceClass; }),
+  corrupt('SDD: iceClass not a CURIE or null', 'minimal/sdd-null.jsonld', (d) => { d.mappings[2].iceClass = 'none'; }),
+  corrupt('SDD: type mapping with null referentClass', 'minimal/sdd.jsonld', (d) => { d.mappings[0].referentClass = null; }),
   corrupt('SDD: absenceKinds reordered', 'minimal/sdd.jsonld', (d) => { d.absenceKinds.reverse(); }),
   corrupt('SDD: absenceKinds short', 'minimal/sdd.jsonld', (d) => { d.absenceKinds.pop(); }),
   corrupt('SDD: decision rejected', 'minimal/sdd.jsonld', (d) => { d.mappings[0].acceptance.decision = 'rejected'; }),
@@ -307,7 +313,7 @@ for (const [label, doc] of corruptions) {
 
 // ---------- 4. SHACL term lists match the term list ----------
 {
-  const ttl = fs.readFileSync(P('shapes', 'sdd-v1.shacl.ttl'), 'utf8');
+  const ttl = fs.readFileSync(P('shapes', 'sdd-v2.shacl.ttl'), 'utf8');
   const generated = (name) => {
     const mm = ttl.match(new RegExp(`# BEGIN GENERATED ${name} \\((\\d+)\\)\\n[\\s\\S]*?sh:in \\(([\\s\\S]*?)\\) \\.\\n# END GENERATED ${name}`));
     if (!mm) { fail(`shapes: no generated list ${name}`); return []; }

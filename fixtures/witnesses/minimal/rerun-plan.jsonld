@@ -1,7 +1,7 @@
 {
   "@context": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld",
   "@type": "RerunPlan",
-  "previousSddSha256": "d311d909a03fe3bb193dd60f51c6086127c18fc86764420de4004fc3ce4e07f3",
+  "previousSddSha256": "45152cda6876435d3cb92c25d1e936d4c83236c074180cd35fd1b695074ba666",
   "inventorySha256": "0ea0045b7131f75356dafb2759250e97edeeab52cfec7ba67b6a2be9f6e47613",
   "unchanged": [
     "at:Organization/Name",

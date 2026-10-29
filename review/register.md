@@ -741,3 +741,61 @@ Node 22.23.4, Chromium 141.0.7390.37; CPUs as recorded per job, not fixed). Fres
   harness defects, all fixed.
 - **Release candidate `v1.0.0-rc.1`** is tagged on the commit that records this entry. Per the registrar, this is not
   final v1 acceptance: Milestone 5 (enterprise pilot) and the registrar's acceptance remain.
+
+## v0.5: simplified attribute contract (prop-003), registrar decisions and implementation (2026-10-29, appended; sections above unamended)
+
+**Origin.** The external ontological review of the SDD is closed by the registrar: no BFO/CCO contradiction, and no
+irreversible semantic loss inherent in the proposed simplification. The registrar approved the simplified attribute
+contract after an engineering impact assessment (estimate 6–8 person-days, clean versioned break). The established
+decisions stand unchanged: record versus referent (ADR-001), human semantic authority (ADR-004), open-world absence
+(ADR-003), source structure is not ontology (R-S4), traceability, and no materialization (ADR-007).
+
+**Registrar decisions.**
+- **D1 (LLM-proposed null): approved.** A reply MAY give an attribute `"iceClass": null`, meaning no specific ICE
+  classification is asserted; the prompt says so, asks for it only when no specific class can be justified, and asks
+  the rationale to say why. The person accepts or rejects it through the existing C-S6 workflow. The `iceClass`
+  member stays required. No new control or acceptance state.
+- **D2 (versioned clean break): approved.** `sddVersion` 2; version-2 SDD, Skeleton, CheckReport and proposal schemas
+  and SDD shapes; the JSON-LD context and the pinned term list unchanged. Version-1 SDDs (release candidate
+  v1.0.0-rc.1, which stays unchanged) are refused as previous SDDs by C-S6, C-S7 and the page; no migration and no
+  dual format. Within version 2, R-S17's byte-identical carry is unchanged.
+- **D3 (many null proposals): no new warning.** A human semantic-review matter, not a structural failure. A null
+  classification is shown as `iceClass — none asserted`. No heuristic, warning or automatic rejection.
+- Datatype policy unchanged, including the Jira `time` fallback (Decision B).
+
+**Spec changes (SDD v0.5, SDD-operator v0.5).** R-S5 (null `iceClass`), R-S7, R-S9 (datatype only; no value
+property), R-S10 (`valueProperty` leaves the human-only list; a proposal carrying it is E-CHK-SHAPE), R-S11 (template
+`spec/prompt-template-v3.txt`), R-S13 (`proposal-v2`), R-S20, new **R-S24** (contract version) and **NG-S11** (no
+migration), NG-S6 restated, V-S6 extended, OS-1 amended. New witnesses W-CS4-Δ19, W-CS4-Δ20, W-CS6-Δ11, W-CS6-Δ12,
+W-CS7-Δ4; W-CS2-Δ1 restated. SDD-operator: RV-O1 (the `iceClass — none asserted` line), RV-O4 (E-USAGE detail),
+scenes W-PRO1-Δ7 and W-PRO2-Δ3. Size-dependent numbers follow the 172-byte longer template (W-CS3-N 63,571 bytes;
+W-CS3-Δ2 68,975 and 65,151, two batches from 67,137 to 71,026; W-CS4-Δ15 and E-S3 71,027); W-CS3-Δ4's oversize set and
+W-CS4-Δ10's 52 errors and 10 warnings are unchanged.
+
+**Implementation.** `src/core/skeleton.mjs` (value table: datatype only), `check.mjs` (null `iceClass` exempt from
+term, kind, category and warnings; `valueProperty` no longer human-only), `accept.mjs` (no `valueProperty`;
+`sddVersion` 2; R-S24 gate in `readPrevious`, which C-S6, C-S7 and the page all use; null admitted when re-reading a
+paste), `src/cli/sdd.mjs` and `tools/build-site.mjs` (template v3, proposal-v2), `site/app.mjs` (the RV-O1 line).
+Unchanged: `parse`, `canonical`, `terms`, `jsonschema`, `prompt` (logic), `repair`, `rerun` (logic), `site/session.mjs`.
+
+**Witness re-issue (prop-003).** `review/proposals/prop-003/aids/gen.cjs` is prop-002's reference generator, which
+shares no code with `src/core`, extended with the W-CS3-Δ7 placeholder witnesses (single-pass fill), the v0.5
+contract and the new witnesses. Baseline first: in `--v1` mode it rebuilds all 49 version-1 files from nothing, byte
+for byte. In v0.5 mode it wrote the current set; the 39 changed files' version-1 bytes are retained under
+`fixtures/witnesses/superseded/v4/`; registry rows are Ver 5. The implementation then reproduced every generated
+witness byte for byte (CLI judge, 115 checks). Expectations that the change must not move did not move.
+
+**Independent verification added.** `tools/oracle/oracle-n.cjs` was written by an isolated rater from
+`spec/sdd-service.md` v0.5 alone (no access to `src/`, `site/`, `harness/`, `tools/`, `fixtures/` or `review/`) and
+is kept unmodified; `tools/oracle-check.mjs` now runs it on every in-scope CheckReport and the frozen oracle-b
+(cycle 3, v0.3, unmodified) on every report whose reply has no null `iceClass`. The CLI judge gained spec-literal
+checks for R-S9 and the new witnesses, plus refusals of the actual rc.1 SDD bytes; `harness/os1_judge.py` judges the
+version-2 schemas and shapes with new spec-derived corruptions (a `valueProperty`, a missing `iceClass` member,
+`sddVersion` 1, a `sdd:valueProperty` triple); G1/G2 proposals carry null `iceClass` at rate 0.15 from their own
+random stream, and V-O3 accepts the RV-O1 line only where a CLI-validated reply or carried record has the null.
+
+**Local verification (Windows, Node 24, before the reference runs).** CLI judge 115/115; `src/test/witnesses.mjs`
+97/97; `src/test/schemas.mjs` 98/98 corruptions rejected; `src/test/site.mjs` 29/29; registry (151 rows), embedded
+digests (384), citations (109); oracles agree (oracle-b 8, oracle-n 9 reports); mutation test 89/89 corruptions
+detected by their expected check, control correct; OS-1 judge 74/74; H-O1 28/28; H-O2 3/3 (netguard empty);
+V-O smoke (n = 6) and V-S smoke (scale 0.1) pass. The reference-environment runs follow in the next entry.

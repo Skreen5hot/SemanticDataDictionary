@@ -1,7 +1,7 @@
 {
   "@context": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld",
   "@type": "SemanticDataDictionary",
-  "sddVersion": 1,
+  "sddVersion": 2,
   "source": {
     "format": "jira-assets-import/2021_09_15",
     "sha256": "3239b1f085d090c71027032833831cf151b28ec90a935e01788b992ec6363869",
@@ -35,9 +35,9 @@
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "7f121f7a15ed3f67563c10d2038c2722c87e92fab7160eae37bdcc3e78cbcc3c",
-        "proposalSha256": "7d3a9546da8c8ab55b25ec8e0e6e761c12529855de54fb280b47c8935d3be91b",
-        "checkReportSha256": "552fa6c873611e7aace29d27fbd76e8ac52e8d343d276fe3df3ea52c890dfd3d"
+        "promptSha256": "8b6516fc33d6378ae93b622b9ec8527fea12c7cbaffc2c22ed827f2a090d6d5c",
+        "proposalSha256": "06d648cb1c0f63ba5d05a8eb3e7b5d68c5db872cd0689819d2f815e3d72ad5e5",
+        "checkReportSha256": "f3d22d7f8bc7d2bcf23adba23ebd515f349d4bfc3504b11d0af002c928504233"
       },
       "acceptance": {
         "decision": "accepted",
@@ -57,15 +57,14 @@
       },
       "iceClass": "cco:ont00001014",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "The label is the organization's proper name.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "7f121f7a15ed3f67563c10d2038c2722c87e92fab7160eae37bdcc3e78cbcc3c",
-        "proposalSha256": "7d3a9546da8c8ab55b25ec8e0e6e761c12529855de54fb280b47c8935d3be91b",
-        "checkReportSha256": "552fa6c873611e7aace29d27fbd76e8ac52e8d343d276fe3df3ea52c890dfd3d"
+        "promptSha256": "8b6516fc33d6378ae93b622b9ec8527fea12c7cbaffc2c22ed827f2a090d6d5c",
+        "proposalSha256": "06d648cb1c0f63ba5d05a8eb3e7b5d68c5db872cd0689819d2f815e3d72ad5e5",
+        "checkReportSha256": "f3d22d7f8bc7d2bcf23adba23ebd515f349d4bfc3504b11d0af002c928504233"
       },
       "acceptance": {
         "decision": "accepted",
@@ -85,15 +84,14 @@
       },
       "iceClass": "cco:ont00000077",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "A cost center is a code identifier assigned by finance.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "7b7791a63b7dc49e3fc342cecbeb01f8fe8e828b372c5d32944ff71b73c3105d",
-        "proposalSha256": "6537840cf5c054a5e813ea6f4bf27cf7c97bb06a325031168ea629b9c91c1a46",
-        "checkReportSha256": "075052bc8ce9237965ce4f47135fe673ad5644b8cc56ab6cb73b6ab1757fd165"
+        "promptSha256": "b28de544e556cf7f8df4ac33f57a7e31b38b5e34a65ca9c1fd68983586bb2f28",
+        "proposalSha256": "f3fb91ec6d5b6ee399189b356aa639c70e0f47dadd0d0b1ce02f8c50f89edcbb",
+        "checkReportSha256": "c10ba5357d95b3c76587448e0fdc4412b20cd15d7a8acd492819ce9e2dd77bed"
       },
       "acceptance": {
         "decision": "accepted",

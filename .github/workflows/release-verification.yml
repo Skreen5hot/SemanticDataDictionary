@@ -28,6 +28,11 @@ jobs:
         run: |
           npm ci --no-audit --no-fund
           npx playwright install --with-deps chromium
+      - name: OS-1 independent judge (Python jsonschema + pyshacl)
+        run: |
+          python3 -m venv /tmp/os1 && /tmp/os1/bin/pip install --quiet jsonschema pyshacl rdflib
+          set -o pipefail; /tmp/os1/bin/python -I harness/os1_judge.py . | tee os1-judge.txt
+          echo "::notice title=os1 judge::$(tail -1 os1-judge.txt)"
       - name: Envelopes E-S1–E-S3 (OS-6)
         run: |
           node bench/run.mjs --runs 5 | tee bench-out.json
@@ -45,6 +50,7 @@ jobs:
           path: |
             vs-results.json
             bench/results.jsonl
+            os1-judge.txt
 
   # OO-2: browser properties V-O1–V-O3 over n = 300 G2 sessions (SDD-operator §9), on the same reference environment.
   browser-properties:

@@ -144,7 +144,7 @@ async function scenes() {
     await s.name(BY); for (const k of KEYS) await s.accept(k);
     const dec = await s.decisions(); const saved = await s.save();
     return all(eq(summary, '1 object type · 2 attributes · 0 references · 0 flags', 'summary (S-O5)'), eq(labels.length, 1, 'batch controls'),
-      labels[0].includes('Batch 1 of 1') ? true : 'no "Batch 1 of 1"', labels[0].includes('7f121f7a') ? true : 'sha256 prefix 7f121f7a not shown',
+      labels[0].includes('Batch 1 of 1') ? true : 'no "Batch 1 of 1"', labels[0].includes('8b6516fc') ? true : 'sha256 prefix 8b6516fc not shown',
       bytesEq(clip, rdb(W('minimal/prompt.txt')), 'clipboard vs minimal/prompt.txt'), eq(st, VALIDATED, 'status'), eq(undecided, ['', '', ''], 'undecided before acts'),
       eq(dec, KEYS.map(() => `Accepted by ${BY}`), 'decision texts'), sddEquals(saved, W('minimal/sdd.jsonld'), s), eq(s.requests, [], 'request log'));
   });
@@ -212,6 +212,32 @@ async function scenes() {
     await s.openPrevious(Buffer.from(rd(W('minimal/sdd.jsonld')).replace('https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld', 'https://example.org/ctx.jsonld')), 'foreign.jsonld');
     await s.page.locator('[data-testid="problem-row"]').first().waitFor();
     return all(eq(await s.rows(), ["E-CTX-EXTERNAL · — · — · https://example.org/ctx.jsonld · R-S16 — The file's @context is not the bundled SDD context."], 'rows'), eq(s.requests.filter((u) => u.includes('example.org')), [], 'requests to the foreign IRI'));
+  });
+  // SDD v0.5: a null iceClass is shown with RV-O1's fixed text and becomes part of the SDD only by an act (W-PRO1-Δ7);
+  // a version-1 previous SDD is refused (W-PRO2-Δ3, SDD R-S24), both as the spec's one-factor variant and as the
+  // release candidate v1.0.0-rc.1 file itself.
+  await scene('W-PRO1-Δ7: no specific classification is shown, then accepted only by acts', async (s) => {
+    await jo1to3(s); await s.paste(rd(W('minimal/proposal-null.txt')));
+    const st = await s.status(); const rows = await s.rows();
+    const cc = s.item(KEYS[2]);
+    const none = (await cc.locator('[data-testid="none-asserted"]').allInnerTexts()).map((t) => t.replace(/\s+/g, ' ').trim());
+    const ccReply = (await cc.locator('[aria-label="From the LLM\'s reply"]').innerText());
+    const undecided = await s.decisions();
+    await s.name(BY); for (const k of KEYS) await s.accept(k);
+    return all(eq(st, VALIDATED, 'status'), eq(rows, [], 'rows'), eq(none, ['iceClass — none asserted'], 'Cost Center field line'),
+      /cco:|bfo:/.test(ccReply) ? `a CURIE is shown for Cost Center: ${ccReply}` : true, eq(undecided, ['', '', ''], 'undecided before acts'),
+      sddEquals(await s.save(), W('minimal/sdd-null.jsonld'), s));
+  });
+  await scene('W-PRO2-Δ3: a version-1 previous SDD is refused (R-S24)', async (s) => {
+    const ROW = 'E-USAGE · — · — · — · — — the previous SDD has sddVersion 1; this release reads only sddVersion 2';
+    await s.openSchema(F('minimal-organization.json'));
+    await s.openPrevious(Buffer.from(rd(W('minimal/sdd.jsonld')).replace('"sddVersion": 2', '"sddVersion": 1')), 'v1.jsonld');
+    await s.page.locator('[data-testid="problem-row"]').first().waitFor(); const rows1 = await s.rows();
+    const accepted1 = (await s.page.locator('[data-testid="item"] [data-testid="decision"]').allInnerTexts()).filter((t) => t.trim().startsWith('Accepted by'));
+    await s.openPrevious(W('superseded/v4/minimal/sdd.jsonld'));
+    await s.page.locator('[data-testid="problem-row"]').first().waitFor(); const rows2 = await s.rows();
+    const accepted2 = (await s.page.locator('[data-testid="item"] [data-testid="decision"]').allInnerTexts()).filter((t) => t.trim().startsWith('Accepted by'));
+    return all(eq(rows1, [ROW], 'rows (sddVersion replaced by 1)'), eq(accepted1, [], 'items reading Accepted'), eq(rows2, [ROW], 'rows (the rc.1 SDD)'), eq(accepted2, [], 'items reading Accepted (rc.1)'), eq(s.requests, [], 'request log'));
   });
   await scene('W-PRO3-N: a bad paste never costs work', async (s) => {
     await jo1to5(s); const a = await s.save(); await s.paste(rd(W('minimal/bad-proposal.txt'))); const st = await s.status(); const b = await s.save();

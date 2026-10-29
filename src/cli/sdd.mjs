@@ -18,9 +18,9 @@ import { rerunPlan } from '../core/rerun.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const RES = {
-  template: path.join(ROOT, 'spec', 'prompt-template-v2.txt'),
+  template: path.join(ROOT, 'spec', 'prompt-template-v3.txt'),
   terms: path.join(ROOT, 'ontology', 'term-list.json'),
-  proposalSchema: path.join(ROOT, 'schemas', 'proposal-v1.schema.json'),
+  proposalSchema: path.join(ROOT, 'schemas', 'proposal-v2.schema.json'),
   atlassian: path.join(ROOT, 'vendor', 'atlassian', 'assets-import-schema-2021_09_15.json'),
 };
 

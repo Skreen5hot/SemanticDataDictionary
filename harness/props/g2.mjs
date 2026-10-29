@@ -79,7 +79,9 @@ export const MUTATIONS = {
   'category (E-CHK-CATEGORY)': (o, r) => { const ms = o.mappings.filter((m) => 'iceClass' in m || 'recordClass' in m); if (!ms.length) return false; const m = r.pick(ms); m['iceClass' in m ? 'iceClass' : 'recordClass'] = r.pick(NON_ICE_CLASSES); },
   'invented-term (E-CHK-TERM)': (o, r) => { const m = r.pick(o.mappings); const f = ['recordClass', 'referentClass', 'iceClass', 'relation'].find((x) => x in m); m[f] = 'cco:ont99999999'; },
   'wrong-kind (E-CHK-KIND)': (o, r) => { const ms = o.mappings.filter((m) => 'iceClass' in m || 'recordClass' in m); if (!ms.length) return false; const m = r.pick(ms); m['iceClass' in m ? 'iceClass' : 'recordClass'] = r.pick(OBJECT_PROPERTIES).curie; },
-  'human-field (E-CHK-HUMAN-FIELD)': (o, r) => { r.pick(o.mappings)[r.pick(['datatype', 'valueProperty'])] = 'xsd:string'; },
+  'human-field (E-CHK-HUMAN-FIELD)': (o, r) => { const m = r.pick(o.mappings); const f = r.pick(['datatype', 'nullEquivalents']); m[f] = f === 'datatype' ? 'xsd:string' : ['N/A']; },
+  // SDD v0.5 (R-S10, R-S13): valueProperty is no longer a field of any artifact; the proposal schema rejects it.
+  'retired-field (E-CHK-SHAPE)': (o, r) => { r.pick(o.mappings).valueProperty = 'cco:ont00001765'; },
   'field-set (E-CHK-FIELDS)': (o, r) => { const m = r.pick(o.mappings); delete m.rationale; },
   'stale-skeleton (E-CHK-SKELETON)': (o) => { o.skeletonSha256 = 'f'.repeat(64); },
   'wrong-batch (E-CHK-BATCH)': (o) => { o.batch = '9/9'; },

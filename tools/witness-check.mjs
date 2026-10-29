@@ -93,7 +93,7 @@ for (const r of witnesses) {
 //    no CR / U+2028 / U+2029; exactly one LF-delimited END DATA line; every DATA line parses; the catalogue equals one
 //    rebuilt from the term list (permitted classes split by ICE ancestry, then object properties, each sorted by
 //    CURIE, `curie<TAB>label`: the construction an isolated cycle-3 rater derived independently); and the prompt,
-//    with its DATA and ERRORS blocks taken as given, equals spec/prompt-template-v2.txt filled from its own header.
+//    with its DATA and ERRORS blocks taken as given, equals spec/prompt-template-v3.txt (SDD R-S11, v0.5) filled from its own header.
 const LS = String.fromCharCode(0x2028), PS = String.fromCharCode(0x2029);
 const terms = JSON.parse(readFileSync(join(ROOT, 'ontology/term-list.json'), 'utf8')).terms;
 const byIri = Object.fromEntries(terms.map((x) => [x.iri, x]));
@@ -105,7 +105,7 @@ const lines = (title, xs) => '# ' + title + '\n' + xs.slice().sort(byCurie).map(
 const CATALOGUE = lines('Information Content Entity classes (recordClass, iceClass)', perm.filter((x) => x.kind === 'class' && isIce(x)))
   + lines('Other classes (referentClass)', perm.filter((x) => x.kind === 'class' && !isIce(x)))
   + lines('Object properties (relation)', perm.filter((x) => x.kind === 'object_property'));
-const TEMPLATE = readFileSync(join(ROOT, 'spec/prompt-template-v2.txt'), 'utf8');
+const TEMPLATE = readFileSync(join(ROOT, 'spec/prompt-template-v3.txt'), 'utf8');
 let prompts = 0;
 for (const r of witnesses.filter((x) => x.endsWith('.txt'))) {
   const t = text(r);

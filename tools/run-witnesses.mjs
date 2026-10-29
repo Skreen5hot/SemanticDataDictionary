@@ -55,6 +55,17 @@ for (const [id, fx, w] of [['inventory (W-JS3 v2)', 'minimal-organization-v2.jso
 for (const [id, inv, sk] of [['W-CS2-N', 'minimal/inventory.jsonld', 'minimal/skeleton.jsonld'], ['W-CS2-Δ1', 'full/inventory.jsonld', 'full/skeleton.jsonld'], ['C-S2 skeleton (W-JS3 v2)', 'minimal/inventory-v2.jsonld', 'minimal/skeleton-v2.jsonld'], ['C-S2 skeleton (hostile)', 'hostile/inventory.jsonld', 'hostile/skeleton.jsonld']])
   check(id, () => { const r = sdd('skeleton', W(inv)); return all(exitIs(r, 0), sameFile(r.out, W(sk))); });
 check('W-CS2-Δ2', () => { const p = tmp('foreign.jsonld', rd(W('minimal/inventory.jsonld')).replace('https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld', 'https://example.org/ctx.jsonld')); const r = sdd('skeleton', p); return all(exitIs(r, 1), codeIn(r, 'E-CTX-EXTERNAL')); });
+// W-CS2-Δ1 judged from the spec text: slot counts, and R-S9's v0.5 table (datatype only; no slot carries valueProperty).
+const RS9 = { text: 'xsd:string', textarea: 'xsd:string', email: 'xsd:string', select: 'xsd:string', ipaddress: 'xsd:string', url: 'xsd:anyURI', integer: 'xsd:integer', double: 'xsd:double', boolean: 'xsd:boolean', date: 'xsd:date', date_time: 'xsd:dateTime', time: 'xsd:string' };
+check('W-CS2-Δ1 R-S9', () => {
+  const slots = JSON.parse(sdd('skeleton', W('full/inventory.jsonld')).out).slots;
+  const count = (k) => slots.filter((s) => s.kind === k).length;
+  const attrs = slots.filter((s) => s.kind === 'attribute');
+  return all(deq([count('type'), count('attribute'), count('reference'), count('containment')], [10, 35, 5, 2], 'slot counts'),
+    deq(attrs.filter((s) => s.datatype !== RS9[s.jiraType]).map((s) => s.key), [], 'datatype off the R-S9 table'),
+    deq(attrs.filter((s) => 'valueProperty' in s).map((s) => s.key), [], 'slots carrying valueProperty'),
+    deq([...new Set(attrs.map((s) => s.jiraType))].sort(), Object.keys(RS9).sort(), 'all 12 non-reference types occur'));
+});
 check('W-CS2-Δ3', () => { const inv = sdd('parse', F('jira-assets/invalid/unknown-reference-target.json')); const r = sdd('skeleton', tmp('errored.jsonld', inv.out)); return all(exitIs(r, 1), codeIn(r, 'E-SKEL-ERRORED')); });
 
 // ---------------- C-S3 prompt ----------------
@@ -125,6 +136,14 @@ delta('W-CS4-Δ11', variant((o) => { org(o).referentClass = 'cco:ont00000853'; }
 delta('W-CS4-Δ12', variant((o) => { o.batch = '2/2'; }), 1, [['E-CHK-BATCH', null]]);
 delta('W-CS4-Δ13', variant((o) => { const m = name(o); delete m.iceClass; m.relation = 'bfo:BFO_0000176'; }), 1, [['E-CHK-FIELDS', 'at:Organization/Name']]);
 delta('W-CS4-Δ14', variant((o) => { o.mappings = {}; }), 1, [['E-CHK-SHAPE', null]]);
+// v0.5 (R-S5, R-S10, R-S13): a null iceClass is validated with no error and no warning; valueProperty is a shape error.
+fileCheck('W-CS4-Δ19', 'minimal/skeleton.jsonld', 'minimal/prompt.txt', 'minimal/proposal-null.txt', 'minimal/check-report-null.jsonld', 0);
+delta('W-CS4-Δ19 (from the N proposal)', variant((o) => { o.mappings.find((m) => m.key === 'at:Organization/Cost Center').iceClass = null; }), 0, [], []);
+check('W-CS4-Δ19 literal', () => { const o = JSON.parse(rd(W('minimal/check-report-null.jsonld'))); const p = JSON.parse(rd(W('minimal/proposal-null.txt'))); return all(deq([o.status, o.errors, o.warnings], ['validated', [], []], 'status/errors/warnings'), deq(p.mappings.find((m) => m.key === 'at:Organization/Cost Center').iceClass, null, 'Cost Center iceClass in the paste')); });
+chk('W-CS4-Δ20', 'minimal/skeleton.jsonld', 'minimal/prompt.txt', tmp('paste.txt', variant((o) => { name(o).valueProperty = 'cco:ont00001765'; })), (r) => {
+  if (r.code !== 1) return exitIs(r, 1);
+  return deq(JSON.parse(r.out).errors, [{ code: 'E-CHK-SHAPE', key: null, field: null, value: '/mappings/1', rule: 'R-S13', message: 'The reply does not match the proposal schema at /mappings/1 (additionalProperties).' }], 'errors');
+});
 delta('W-CS4-Δ17', variant((o) => { org(o).referentClass = 'cco:ont00000958'; }), 0, [], [['W-CHK-GENERIC', 'ot:Organization'], ['W-CHK-ICE-REFERENT', 'ot:Organization']]);
 check('W-CS4-Δ13 message', () => { const r = sdd('check', W('minimal/skeleton.jsonld'), W('minimal/prompt.txt'), tmp('p13.txt', variant((o) => { const m = name(o); delete m.iceClass; m.relation = 'bfo:BFO_0000176'; }))); return deq(errs(r.out)[0]?.message, 'at:Organization/Name must have exactly the fields key, iceClass, rationale.', 'message'); });
 check('W-CS4-Δ10', () => {
@@ -231,6 +250,9 @@ check('W-CS6-Δ4', () => accept([SK, INV, decisions(ACCEPT3, { 'at:Organization/
 check('W-CS6-Δ7', () => accept([SK, INV, decisions(ACCEPT3), ...R2], KEYS, 'minimal/sdd-round2.jsonld'));
 check('W-CS6-Δ9', () => accept([SK, INV, decisions(ACCEPT3), ...R1, ...R2], KEYS, 'minimal/sdd-round2.jsonld'));
 check('W-CS6-Δ9 (reports in the other order)', () => accept([SK, INV, decisions(ACCEPT3), ...R2, ...R1], KEYS, 'minimal/sdd-round2.jsonld'));
+// W-CS6-Δ11 (R-S5): an accepted mapping with a null iceClass is decided (own acceptance record), not open.
+check('W-CS6-Δ11', () => accept([SK, INV, decisions(ACCEPT3), '--checked', W('minimal/check-report-null.jsonld'), W('minimal/proposal-null.txt')], KEYS, 'minimal/sdd-null.jsonld'));
+check('W-CS6-Δ11 literal', () => { const o = JSON.parse(rd(W('minimal/sdd-null.jsonld'))); const m = o.mappings.find((x) => x.key === KEYS[2]); return all(deq(o.sddVersion, 2, 'sddVersion'), deq([m.iceClass, m.datatype, m.acceptance?.decision, m.acceptance?.by], [null, 'xsd:string', 'accepted', BY], 'Cost Center'), 'valueProperty' in m ? 'mapping carries valueProperty' : true, deq(o.open, [], 'open')); });
 check('W-JS3 step 6 (--previous, rerun subset)', () => accept([W('minimal/skeleton-v2.jsonld'), W('minimal/inventory-v2.jsonld'), decisions([[KEYS[2], 'accept']]), '--checked', W('minimal/check-report-rerun.jsonld'), W('minimal/proposal-rerun.txt'), '--previous', W('minimal/sdd.jsonld')], [KEYS[2]], 'minimal/sdd-v2.jsonld'));
 check('W-JS4 step 2 (--previous, open key)', () => accept([SK, INV, decisions([[KEYS[2], 'accept']]), '--checked', W('minimal/check-report-open.jsonld'), W('minimal/proposal-open.txt'), '--previous', W('minimal/sdd-partial.jsonld')], [KEYS[2]], 'minimal/sdd-j4.jsonld'));
 // Refusals (R-S18, R-S23): exit code and code as the witness states, nothing on stdout, the --out path never created.
@@ -240,6 +262,9 @@ for (const [id, args, code, exit] of [
   ['W-CS6-Δ3', [SK, INV, decisions(ACCEPT3), '--checked', W('minimal/check-report.jsonld'), W('minimal/bad-proposal.txt')], 'E-ACC-MISMATCH', 1],
   ['W-CS6-Δ6', [SK, INV, decisions([[KEYS[0], 'accept']]), '--checked', W('minimal/check-report-open.jsonld'), W('minimal/proposal-open.txt')], 'E-ACC-UNCOVERED', 1],
   ['W-CS6-Δ8', [W('minimal/skeleton-v2.jsonld'), INV, decisions(ACCEPT3), ...R1], 'E-ACC-MISMATCH', 1],
+  // R-S24: a version-1 previous SDD is refused; also the release candidate v1.0.0-rc.1 SDD itself (retained bytes).
+  ['W-CS6-Δ12', [W('minimal/skeleton-v2.jsonld'), W('minimal/inventory-v2.jsonld'), decisions([[KEYS[2], 'accept']]), '--checked', W('minimal/check-report-rerun.jsonld'), W('minimal/proposal-rerun.txt'), '--previous', tmp('prev-v1.jsonld', rd(W('minimal/sdd.jsonld')).replace('"sddVersion": 2', '"sddVersion": 1'))], 'sddVersion 1; this release reads only sddVersion 2', 2],
+  ['C-S6 refusal (R-S24): the rc.1 SDD', [W('minimal/skeleton-v2.jsonld'), W('minimal/inventory-v2.jsonld'), decisions([[KEYS[2], 'accept']]), '--checked', W('minimal/check-report-rerun.jsonld'), W('minimal/proposal-rerun.txt'), '--previous', W('superseded/v4/minimal/sdd.jsonld')], 'E-USAGE', 2],
   ['C-S6 no --checked pair (R-S23)', [SK, INV, decisions(ACCEPT3)], 'E-USAGE', 2],
   ['C-S6 unreadable decisions (R-S23)', [SK, INV, join(TMP, 'missing.json'), ...R1], 'E-IO', 2],
   ['C-S6 foreign @context report (R-S16)', [SK, INV, decisions(ACCEPT3), '--checked', tmp('foreign.jsonld', rd(W('minimal/check-report.jsonld')).replace('https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld', 'https://example.org/ctx.jsonld')), W('minimal/proposal-pasted.txt')], 'E-CTX-EXTERNAL', 1],
@@ -302,6 +327,8 @@ check('W-CS7-Δ3', () => {
 for (const [id, args, code, exit] of [
   ['foreign @context previous SDD', [F('jira-assets/minimal-organization-v2.json'), tmp('foreign-sdd.jsonld', rd(W('minimal/sdd.jsonld')).replace('https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld', 'https://example.org/ctx.jsonld'))], 'E-CTX-EXTERNAL', 1],
   ['previous is not an SDD', [F('jira-assets/minimal-organization-v2.json'), W('minimal/check-report.jsonld')], 'E-USAGE', 2],
+  ['W-CS7-Δ4 (R-S24)', [F('jira-assets/minimal-organization-v2.json'), tmp('prev-v1.jsonld', rd(W('minimal/sdd.jsonld')).replace('"sddVersion": 2', '"sddVersion": 1'))], 'sddVersion 1; this release reads only sddVersion 2', 2],
+  ['the rc.1 SDD (R-S24)', [F('jira-assets/minimal-organization-v2.json'), W('superseded/v4/minimal/sdd.jsonld')], 'E-USAGE', 2],
   ['unreadable schema', [join(TMP, 'missing.json'), W('minimal/sdd.jsonld')], 'E-IO', 2],
   ['missing argument', [F('jira-assets/minimal-organization-v2.json')], 'E-USAGE', 2],
 ]) check(`C-S7 refusal (R-S23): ${id}`, () => { const dir = join(TMP, `${n++}-never`); const r = sdd('rerun', ...args, '--out-dir', dir); return all(exitIs(r, exit), codeIn(r, code), r.out === '' ? true : 'wrote to stdout', nothingAt(dir)); });

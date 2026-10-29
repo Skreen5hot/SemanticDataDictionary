@@ -1,7 +1,7 @@
 {
   "@context": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld",
   "@type": "SemanticDataDictionary",
-  "sddVersion": 1,
+  "sddVersion": 2,
   "source": {
     "format": "jira-assets-import/2021_09_15",
     "sha256": "2794d08cdf3a87d72151d4c8dc84ac999291010bf04ccc5ca8d22ad736b4eded",
@@ -35,9 +35,9 @@
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -57,15 +57,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -85,15 +84,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -115,9 +113,9 @@
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -137,15 +135,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -165,15 +162,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -193,15 +189,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -221,15 +216,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:date",
-      "valueProperty": "cco:ont00001771",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -249,15 +243,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:boolean",
-      "valueProperty": "cco:ont00001772",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -281,9 +274,9 @@
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -307,9 +300,9 @@
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -331,9 +324,9 @@
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -353,15 +346,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -381,15 +373,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -409,15 +400,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -437,15 +427,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -465,15 +454,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:double",
-      "valueProperty": "cco:ont00001770",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -493,15 +481,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:double",
-      "valueProperty": "cco:ont00001770",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -523,9 +510,9 @@
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -545,15 +532,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -573,15 +559,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -601,15 +586,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:date",
-      "valueProperty": "cco:ont00001771",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -629,15 +613,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:double",
-      "valueProperty": "cco:ont00001770",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -657,15 +640,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -685,15 +667,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:anyURI",
-      "valueProperty": "cco:ont00001768",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -717,9 +698,9 @@
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -743,9 +724,9 @@
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -767,9 +748,9 @@
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -789,15 +770,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:boolean",
-      "valueProperty": "cco:ont00001772",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -817,15 +797,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:integer",
-      "valueProperty": "cco:ont00001773",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -847,9 +826,9 @@
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -869,15 +848,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -897,15 +875,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -925,15 +902,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -953,15 +929,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:integer",
-      "valueProperty": "cco:ont00001773",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -981,15 +956,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -1011,9 +985,9 @@
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -1033,15 +1007,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:integer",
-      "valueProperty": "cco:ont00001773",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -1063,9 +1036,9 @@
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -1087,9 +1060,9 @@
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -1109,15 +1082,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:integer",
-      "valueProperty": "cco:ont00001773",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -1139,9 +1111,9 @@
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -1163,9 +1135,9 @@
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -1185,15 +1157,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -1213,15 +1184,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -1241,15 +1211,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:dateTime",
-      "valueProperty": "cco:ont00001767",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -1269,15 +1238,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:anyURI",
-      "valueProperty": "cco:ont00001768",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -1301,9 +1269,9 @@
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -1323,15 +1291,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:string",
-      "valueProperty": "cco:ont00001765",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -1353,9 +1320,9 @@
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -1375,15 +1342,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:dateTime",
-      "valueProperty": "cco:ont00001767",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",
@@ -1403,15 +1369,14 @@
       },
       "iceClass": "cco:ont00000853",
       "datatype": "xsd:integer",
-      "valueProperty": "cco:ont00001773",
       "nullEquivalents": [],
       "rationale": "Witness mapping.",
       "provenance": {
         "round": 1,
         "batch": "1/1",
-        "promptSha256": "13fdfcb117fb2f48dd57673ddaf14a1d54d5375eebc11528b52133a161721dd0",
-        "proposalSha256": "35b8ea337aabea99e792d29a0bd5e8210d17f98bbda1c64387a204446da6e429",
-        "checkReportSha256": "0b871856721f021036238aa9e99bcbe53a041f16badbfbb8c774d5116e890e8e"
+        "promptSha256": "afa7aa601374fc7be9b411f44713b4e61b76e03550027a0d39f0c887ceb7f801",
+        "proposalSha256": "7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2",
+        "checkReportSha256": "d4d76f6daf20a265adfe437419c4ec1e6359de9c856af16c36aa208b2332c3f8"
       },
       "acceptance": {
         "decision": "accepted",

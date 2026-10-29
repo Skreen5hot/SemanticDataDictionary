@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://skreen5hot.github.io/SemanticDataDictionary/schemas/skeleton-v2.schema.json",
+  "title": "SDD Skeleton, version 2",
+  "description": "Authoritative shape of a C-S2 Skeleton (SDD R-S1, R-S2, R-S4, R-S9; OS-1): one slot per decision, meaning fields null, value fields pre-filled from the R-S9 value table. Property order is the R-S1 canonical key order.",
+  "type": "object",
+  "required": ["@context", "@type", "inventorySha256", "termListSha256", "slots"],
+  "additionalProperties": false,
+  "properties": {
+    "@context": { "const": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld" },
+    "@type": { "const": "Skeleton" },
+    "inventorySha256": { "$ref": "#/$defs/sha256" },
+    "termListSha256": { "$ref": "#/$defs/sha256" },
+    "slots": { "type": "array", "items": { "$ref": "#/$defs/slot" } }
+  },
+  "$defs": {
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "otKey": { "type": "string", "pattern": "^ot:([^~/]|~[01])*$" },
+    "atKey": { "type": "string", "pattern": "^at:([^~/]|~[01])*(/([^~/]|~[01])*)?$" },
+    "ctKey": { "type": "string", "pattern": "^ct:ot:([^~/]|~[01])*$" },
+    "slot": {
+      "type": "object",
+      "required": ["key", "kind"],
+      "properties": { "kind": { "enum": ["type", "attribute", "reference", "containment"] } },
+      "if": { "properties": { "kind": { "const": "type" } } },
+      "then": {
+        "required": ["key", "kind", "recordClass", "referentClass"],
+        "additionalProperties": false,
+        "properties": {
+          "key": { "$ref": "#/$defs/otKey" },
+          "kind": { "const": "type" },
+          "recordClass": { "type": "null" },
+          "referentClass": { "type": "null" }
+        }
+      },
+      "else": {
+        "if": { "properties": { "kind": { "const": "attribute" } } },
+        "then": {
+          "required": ["key", "kind", "jiraType", "datatype", "iceClass"],
+          "additionalProperties": false,
+          "properties": {
+            "key": { "$ref": "#/$defs/atKey" },
+            "kind": { "const": "attribute" },
+            "jiraType": { "enum": ["text", "textarea", "integer", "double", "boolean", "date", "time", "date_time", "url", "email", "select", "ipaddress"] },
+            "datatype": { "enum": ["xsd:string", "xsd:anyURI", "xsd:integer", "xsd:double", "xsd:boolean", "xsd:date", "xsd:dateTime"] },
+            "iceClass": { "type": "null" }
+          },
+          "$ref": "#/$defs/valueTable"
+        },
+        "else": {
+          "if": { "properties": { "kind": { "const": "reference" } } },
+          "then": {
+            "required": ["key", "kind", "target", "relation"],
+            "additionalProperties": false,
+            "properties": {
+              "key": { "$ref": "#/$defs/atKey" },
+              "kind": { "const": "reference" },
+              "target": { "$ref": "#/$defs/otKey" },
+              "relation": { "type": "null" }
+            }
+          },
+          "else": {
+            "required": ["key", "kind", "child", "container", "relation"],
+            "additionalProperties": false,
+            "properties": {
+              "key": { "$ref": "#/$defs/ctKey" },
+              "kind": { "const": "containment" },
+              "child": { "$ref": "#/$defs/otKey" },
+              "container": { "$ref": "#/$defs/otKey" },
+              "relation": { "type": "null" }
+            }
+          }
+        }
+      }
+    },
+    "valueTable": {
+      "description": "R-S9: the datatype is fixed by the Jira type.",
+      "if": { "properties": { "jiraType": { "enum": ["text", "textarea", "email", "select", "ipaddress", "time"] } } },
+      "then": { "properties": { "datatype": { "const": "xsd:string" } } },
+      "else": {
+        "if": { "properties": { "jiraType": { "const": "url" } } },
+        "then": { "properties": { "datatype": { "const": "xsd:anyURI" } } },
+        "else": {
+          "if": { "properties": { "jiraType": { "const": "integer" } } },
+          "then": { "properties": { "datatype": { "const": "xsd:integer" } } },
+          "else": {
+            "if": { "properties": { "jiraType": { "const": "double" } } },
+            "then": { "properties": { "datatype": { "const": "xsd:double" } } },
+            "else": {
+              "if": { "properties": { "jiraType": { "const": "boolean" } } },
+              "then": { "properties": { "datatype": { "const": "xsd:boolean" } } },
+              "else": {
+                "if": { "properties": { "jiraType": { "const": "date" } } },
+                "then": { "properties": { "datatype": { "const": "xsd:date" } } },
+                "else": { "properties": { "datatype": { "const": "xsd:dateTime" } } }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
