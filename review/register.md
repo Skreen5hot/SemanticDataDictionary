@@ -631,3 +631,11 @@ The item (7) jira-assets base-name reading was made explicit.
 
   *Reading:* E-S2's "5,000-slot G1 schema" exceeds G1's own bounds (about 720 slots), so it is G1 with the type
   count raised (`harness/props/bench-e-s2.mjs`).
+- **Clean reference run after the fixes** (run 40886607369, fresh seed `rc-8f1ffb5…`, Intel Xeon Platinum 8573C):
+  - V-S1 217/217, V-S2 200/200, V-S3 100/100, V-S4 200/200, V-S5 100/100 and V-S6 296/296;
+  - 10,797 CLI calls, with the network guard empty;
+  - envelopes: E-S1 worst 239 ms, E-S2 worst 178 ms (5,233 slots), E-S3 one batch of 70,855 bytes.
+
+  Both reference runs are in `bench/results.jsonl`, each with the CPU it actually ran on.
+- **OS-3, OS-4 and OS-6 are closed in the spec.** The SDD §10 witness precondition (P10) is met under H-S1. Readiness
+  is now BLOCKED only on SDD-operator OO-2 (V-O1–V-O3, in progress).

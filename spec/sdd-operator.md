@@ -237,7 +237,7 @@ Under H-O1 unless marked H-O2. Expected texts are exact except where masked.
 **Scene-validation precondition (P10.1):** every scene executed against the built page and CLI in a clean
 environment. *Status: met for every W-PRO\* and W-JO\* scene (H-O1 `harness/h-o1.mjs`, H-O2 `harness/h-o2.mjs`, on `ubuntu-24.04` and against the published page, 2026-10-28). V-O1–V-O3 (OO-2) pending.*
 
-`Disposition: per method §6` · `Acceptance readiness: BLOCKED — OO-2; SDD OS-3, OS-4, OS-6`
+`Disposition: per method §6` · `Acceptance readiness: BLOCKED — OO-2`
 
 ## SDD-operator §15: Change discipline
 
@@ -265,9 +265,6 @@ Citations follow the normative citation rule in SDD §11 (identifiers, attributi
 | NG-S1 | NP-O0 |
 | NG-S4 | PR-O2, SDD-operator §2 |
 | NG-S5 | NP-O2, PR-O1, SDD-operator §2 |
-| OS-3 | SDD-operator §14, SDD-operator §15 |
-| OS-4 | SDD-operator §14, SDD-operator §15 |
-| OS-6 | SDD-operator §14, SDD-operator §15 |
 | OS-7 | SDD-operator §15, SDD-operator §16 |
 | R-S5 | W-PRO4-Δ1, W-PRO5-N |
 | R-S6 | W-PRO4-Δ3, W-PRO5-N |
@@ -283,7 +280,7 @@ Citations follow the normative citation rule in SDD §11 (identifiers, attributi
 | R-S23 | CV-O3, PR-O3, SDD-operator §2, SDD-operator §12 |
 | SDD §2 | J-O1, J-O2, J-O3, J-O4, WV-1 |
 | SDD §5 | CV-O1, CV-O2, CV-O3 |
-| SDD §10 | OO-2, WV-1 |
+| SDD §10 | H-O2, OO-2, WV-1 |
 | SDD §11 | G2, K2, WV-1 |
 | SDD header | WV-1 |
 | W-CS3-N | W-JO1, W-PRO6-N |
@@ -313,7 +310,7 @@ Citations follow the normative citation rule in SDD §11 (identifiers, attributi
 | Joint acceptance housed in both change-discipline sections | met |
 
 **CAP-2 was lifted** by the registrar (Decision B, 2026-10-28) after gates 1 and 2 were verified independently of the author (SDD §11). **Joint
-disposition** = min(SDD, SDD-operator), no longer capped by CAP-2; it is reassessed only at the next authorized grading. Joint acceptance readiness: BLOCKED (SDD OS-3, OS-4, OS-6; OO-2).
+disposition** = min(SDD, SDD-operator), no longer capped by CAP-2; it is reassessed only at the next authorized grading. Joint acceptance readiness: BLOCKED (OO-2).
 
 **Open items.** **OO-1:** *closed (2026-10-28):* `site/` and `harness/netguard.mjs` built; every scene executed under H-O1/H-O2. **OO-2:**
 implement G2 and K2.

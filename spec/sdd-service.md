@@ -319,11 +319,12 @@ Reference machine: `bench/config.json` (OS-6), Node 22 LTS; measured by `bench/r
 7. E-S1–E-S3 met under their measurement paths.
 
 ACCEPT = g₁ ∧ … ∧ g₇ (the minimum, never a mean). **Witness precondition (P10):** every W-\* MUST be validated by
-execution against the implementation in a clean environment before a gate consumes it. *Status at v0.4: the witness
-files are authored, with hashes computed by the author's reference generator (not an implementation); none is
-validated.*
+execution against the implementation in a clean environment before a gate consumes it. *Status (2026-10-29): met.
+Every W-\* is executed against the implementation by the independent judge `tools/run-witnesses.mjs`, inside a clean
+container with networking disabled and the H-O2 network guard preloaded (H-S1; the Operator acceptance workflow on
+`ubuntu-24.04`), with an empty guard log.*
 
-`Disposition: per method §6` · `Acceptance readiness: BLOCKED — OS-3, OS-4, OS-6; SDD-operator OO-2`
+`Disposition: per method §6` · `Acceptance readiness: BLOCKED — SDD-operator OO-2`
 
 ## SDD §11: Change discipline
 
@@ -470,9 +471,6 @@ enumerated from both documents:
 | NG-S1 | NP-O0 |
 | NG-S4 | PR-O2, SDD-operator §2 |
 | NG-S5 | NP-O2, PR-O1, SDD-operator §2 |
-| OS-3 | SDD-operator §14, SDD-operator §15 |
-| OS-4 | SDD-operator §14, SDD-operator §15 |
-| OS-6 | SDD-operator §14, SDD-operator §15 |
 | OS-7 | SDD-operator §15, SDD-operator §16 |
 | R-S5 | W-PRO4-Δ1, W-PRO5-N |
 | R-S6 | W-PRO4-Δ3, W-PRO5-N |
@@ -488,7 +486,7 @@ enumerated from both documents:
 | R-S23 | CV-O3, PR-O3, SDD-operator §2, SDD-operator §12 |
 | SDD §2 | J-O1, J-O2, J-O3, J-O4, WV-1 |
 | SDD §5 | CV-O1, CV-O2, CV-O3 |
-| SDD §10 | OO-2, WV-1 |
+| SDD §10 | H-O2, OO-2, WV-1 |
 | SDD §11 | G2, K2, WV-1 |
 | SDD header | WV-1 |
 | W-CS3-N | W-JO1, W-PRO6-N |
@@ -524,10 +522,10 @@ outputs are not validated only by the generator that produced them.
 **Open items.**
 - **OS-1:** *closed (2026-10-28, milestone 4).* JSON Schemas `schemas/inventory-v1.schema.json`, `schemas/skeleton-v1.schema.json`, `schemas/prompt-set-v1.schema.json`, `schemas/check-report-v1.schema.json`, `schemas/rerun-plan-v1.schema.json`, `schemas/sdd-v1.schema.json` and the SDD shapes `shapes/sdd-v1.shacl.ttl` (term lists pinned to `terms_sha256` `a9e01756`); the context `context/sdd-v1.jsonld` is served at its IRI (milestone 3). Every current witness validates against its schema and every SDD witness conforms to the shapes, under the author's test (`src/test/schemas.mjs`) and an independent judge (`harness/os1_judge.py`: Python jsonschema and pyshacl, with spec-derived corruptions rejected). Was: author `schemas/*.schema.json` for the remaining artifacts (the proposal schema is done and pinned), the bundled `context/sdd-v1.jsonld` (hash-pinned), and **SHACL shapes for the SemanticDataDictionary** (`shapes/sdd-v1.shacl.ttl`, ADR-006), with `minimal/sdd.jsonld` as the conforming witness.
 - **OS-2:** *closed (v0.3).* The term list carries every named `rdfs:domain` / `rdfs:range` the pins state: of 225 CCO object properties, 112 have at least one named domain and 110 at least one named range; of 40 BFO object properties, 28 and 31 (the rest have none, or only anonymous expressions, NG-S9). In the source files: CCO 148 named domain and 149 named range edges plus 15 and 15 anonymous; BFO 28 and 31. The reader matches rdflib 7.1.1 exactly on all six edge sets (`tools/verify-hierarchy.py`). The new `terms_sha256` superseded every term-bearing witness; the version-2 files are retained under `fixtures/witnesses/superseded/v2/`. W-CS4-Δ5 and Δ15 are literal.
-- **OS-3:** implement G1 and K1.
-- **OS-4:** build the core and CLI; execute every witness under H-S1.
+- **OS-3:** *closed (2026-10-29).* G1 and K1 are implemented in `harness/props/` by an independent verification agent working black-box from §7. V-S1–V-S6 pass at the stated n on the reference runner (workflow run 40886607369: V-S1 217, V-S2 200, V-S3 100, V-S4 200, V-S5 100, V-S6 296; 10,797 CLI calls; network guard empty). Two harness defects found on the first run were fixed and are recorded in the register (H-1, H-2).
+- **OS-4:** *closed (2026-10-29).* The core and CLI are built (C-S1–C-S7). Every witness is executed under H-S1 (see the §10 status).
 - **OS-5:** closed by registrar Decision B (2026-10-27): the R-S9 text fallback is retained.
-- **OS-6:** `bench/` with the reference machine.
+- **OS-6:** *closed (2026-10-29).* The reference environment is `bench/config.json` (`ubuntu-24.04`, Node 22; the hardware is recorded per run, not fixed). `bench/run.mjs` writes to `bench/results.jsonl`. E-S1–E-S3 pass on two reference runs, on different CPUs.
 - **OS-7:** *tool built (v0.3), corrected and mutation-tested (v0.4); independent verification pending.* `tools/citations.mjs` extracts every cross-document citation (explicit-identifier rule, with section-level attribution for blocks that define no identifier) and checks both tables and the mirrored seam rows.
 
 ## SDD §12: Closure report (method P2)
