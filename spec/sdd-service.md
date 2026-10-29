@@ -345,9 +345,9 @@ prop-001 are retained under `fixtures/witnesses/superseded/v1/` with their v1 ha
 | `fixtures/jira-assets/invalid/two-containers.json` | 4.1 | `f747a948434d84438324d90255b954aa01cf9e1b0d37a06e572411ec9495d79b` | W-CS1-Δ13 |
 | `fixtures/jira-assets/invalid/unknown-attribute-type.json` | 1 | `0f754ada66d9d471716c92035fc29ee71ba0221cf8585ee51cc165567a840304` | W-CS1-Δ7 |
 | `fixtures/jira-assets/invalid/unknown-reference-target.json` | 1 | `ef2337610680a27c2d00e1e9dd80bba8e99c94d666d4ec11fb445706c059c398` | W-CS1-Δ2 |
-| `fixtures/jira-assets/minimal-organization-v2.json` | 2 | `e86ef883322aa194ed10bda51118d02a9b0ddc51892d09d781514e9b11f5373b` | H-S1, W-CS7-N, W-CS7-Δ3, W-JS3 |
+| `fixtures/jira-assets/minimal-organization-v2.json` | 2 | `e86ef883322aa194ed10bda51118d02a9b0ddc51892d09d781514e9b11f5373b` | H-S1, W-CS7-N, W-CS7-Δ3, W-JS3, W-PRO1-Δ6 |
 | `fixtures/jira-assets/minimal-organization-v3-removed.json` | 4 | `0ced1f7e469fd90db9aaec1bd4cb317c871129341822836c84c90f8b16144ad7` | W-CS7-Δ1 |
-| `fixtures/jira-assets/minimal-organization.json` | 1 | `3239b1f085d090c71027032833831cf151b28ec90a935e01788b992ec6363869` | H-S1, W-CS1-N, W-JO1 |
+| `fixtures/jira-assets/minimal-organization.json` | 1 | `3239b1f085d090c71027032833831cf151b28ec90a935e01788b992ec6363869` | H-S1, W-CS1-N, W-JO1, W-PRO1-Δ6 |
 | `fixtures/jira-assets/synthetic-it-assets-externalids.json` | 1 | `b6692a952b16c198499c4268938636dcf80f01a8956b66b7b000351e1d59c750` | W-CS1-Δ5, W-CS7-Δ2 |
 | `fixtures/jira-assets/synthetic-it-assets.json` | 1 | `2794d08cdf3a87d72151d4c8dc84ac999291010bf04ccc5ca8d22ad736b4eded` | E-S1, E-S3, W-CS1-Δ6 |
 | `fixtures/witnesses/full/check-report-batch2.jsonld` | 4 | `9908fa5122c725dbaecde831136f66e568e82213e783e81379bddd2a6f0c79e7` | W-CS4-Δ16 |
@@ -387,15 +387,15 @@ prop-001 are retained under `fixtures/witnesses/superseded/v1/` with their v1 ha
 | `fixtures/witnesses/minimal/prompt.txt` | 3 | `7f121f7a15ed3f67563c10d2038c2722c87e92fab7160eae37bdcc3e78cbcc3c` | S-O1, W-CS3-N, W-CS4-N, W-CS5-N, W-JO1, W-JS1, W-PRO6-N |
 | `fixtures/witnesses/minimal/proposal-open.txt` | 4 | `6537840cf5c054a5e813ea6f4bf27cf7c97bb06a325031168ea629b9c91c1a46` | W-JS4 |
 | `fixtures/witnesses/minimal/proposal-pasted.txt` | 4 | `7d3a9546da8c8ab55b25ec8e0e6e761c12529855de54fb280b47c8935d3be91b` | S-O2, W-CS4-N, W-JO1, W-JO2, W-JO4, W-JS1, W-JS2, W-PRO1-Δ2, W-PRO4-Δ2, W-PRO4-Δ3, W-PRO5-Δ1 |
-| `fixtures/witnesses/minimal/proposal-rerun.txt` | 4 | `e7ed529bd3440ee30fbee4028141aa483fa7f2857dc33a0278ebb3f811127351` | W-JS3 |
+| `fixtures/witnesses/minimal/proposal-rerun.txt` | 4 | `e7ed529bd3440ee30fbee4028141aa483fa7f2857dc33a0278ebb3f811127351` | W-JS3, W-PRO1-Δ6 |
 | `fixtures/witnesses/minimal/repair-prompt.txt` | 4 | `e14d07015a3d8d33cc586f6ce2b72bd86797e6fbe6b439f85e47aa0f347b1a86` | W-CS5-N, W-JO2, W-JS2, W-PRO5-N |
 | `fixtures/witnesses/minimal/rerun-plan-removed.jsonld` | 4 | `d739af913a63a0f783fd5ad18c05b90fb70a3c44cb7330e00f0a7d9278d88414` | W-CS7-Δ1 |
 | `fixtures/witnesses/minimal/rerun-plan.jsonld` | 4 | `4e09c7bbe63d5a11faea0e8f7eec02d645bf70f5cd3342c0addd1540dfa4e0f5` | S-S6, W-CS7-N, W-JS3 |
 | `fixtures/witnesses/minimal/sdd-j4.jsonld` | 4 | `1990267916386cc6be2ae2f8fee2b31fd72e79cfcdfb1c2dd5e1ff2496a1e601` | W-JS4 |
 | `fixtures/witnesses/minimal/sdd-partial.jsonld` | 4 | `769ddf341e8a55907f545da426271ee677e3a571588d712a811d7f3090577091` | W-CS6-Δ2, W-JS4, W-PRO1-Δ5 |
 | `fixtures/witnesses/minimal/sdd-round2.jsonld` | 4 | `a05cff1a945158c98ce4ff534fc061b1e128b7ca1f44e13e4a51fd5434f65160` | W-CS6-Δ7, W-CS6-Δ9, W-JO2, W-JS2 |
-| `fixtures/witnesses/minimal/sdd-v2.jsonld` | 4 | `cae6b1aaf6e43b38b5bda92084842ce100352b41a7a226ebe3929fde27d6c767` | W-JS3 |
-| `fixtures/witnesses/minimal/sdd.jsonld` | 4 | `d311d909a03fe3bb193dd60f51c6086127c18fc86764420de4004fc3ce4e07f3` | OS-1, S-O6, S-S7, W-CS6-N, W-CS6-Δ10, W-CS7-N, W-CS7-Δ1, W-CS7-Δ3, W-JO1, W-JO3, W-JS1, W-JS3, W-PRO1-N |
+| `fixtures/witnesses/minimal/sdd-v2.jsonld` | 4 | `cae6b1aaf6e43b38b5bda92084842ce100352b41a7a226ebe3929fde27d6c767` | W-JS3, W-PRO1-Δ6 |
+| `fixtures/witnesses/minimal/sdd.jsonld` | 4 | `d311d909a03fe3bb193dd60f51c6086127c18fc86764420de4004fc3ce4e07f3` | OS-1, S-O6, S-S7, W-CS6-N, W-CS6-Δ10, W-CS7-N, W-CS7-Δ1, W-CS7-Δ3, W-JO1, W-JO3, W-JS1, W-JS3, W-PRO1-N, W-PRO1-Δ6 |
 | `fixtures/witnesses/minimal/skeleton-v2.jsonld` | 4 | `60411c630940a686335e005622284427b07384650c4668721216a392d5196bef` | W-CS6-Δ8, W-JS3 |
 | `fixtures/witnesses/minimal/skeleton.jsonld` | 3 | `e990dbb36831aa769a09a7d5df64d396698511482c3ba849064353500ff9de57` | S-S2, W-CS2-N, W-CS3-N, W-CS4-Δ18, W-JS1 |
 | `schemas/inventory-v1.schema.json` | 4.1 | `d99750e46f7a0ea7e5b5ec7712168cab65b2b5d972580763f87f5daf5c10b080` | OS-1 |
@@ -464,7 +464,7 @@ enumerated from both documents:
 | C-S4 | NP-O5, SDD-operator §4, W-JO3 |
 | C-S5 | PR-O5 |
 | C-S6 | SDD-operator §4, SDD-operator §5, W-JO3 |
-| C-S7 | SDD-operator §4, W-JO3 |
+| C-S7 | RV-O2, SDD-operator §4, W-JO3 |
 | G1 | G2 |
 | H-S1 | H-O1, H-O2, SDD-operator §15, W-JO1, W-JO2, W-JO3, W-JO4 |
 | NG-S0 | WV-1 |
@@ -479,8 +479,8 @@ enumerated from both documents:
 | R-S13 | W-PRO3-Δ1 |
 | R-S14 | NP-O3, PR-O4, RV-O3, RV-O4, SDD-operator §2 |
 | R-S16 | PR-O2, SDD-operator §2, W-PRO2-Δ2 |
-| R-S17 | PR-O1, W-PRO1-Δ5 |
-| R-S18 | PR-O1, SDD-operator §2 |
+| R-S17 | PR-O1, RV-O2, W-PRO1-Δ5, W-PRO1-Δ6 |
+| R-S18 | PR-O1, RV-O2, SDD-operator §2, W-PRO1-Δ6 |
 | R-S20 | W-PRO5-Δ1 |
 | R-S21 | RV-O4, SDD-operator §2, W-PRO2-Δ2, W-PRO4-Δ1, W-PRO5-N |
 | R-S23 | CV-O3, PR-O3, SDD-operator §2, SDD-operator §12 |

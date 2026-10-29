@@ -639,3 +639,42 @@ The item (7) jira-assets base-name reading was made explicit.
   Both reference runs are in `bench/results.jsonl`, each with the CPU it actually ran on.
 - **OS-3, OS-4 and OS-6 are closed in the spec.** The SDD §10 witness precondition (P10) is met under H-S1. Readiness
   is now BLOCKED only on SDD-operator OO-2 (V-O1–V-O3, in progress).
+
+## Milestone 4: OO-2 first browser run, registrar decisions D1–D3 (2026-10-29, appended; sections above unamended)
+
+- **OO-2 harness** (`harness/props/g2.mjs`, `k2.mjs`, `v-o.mjs`, by an independent verification agent working
+  black-box from the spec and UI-CONTRACT). First run: n = 300, seed `oo2-2026-10-29`, Windows 11, Chromium 141;
+  results kept as `review/evidence/oo2-first-run-v-o-results.json`.
+  - V-O2 300/300 (request log empty; CLI netguard log 0 lines).
+  - **V-O1 294/300 and V-O3 151/300.** Every failure reproduced from its seed (79, 53 re-run by the registrar's
+    verifier) and classified:
+    - *V-O1 (6 sessions):* after schema B was opened, a valid B paste showed a key that had been accepted under schema
+      A as undecided. The product follows SDD R-S18 (an acceptance is bound to a report on the current skeleton);
+      RV-O2's wording did not say decisions belong to a skeleton. **Spec ambiguity → D1.**
+    - *V-O3 (138 sessions):* the previous-SDD summary and rerun-plan heading counts are not RV-O1 templates.
+      **Spec gap → D2.**
+    - *V-O3 (32 sessions):* the E-PROMPT-BUDGET row's message has no R-S21 template, so RV-O4 could not be met.
+      **Spec gap → D3.**
+    - *H-3 (2 sessions, notes only):* 30 s click timeouts. Not page size (2- and 4-type schemas): the harness tried
+      to click Accept on items that correctly show no Accept control. **Harness defect**; no bearing on E-O2.
+- **Registrar decisions (all approved):**
+  - **D1:** a decision applies only to the skeleton of the report it was made on; under another skeleton it is
+    neither shown nor saved, and it is preserved, not rewritten or discarded. C-S7 alone carries across schema
+    versions. Written into §6 State and RV-O2; V-O1 now judges decisions per skeleton; new scene W-PRO1-Δ6.
+  - **D2:** RV-O1 gains `Previous SDD open: {name}, {m} mapping(s), {o} open, {r} retired.` and the rerun-plan
+    headings `Unchanged/Changed/Added/Removed ({n})`, every count taken from the SDD or RerunPlan.
+  - **D3:** RV-O4 uses R-S21 messages where defined, and fixed messages for E-PROMPT-BUDGET and E-SKEL-ERRORED.
+  - **H-3:** harness corrected; no timeout allowance added.
+- **Product defect found while writing D1 into the spec (P-1):** the page kept one `decisions{key}` map, so an act
+  on key K under skeleton B overwrote the decision skeleton A held for K. That broke D1's "preserved". Fixed by a
+  separate implementer (`site/session.mjs`: decisions held per skeleton sha; `src/test/site.mjs` 29/29).
+  W-PRO1-Δ6 (a) **fails on the unfixed page** (Cost Center reads `""` after returning to the minimal schema) and
+  passes on the fixed one. H-O1 26/26, H-O2 3/3, CLI witnesses 104/104.
+- **Judge changes:** decisions modelled per skeleton (CLI skeleton bytes); D2 counts accepted only when equal to the
+  CLI's previous-SDD and RerunPlan list lengths; D3 texts accepted only inside a row of that code; Accept/Reject
+  attempted only on items showing that control. The `--inject-faults` self-test now also falsifies a plan count and
+  fails as it should, as do the decision, name, null-equivalents, markup, grounding and approval-word clauses.
+  Local smoke run (30 sessions, seed `smoke-2026-10-29`): V-O1/V-O2/V-O3 30/30.
+- **Observations, not blockers:** (1) `nullEquivalents` stay keyed by key across skeletons, as §6 states; an entry
+  made under skeleton B for K is what a later save under A writes for K. (2) G2 has not yet reached the carried-
+  mapping path (R-S17); W-PRO1-Δ6 (b) and W-JO3 cover it.

@@ -14,6 +14,7 @@ import { createHash } from 'node:crypto';
 import { join, dirname, extname } from 'node:path';
 import { tmpdir, cpus, totalmem, release, platform, arch } from 'node:os';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { Assignment, correctProposal, toPaste } from './props/proposal.mjs';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = join(ROOT, 'dist');
@@ -180,6 +181,32 @@ async function scenes() {
   await scene('W-PRO1-Δ5: an opened SDD names someone (adversarial)', async (s) => {
     await s.openPrevious(W('minimal/sdd-partial.jsonld')); await s.openSchema(F('minimal-organization.json'));
     return all(eq(await s.nameValue(), '', 'name field'), eq(await s.decision(KEYS[0]), `Accepted by ${BY}`, 'Organization (carried)'), eq(await s.decision(KEYS[1]), `Accepted by ${BY}`, 'Name (carried)'), eq((await s.item(KEYS[2]).count()) === 0 ? '' : await s.decision(KEYS[2]), '', 'Cost Center (no new decision: no row, or an undecided row)'));
+  });
+  // W-PRO1-Δ6 (registrar decision D1): a decision is shown and saved only under its own skeleton; only R-S17 carries.
+  const shownDecision = async (s, k) => ((await s.item(k).count()) ? s.decision(k) : '');
+  await scene('W-PRO1-Δ6 (a): a decision belongs to its skeleton (adversarial, RV-O2)', async (s) => {
+    await jo1to5(s);
+    await s.openSchema(F('minimal-organization-v2.json'));
+    const underV2 = (await s.page.locator('[data-testid="item"] [data-testid="decision"]').allInnerTexts()).map((t) => t.trim()).filter((t) => t.startsWith('Accepted by'));
+    await s.build(); const pr = await s.copy(0);
+    await s.paste(toPaste(correctProposal(pr.toString('utf8'), new Assignment('W-PRO1-Δ6')))); const st = await s.status();
+    await s.name('Other Person'); await s.accept(KEYS[2]); const actV2 = await s.decision(KEYS[2]);
+    await s.openSchema(F('minimal-organization.json'));
+    const back = []; for (const k of KEYS) back.push(await shownDecision(s, k));
+    return all(eq(underV2, [], 'items reading Accepted under the v2 skeleton'), eq(st, VALIDATED, 'v2 proposal status'), eq(actV2, 'Accepted by Other Person', 'act under v2'),
+      eq(back, KEYS.map(() => `Accepted by ${BY}`), 'decisions after reopening the minimal schema'), sddEquals(await s.save(), W('minimal/sdd.jsonld'), s));
+  });
+  await scene('W-PRO1-Δ6 (b): carried under R-S17, never leaked across skeletons (adversarial)', async (s) => {
+    await jo1to5(s);
+    await s.openPrevious(W('minimal/sdd.jsonld')); await s.openSchema(F('minimal-organization-v2.json'));
+    const opened = []; for (const k of KEYS) opened.push(await shownDecision(s, k));
+    await s.build(); const n = await s.batches().count(); await s.copy(n - 1);
+    await s.paste(rd(W('minimal/proposal-rerun.txt'))); const st = await s.status(); const ccAfterPaste = await shownDecision(s, KEYS[2]);
+    const first = await s.save(); const prevMs = JSON.parse(rd(W('minimal/sdd.jsonld'))).mappings;
+    const carriedOk = eq((first.json.mappings || []).map((m) => canon(m)).sort(), KEYS.slice(0, 2).map((k) => canon(prevMs.find((m) => m.key === k))).sort(), 'saved mappings vs minimal/sdd.jsonld records');
+    await s.accept(KEYS[2]);
+    return all(eq(opened, [`Accepted by ${BY}`, `Accepted by ${BY}`, ''], 'after opening v2 with the previous SDD'), eq(st, VALIDATED, 'rerun proposal status'), eq(ccAfterPaste, '', 'Cost Center after the paste'),
+      carriedOk, eq(first.json.open, [KEYS[2]], 'open in the first save'), sddEquals(await s.save(), W('minimal/sdd-v2.jsonld'), s));
   });
   await scene('W-PRO2-Δ2: foreign @context refused, never fetched (adversarial)', async (s) => {
     await s.openPrevious(Buffer.from(rd(W('minimal/sdd.jsonld')).replace('https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld', 'https://example.org/ctx.jsonld')), 'foreign.jsonld');

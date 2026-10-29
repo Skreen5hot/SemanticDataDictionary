@@ -150,6 +150,8 @@ function jo1(s) {
   s.activate(prompts[0].id);
   return prompts;
 }
+/** Decisions held in the session, under every skeleton (RV-O2: decisions{skeleton -> {key -> decision}}). */
+const heldCount = (s) => [...s.state.decisions.values()].reduce((n, m) => n + m.size, 0);
 const decideAll = (s, d = 'accept') => s.items().forEach((it, i) => s.decide(it.key, d, T(i)));
 
 test('W-JO1 / W-PRO1-N / W-PRO6-N: summary, 1 batch 7f121f7a, same bytes, validated, 3 clicks -> minimal/sdd.jsonld (at masked)', () => {
@@ -200,11 +202,11 @@ test('W-PRO1-Δ1: bulk act names N; cancel = 0 decisions; confirm = same SDD as 
   s.checkPaste(text(W('minimal/proposal-pasted.txt')));
   s.setName(NAME);
   const n = s.bulkKeys().length;
-  const before = s.state.decisions.size; // "Cancel" performs no act
+  const before = heldCount(s); // "Cancel" performs no act
   const r = s.acceptAll(n, T(9));
   const out = s.buildSdd();
   return all(expect(n === 3, `N ${n}`), expect(M.bulkConfirmText(n, NAME) === 'Accept all 3 validated mappings as Aaron Damiano?', 'confirm text'),
-    expect(before === 0, 'decisions before confirm'), expect(r.ok && s.state.decisions.size === 3, 'confirm'),
+    expect(before === 0, 'decisions before confirm'), expect(r.ok && heldCount(s) === 3, 'confirm'),
     expect(mask(out.bytes) === mask(W('minimal/sdd.jsonld')), 'SDD differs'), expect(eq(ats(out.bytes), [T(9), T(9), T(9)]), 'at = confirm click'),
     expect(s.bulkKeys().length === 0, 'N after'));
 });
@@ -219,10 +221,43 @@ test('W-PRO1-Δ2: a paste cannot decide or name (human field rejected; approval 
   s.checkPaste(JSON.stringify(hostile, null, 2));
   const o2 = s.outcomeView();
   return all(expect(o1.status === M.rejectedText(1) && o1.rows.length === 1 && o1.rows[0].code === 'E-CHK-HUMAN-FIELD', JSON.stringify(o1.rows)),
-    expect(o2.status === M.VALIDATED_TEXT, o2.status), expect(s.state.decisions.size === 0, 'decisions'), expect(s.state.acceptorName === '', 'name'),
+    expect(o2.status === M.VALIDATED_TEXT, o2.status), expect(heldCount(s) === 0, 'decisions'), expect(s.state.acceptorName === '', 'name'),
     expect(s.items().every((it) => it.decision === null), 'items decided'),
     expect(s.items()[0].mapping.rationale === hostile.mappings[0].rationale, 'rationale not literal'),
-    expect(s.decide('ot:Organization', 'accept', T(1)).message === 'Type your name first.' && s.state.decisions.size === 0, 'act without a name'));
+    expect(s.decide('ot:Organization', 'accept', T(1)).message === 'Type your name first.' && heldCount(s) === 0, 'act without a name'));
+});
+test('RV-O2: an act under one skeleton never changes a decision held under another; reopening shows and saves it again', () => {
+  const s = fresh();
+  jo1(s);
+  s.checkPaste(text(W('minimal/proposal-pasted.txt')));
+  s.setName(NAME);
+  s.acceptAll(3, T(1));
+  s.decide('at:Organization/Cost Center', 'reject', T(2));
+  const shaA = s.state.skeletonSha;
+  const itemsA = JSON.stringify(s.items().map((it) => [it.key, it.decision]));
+  const savedA = s.buildSdd().bytes;
+  s.openSchema(F('minimal-organization-v2.json'));
+  const shown = s.items().filter((it) => it.decision).length;
+  const { prompts } = s.buildPromptSet('');
+  s.activate(prompts[0].id);
+  const full = JSON.parse(text(W('minimal/proposal-pasted.txt')).match(/```json\n([\s\S]*?)```/)[1]);
+  full.skeletonSha256 = s.state.skeletonSha;
+  s.checkPaste(JSON.stringify(full));
+  const shaB = s.state.skeletonSha;
+  s.setName('Someone Else');
+  const bulk = s.bulkKeys();
+  s.acceptAll(bulk.length, T(7));
+  s.decide('at:Organization/Cost Center', 'reject', T(8));
+  s.decide('at:Organization/Cost Center', 'accept', T(9));
+  const savedB = s.buildSdd().bytes;
+  s.openSchema(minimal());
+  const out = s.buildSdd();
+  return all(expect(shaA !== shaB, 'skeletons should differ'), expect(shown === 0, `decisions shown under another skeleton: ${shown}`),
+    expect(bulk.length === 3, `bulk keys under B: ${bulk}`), expect(savedB !== undefined, 'no save under B'),
+    expect(JSON.stringify(s.items().map((it) => [it.key, it.decision])) === itemsA, 'items under A changed'),
+    expect(same(out.bytes, savedA), 'SDD under A changed'), expect(mask(out.bytes) === mask(W('minimal/sdd-partial.jsonld')), 'sdd-partial differs'),
+    expect(!same(savedB, savedA), 'B saved the decisions held under A'),
+    expect(s.state.decisions.get(shaA)?.size === 3 && s.state.decisions.get(shaB)?.size === bulk.length, 'held per skeleton'));
 });
 test('W-PRO1-Δ3: null-equivalents " N/A , -, " -> ["-", "N/A"]', () => {
   const s = fresh();
@@ -255,7 +290,7 @@ test('W-PRO1-Δ5 + W-JS4: previous SDD then schema -> plan, carried items keep t
   const { prompts } = s.buildPromptSet('');
   s.activate(prompts[0].id);
   s.checkPaste(text(W('minimal/proposal-open.txt')));
-  const before = s.state.decisions.size;
+  const before = heldCount(s);
   s.setName(NAME);
   s.decide('at:Organization/Cost Center', 'accept', T(5));
   const out = s.buildSdd();

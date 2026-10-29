@@ -2,7 +2,8 @@
 // randomness. The view supplies bytes, the person's acts and the time of each act; every artifact comes from
 // src/core exactly as the CLI makes it (same functions, same canonical bytes).
 //
-// State (§6): schema/inventory/skeleton, prompts[], pastes[] and reports[] (append-only), decisions{key -> record},
+// State (§6): schema/inventory/skeleton, prompts[], pastes[] and reports[] (append-only),
+// decisions{skeletonSha -> {key -> record}},
 // acceptorName, nullEquivalents{key -> text}, savedFiles[]. Only the CV-O2 methods (setName, decide, acceptAll,
 // setNullEquivalents) write decisions, acceptorName or nullEquivalents (RV-O2).
 
@@ -87,7 +88,7 @@ export function createSession({ termList, template, proposalSchema, atlassianSch
     recency: [], // prompt ids, most recently built or copied last
     pastes: [], // Uint8Array, append-only
     reports: [], // {id, report, reportBytes, pasteIdx, promptId, answer}, append-only
-    decisions: new Map(), // key -> {decision, by, at, reportId}
+    decisions: new Map(), // skeletonSha -> Map(key -> {decision, by, at, reportId}); RV-O2: one skeleton's acts never touch another's
     acceptorName: '',
     nullEquivalents: new Map(), // key -> entered text
     savedFiles: [],
@@ -177,9 +178,17 @@ export function createSession({ termList, template, proposalSchema, atlassianSch
     return out;
   }
 
+  /** The decisions held under the current skeleton (RV-O2). Others are kept as they are, neither shown nor saved. */
+  const held = () => (s.skeletonSha !== null && s.decisions.get(s.skeletonSha)) || new Map();
+  /** The current skeleton's decisions, for an act to write (created on the first act under that skeleton). */
+  function heldForAct() {
+    if (!s.decisions.has(s.skeletonSha)) s.decisions.set(s.skeletonSha, new Map());
+    return s.decisions.get(s.skeletonSha);
+  }
+
   /** Decisions that apply to the current skeleton (each is bound to the report it was made on). */
   function effectiveDecision(key) {
-    const d = s.decisions.get(key);
+    const d = held().get(key);
     if (!d) return null;
     const r = reportOf(d.reportId);
     return r && current(r) ? d : null;
@@ -389,7 +398,7 @@ export function createSession({ termList, template, proposalSchema, atlassianSch
     if (reportId === null) return { message: 'This item has no validated mapping to decide on.' };
     const prev = effectiveDecision(key);
     if (prev && prev.decision === decision && prev.by === s.acceptorName && prev.reportId === reportId) return { unchanged: true };
-    s.decisions.set(key, { decision, by: s.acceptorName, at, reportId });
+    heldForAct().set(key, { decision, by: s.acceptorName, at, reportId });
     return { ok: true };
   }
 
@@ -403,7 +412,8 @@ export function createSession({ termList, template, proposalSchema, atlassianSch
     if (!nameReady()) return { message: 'Type your name first.' };
     const keys = bulkKeys();
     if (keys.length !== n) return { message: 'The list changed; nothing was done.' };
-    for (const k of keys) s.decisions.set(k, { decision: 'accept', by: s.acceptorName, at, reportId: proposalReportFor(k) });
+    const h = keys.length ? heldForAct() : null;
+    for (const k of keys) h.set(k, { decision: 'accept', by: s.acceptorName, at, reportId: proposalReportFor(k) });
     return { ok: true, keys };
   }
 
@@ -423,7 +433,7 @@ export function createSession({ termList, template, proposalSchema, atlassianSch
     if (!s.skeleton) return { message: 'Open a schema first.' };
     const slotKind = new Map(slots().map((x) => [x.key, x.kind]));
     const effective = [];
-    for (const [key, d] of s.decisions) if (slotKind.has(key) && effectiveDecision(key)) effective.push({ key, ...d });
+    for (const [key, d] of held()) if (slotKind.has(key) && effectiveDecision(key)) effective.push({ key, ...d });
 
     const groups = new Map();
     for (const d of effective) {

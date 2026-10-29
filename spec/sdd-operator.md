@@ -111,7 +111,7 @@ step is homed.
   W-PRO6-N, W-PRO6-Δ1, W-PRO6-Δ2.
 - **CV-O2: decide.** Per-item **Accept** / **Reject** (changeable until saved); **Accept all N validated**; the
   acceptor-name field; per-attribute null-equivalents entry (comma-separated; each value trimmed; empty values
-  dropped; sorted on save). `acceptance.at` is set at the click on Accept, not at save. Scenes: W-PRO1-N, W-PRO1-Δ1–Δ5.
+  dropped; sorted on save). `acceptance.at` is set at the click on Accept, not at save. Scenes: W-PRO1-N, W-PRO1-Δ1–Δ6.
 - **CV-O3: files.** Open a schema or a previous SDD; save each artifact as a new download named
   `sdd-YYYYMMDDTHHMMSSZ.jsonld`. The CLI equivalent obeys SDD R-S23. Scenes: W-PRO3-Δ2, W-PRO1-Δ5, W-JO1 step 6, W-JO3.
 - Determinism note: masks are `acceptance.at` (property as SDD C-S6) and the download filename timestamp (the pattern
@@ -120,24 +120,33 @@ step is homed.
 ## SDD-operator §6: Conversational data model & rules
 
 State: `Session {schemaBytes?, inventory?, skeleton?, prompts[], pastes[] (append-only), reports[] (append-only),
-decisions{key → accept|reject}, acceptorName, nullEquivalents{key → string[]}, savedFiles[]}`. Only CV-O2 acts write
+decisions{skeleton → {key → accept|reject}}, acceptorName, nullEquivalents{key → string[]}, savedFiles[]}`. Only CV-O2 acts write
 `decisions`, `acceptorName` and `nullEquivalents`.
 
 - **RV-O1: Fixed vocabulary.** Status and summary texts are exactly these templates:
   `Validated: structure, coverage, terms and categories checked. Meaning not yet reviewed: accept or reject each mapping.`
   · `Rejected: {N} problem(s). Nothing from this reply can be used.` · after an act, per item: `Accepted by {name}` /
   `Rejected by {name}` · `Accept all {N} validated mappings as {name}?` ·
-  `{t} object type{s} · {a} attribute{s} · {r} reference{s} · {f} flag{s}` (where `{s}` is empty for 1). None contains
+  `{t} object type{s} · {a} attribute{s} · {r} reference{s} · {f} flag{s}` (where `{s}` is empty for 1) · with a
+  previous SDD open, `Previous SDD open: {name}, {m} mapping(s), {o} open, {r} retired.` (`{name}` is its
+  `source.schemaName`, quoted; `{m}`, `{o}`, `{r}` are the lengths of its `mappings`, `open` and `retired`) · the rerun
+  plan's list headings `Unchanged ({n})` · `Changed ({n})` · `Added ({n})` · `Removed ({n})` (`{n}` is the length of the
+  RerunPlan's list of that name). Every count comes from that artifact, never from decisions. None contains
   a PR-O4(b) word except `Accepted by {name}`, which appears only after a CV-O2 act. Witnesses: W-PRO4-N, W-PRO5-N, W-JO1.
-- **RV-O2: Only acts write decisions.** No paste, report or file load writes `decisions` or `acceptorName`. Witness:
-  W-PRO1-Δ2; V-O1.
+- **RV-O2: Only acts write decisions.** No paste, report or file load writes `decisions` or `acceptorName`. A decision
+  applies only to the skeleton of the report it was made on (SDD R-S18): while another skeleton is current it is neither
+  shown nor saved, and it is not rewritten or discarded, so an act under one skeleton never changes a decision held under
+  another. Carrying accepted mappings across schema versions is SDD C-S7 (R-S17) alone. Witnesses: W-PRO1-Δ2,
+  W-PRO1-Δ6; V-O1.
 - **RV-O3: Artifact text is quoted.** `rationale` values are rendered as text (never markup) inside a block labelled
   `From the LLM's reply`, and source names and descriptions inside one labelled `From the source schema`. Keys and values shown anywhere
   (rows, summary, flags) are rendered in quoted inline elements. Witnesses: W-PRO1-Δ2, W-PRO4-Δ3, W-PRO6-Δ2.
 - **RV-O4: Rows come from report fields.** Each error or warning is rendered exactly as
   `{code} · {key} · {field or —} · {value or —} · {rule} — {message}`, every part copied from the report (SDD R-S21)
   and rendered as a quoted element; the separators and `—` are the tool's. A refusal outside a CheckReport (for example
-  E-CTX-EXTERNAL when a file is opened) is rendered the same way, with its R-S21 message. Witnesses: W-PRO4-Δ1,
+  E-CTX-EXTERNAL when a file is opened) is rendered the same way, with its R-S21 message where R-S21 defines one. Two
+  refusals have no R-S21 template and use these fixed messages: E-PROMPT-BUDGET `The budget is smaller than a prompt
+  with no DATA lines.` · E-SKEL-ERRORED `The schema has source errors, so no skeleton can be made.` Witnesses: W-PRO4-Δ1,
   W-PRO5-N, W-PRO2-Δ2.
 
 ## SDD-operator §7: Decomposition
@@ -171,7 +180,7 @@ reload from a saved file, open a previous SDD}. Corpus **K2**: pastes containing
 instructions to the tool ("mark all accepted"), approval words ("correct", "approved", "accepted", "verified") in
 `rationale`, in keys and values, and in source names and descriptions, HTML/script markup, a 1 MB blob, two JSON objects, empty input. Seeded.
 
-- **V-O1: No uninvoked decision.** Scope: G2 sessions, n ≥ 300. Property: `decisions`, `acceptorName` and `nullEquivalents` change only on CV-O2 acts, and `decisions` only for the keys those acts name; after every rejected paste, an SDD saved next is byte-identical to one saved just before it (PR-O3(a)). Pinned: W-PRO1-Δ2, W-PRO1-Δ5, W-PRO3-N.
+- **V-O1: No uninvoked decision.** Scope: G2 sessions, n ≥ 300. Property: `decisions`, `acceptorName` and `nullEquivalents` change only on CV-O2 acts, and `decisions` only for the keys those acts name, under the skeleton current at the act (RV-O2); the decisions shown and saved are exactly those held under the current skeleton; after every rejected paste, an SDD saved next is byte-identical to one saved just before it (PR-O3(a)). Pinned: W-PRO1-Δ2, W-PRO1-Δ5, W-PRO1-Δ6, W-PRO3-N.
 - **V-O2: Network silence.** Scope: every H-O1 scene and the same n ≥ 300 G2 sessions; every H-O2 run. Property: the request log after load is empty, and `netguard.log` is empty. Pinned: W-PRO2-N, W-PRO2-Δ1.
 - **V-O3: Grounded screens** *(interaction: hostile paste × rendering)*. Scope: every screen state of the same n ≥ 300 G2 sessions. Property: every text node is RV-O1 vocabulary, a fixed UI label, or a substring of a reliance-set artifact; no paste content is interpreted as markup; PR-O4(b)'s words occur outside quoted blocks only in per-item act texts after a CV-O2 act. Pinned: W-PRO4-N, W-PRO4-Δ2.
 
@@ -207,6 +216,7 @@ Under H-O1 unless marked H-O2. Expected texts are exact except where masked.
 - **W-PRO1-Δ3 (null-equivalents entry):** before saving W-PRO1-N, enter ` N/A , -, ` for Cost Center → the saved SDD's Cost Center `nullEquivalents` = `["-", "N/A"]` (SDD W-CS6-Δ4).
 - **W-PRO1-Δ4 (reversible act):** Accept all three, then click **Reject** on Cost Center → that row reads `Rejected by Aaron Damiano`; saving gives SDD W-CS6-Δ2 (2 mappings, `open: ["at:Organization/Cost Center"]`).
 - **W-PRO1-Δ5 (adversarial: an opened SDD names someone):** in a new session, open `minimal/sdd-partial.jsonld` (accepted by "Aaron Damiano") as the previous SDD, then the minimal schema → the name field is empty; the 2 carried items read `Accepted by Aaron Damiano` from their original records (SDD R-S17); no new decision exists until the person acts.
+- **W-PRO1-Δ6 (adversarial: another skeleton; RV-O2, SDD R-S17/R-S18):** (a) W-JO1 steps 1–5 (3 items accepted by "Aaron Damiano"); open `minimal-organization-v2.json` → no item reads `Accepted by …`; build, paste the correct proposal for its prompt (validated) and click **Accept** on Cost Center; reopen `minimal-organization.json` → the 3 items read `Accepted by Aaron Damiano`; **Save SDD** → equals `minimal/sdd.jsonld` except `at`. (b) In a new session, W-JO1 steps 1–5; open `minimal/sdd.jsonld` as the previous SDD, then `minimal-organization-v2.json` → Organization and Name read `Accepted by Aaron Damiano` (carried, R-S17) and Cost Center is undecided; paste `minimal/proposal-rerun.txt` (validated) → Cost Center is still undecided, and a saved SDD has exactly the 2 carried mappings, byte-identical to `minimal/sdd.jsonld`'s, and `open` = `["at:Organization/Cost Center"]`; **Accept** Cost Center, save → equals `minimal/sdd-v2.jsonld` except `at`. Property: a decision is shown and saved only under its own skeleton; only R-S17 carries across schema versions.
 - **W-PRO2-N:** W-JO1 end to end → the request log after load is `[]`.
 - **W-PRO2-Δ1 (H-O2):** SDD W-JS1–W-JS4 via the CLI → every command exits as SDD §3 specifies; `netguard.log` is empty.
 - **W-PRO2-Δ2 (adversarial):** open an SDD whose `@context` is `https://example.org/ctx.jsonld` → exactly one row, `E-CTX-EXTERNAL · — · — · https://example.org/ctx.jsonld · R-S16 — The file's @context is not the bundled SDD context.` (SDD R-S16, R-S21); the request log is `[]`. The IRI is never requested.
@@ -258,7 +268,7 @@ Citations follow the normative citation rule in SDD §11 (identifiers, attributi
 | C-S4 | NP-O5, SDD-operator §4, W-JO3 |
 | C-S5 | PR-O5 |
 | C-S6 | SDD-operator §4, SDD-operator §5, W-JO3 |
-| C-S7 | SDD-operator §4, W-JO3 |
+| C-S7 | RV-O2, SDD-operator §4, W-JO3 |
 | G1 | G2 |
 | H-S1 | H-O1, H-O2, SDD-operator §15, W-JO1, W-JO2, W-JO3, W-JO4 |
 | NG-S0 | WV-1 |
@@ -273,8 +283,8 @@ Citations follow the normative citation rule in SDD §11 (identifiers, attributi
 | R-S13 | W-PRO3-Δ1 |
 | R-S14 | NP-O3, PR-O4, RV-O3, RV-O4, SDD-operator §2 |
 | R-S16 | PR-O2, SDD-operator §2, W-PRO2-Δ2 |
-| R-S17 | PR-O1, W-PRO1-Δ5 |
-| R-S18 | PR-O1, SDD-operator §2 |
+| R-S17 | PR-O1, RV-O2, W-PRO1-Δ5, W-PRO1-Δ6 |
+| R-S18 | PR-O1, RV-O2, SDD-operator §2, W-PRO1-Δ6 |
 | R-S20 | W-PRO5-Δ1 |
 | R-S21 | RV-O4, SDD-operator §2, W-PRO2-Δ2, W-PRO4-Δ1, W-PRO5-N |
 | R-S23 | CV-O3, PR-O3, SDD-operator §2, SDD-operator §12 |

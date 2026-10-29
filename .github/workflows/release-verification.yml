@@ -45,3 +45,33 @@ jobs:
           path: |
             vs-results.json
             bench/results.jsonl
+
+  # OO-2: browser properties V-O1–V-O3 over n = 300 G2 sessions (SDD-operator §9), on the same reference environment.
+  browser-properties:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build the page
+        run: node tools/build-site.mjs
+      - name: Install the harness (test-only)
+        working-directory: harness
+        run: |
+          npm ci --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Properties V-O1–V-O3 (OO-2, n = 300)
+        run: node harness/props/v-o.mjs --n 300 --seed rc-vo-${{ github.sha }} --out v-o-results.json --shots v-o-shots --jobs 3
+      - name: Summarise browser properties
+        if: always()
+        run: |
+          node -e "const r=JSON.parse(require('fs').readFileSync('v-o-results.json','utf8')); const s={env:r.environment,seed:r.seedTag,n:r.nCompleted,cli:{calls:r.cli.calls,netguardLogLines:r.cli.netguardLogLines},props:Object.fromEntries(r.properties.map((p)=>[p.id,{n:p.n,pass:p.pass,fail:p.fail}])),pr3:r.pr3Comparisons,obs:r.observationCounts}; console.log('::notice title=browser properties::'+JSON.stringify(s)); for (const p of r.properties) for (const f of (p.failures||[]).slice(0,5)) console.log('::warning title='+p.id+' failure::'+JSON.stringify({clause:f.clause,seed:f.seed,detail:f.detail}).slice(0,900))"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-properties
+          path: |
+            v-o-results.json
+            v-o-shots/
