@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SDD Enterprise Pilot Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;600;700&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a working plan document. One reading column with a sticky contents rail on wide screens; phases as a
+   numbered timeline because they are a real sequence; checklists and tables for what teams act on. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --ink: #18212e;
+  --muted: #5a6577;
+  --rule: #d9dee6;
+  --accent: #1f5f8b;
+  --accent-soft: #e3eef6;
+  --ok: #2f6b3f;
+  --ok-soft: #e4f1e7;
+  --warn: #8a5a00;
+  --warn-soft: #fbf0d9;
+  --stop: #9a2f2f;
+  --stop-soft: #f7e3e3;
+  --font-display: "Bitter", Georgia, "Times New Roman", serif;
+  --font-body: "Source Sans 3", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  --step--1: 0.875rem;
+  --step-0: 1.0625rem;
+  --step-1: 1.25rem;
+  --step-2: 1.6rem;
+  --step-3: 2.25rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11161d; --surface: #182029; --ink: #e6eaf0; --muted: #9aa6b6; --rule: #2c3743;
+    --accent: #7db8e3; --accent-soft: #1d3346; --ok: #8fd3a0; --ok-soft: #1c3324;
+    --warn: #e8c070; --warn-soft: #3a2f17; --stop: #ef9a9a; --stop-soft: #3d2222;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11161d; --surface: #182029; --ink: #e6eaf0; --muted: #9aa6b6; --rule: #2c3743;
+  --accent: #7db8e3; --accent-soft: #1d3346; --ok: #8fd3a0; --ok-soft: #1c3324;
+  --warn: #e8c070; --warn-soft: #3a2f17; --stop: #ef9a9a; --stop-soft: #3d2222;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: var(--step-0); line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 4rem;
+}
+a { color: var(--accent); text-underline-offset: 2px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+code, .mono { font-family: var(--font-mono); font-size: 0.86em; }
+code { background: var(--accent-soft); padding: 0.1em 0.35em; border-radius: 4px; overflow-wrap: anywhere; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; line-height: 1.2; margin: 0; }
+h1 { font-size: var(--step-3); font-weight: 700; }
+h2 { font-size: var(--step-2); font-weight: 600; }
+h3 { font-size: var(--step-1); font-weight: 600; }
+p { margin: 0; }
+ul, ol { margin: 0; padding-left: 1.25rem; display: grid; gap: 0.35rem; }
+
+.masthead { max-width: 76rem; margin: 0 auto; padding-block: 2.75rem 2rem; border-bottom: 1px solid var(--rule); display: grid; gap: 1rem; }
+.eyebrow { font-family: var(--font-mono); font-size: var(--step--1); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lede { max-width: 62ch; font-size: var(--step-1); color: var(--muted); }
+.facts { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; font-size: var(--step--1); color: var(--muted); }
+.facts strong { color: var(--ink); font-weight: 600; }
+
+.layout { max-width: 76rem; margin: 0 auto; display: grid; grid-template-columns: 1fr; gap: 2.5rem; padding-top: 2rem; }
+@media (min-width: 960px) { .layout { grid-template-columns: 14rem minmax(0, 1fr); } }
+.toc { display: none; }
+@media (min-width: 960px) {
+  .toc { display: block; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 1.5rem); align-self: start; font-size: var(--step--1); }
+  .toc ol { list-style: none; padding: 0; gap: 0.15rem; }
+  .toc a { display: block; padding: 0.3rem 0.6rem; border-radius: 6px; color: var(--muted); text-decoration: none; }
+  .toc a:hover { background: var(--accent-soft); color: var(--ink); }
+  .toc .label { font-family: var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 0.5rem 0.6rem; }
+}
+main { min-width: 0; display: grid; gap: 3rem; }
+section { display: grid; gap: 1rem; max-width: 70ch; scroll-margin-top: 1.5rem; }
+section.wide { max-width: none; }
+
+.callout { border: 1px solid var(--rule); background: var(--surface); border-radius: 8px; padding: 1rem 1.25rem; display: grid; gap: 0.5rem; }
+.callout.key { border-color: var(--accent); background: var(--accent-soft); }
+
+.two { display: grid; gap: 1rem; grid-template-columns: 1fr; }
+@media (min-width: 720px) { .two { grid-template-columns: 1fr 1fr; } }
+.two > div { min-width: 0; display: grid; gap: 0.5rem; align-content: start; }
+.tag { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.15rem 0.5rem; border-radius: 999px; justify-self: start; }
+.tag.in { background: var(--ok-soft); color: var(--ok); }
+.tag.out { background: var(--stop-soft); color: var(--stop); }
+
+.table-wrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: var(--step--1); }
+th, td { text-align: left; vertical-align: top; padding: 0.65rem 0.85rem; border-bottom: 1px solid var(--rule); }
+tr:last-child td { border-bottom: 0; }
+th { font-family: var(--font-mono); font-weight: 500; font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); background: var(--bg); }
+td:first-child { font-weight: 600; white-space: nowrap; }
+
+.timeline { list-style: none; padding: 0; display: grid; gap: 0; counter-reset: phase; }
+.phase { display: grid; grid-template-columns: 3rem minmax(0, 1fr); gap: 1rem; padding-bottom: 1.75rem; position: relative; }
+.phase::before { counter-increment: phase; content: counter(phase, decimal); font-family: var(--font-display); font-weight: 700; font-size: var(--step-1);
+  width: 2.5rem; height: 2.5rem; border-radius: 50%; display: grid; place-items: center; background: var(--surface); border: 2px solid var(--accent); color: var(--accent); z-index: 1; }
+.phase::after { content: ""; position: absolute; left: 1.25rem; top: 2.5rem; bottom: 0; width: 2px; background: var(--rule); transform: translateX(-1px); }
+.phase:last-child::after { display: none; }
+.phase .body { min-width: 0; display: grid; gap: 0.6rem; padding-top: 0.25rem; }
+.phase .when { font-family: var(--font-mono); font-size: var(--step--1); color: var(--accent); }
+.phase .done { font-size: var(--step--1); color: var(--muted); border-left: 3px solid var(--ok); padding-left: 0.75rem; }
+.phase .done strong { color: var(--ok); }
+
+.checks { list-style: none; padding: 0; gap: 0.5rem; }
+.checks li { display: grid; grid-template-columns: 1.25rem minmax(0, 1fr); gap: 0.6rem; }
+.checks li::before { content: ""; width: 0.95rem; height: 0.95rem; margin-top: 0.3rem; border: 1.5px solid var(--muted); border-radius: 3px; }
+
+.outcomes { display: grid; gap: 0.75rem; grid-template-columns: 1fr; }
+@media (min-width: 760px) { .outcomes { grid-template-columns: repeat(3, 1fr); } }
+.outcome { border-radius: 8px; padding: 1rem; display: grid; gap: 0.4rem; align-content: start; border: 1px solid var(--rule); background: var(--surface); }
+.outcome h3 { font-size: var(--step-0); }
+.outcome.go { border-top: 4px solid var(--ok); }
+.outcome.fix { border-top: 4px solid var(--warn); }
+.outcome.stop { border-top: 4px solid var(--stop); }
+.outcome p { font-size: var(--step--1); color: var(--muted); }
+
+.hash { font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 0.6rem 0.8rem; }
+pre { margin: 0; overflow-x: auto; background: var(--surface); border: 1px solid var(--rule); border-radius: 6px; padding: 0.75rem 0.9rem; font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.5; }
+.small { font-size: var(--step--1); color: var(--muted); }
+footer { max-width: 76rem; margin: 3rem auto 0; padding-top: 1.25rem; border-top: 1px solid var(--rule); font-size: var(--step--1); color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+html { scroll-behavior: smooth; }
+</style>
+
+<header class="masthead">
+  <div class="eyebrow">Semantic Data Dictionary · release candidate v1.0.0-rc.2</div>
+  <h1>Enterprise pilot plan</h1>
+  <p class="lede">Run the SDD tool on our real Jira Assets schema, inside the enterprise, with our own reviewers and our approved LLM. The pilot shows whether v1 is fit for use. Its findings go to the registrar, who makes the final v1 acceptance decision.</p>
+  <div class="facts">
+    <span><strong>Duration:</strong> about 4 weeks</span>
+    <span><strong>Scope:</strong> one production Assets schema, plus one schema change</span>
+    <span><strong>Decision owner:</strong> the registrar</span>
+    <span><strong>Status:</strong> draft for team review</span>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="Contents">
+    <p class="label">Contents</p>
+    <ol>
+      <li><a href="#goal">Goal and scope</a></li>
+      <li><a href="#tool">How the tool works</a></li>
+      <li><a href="#roles">Roles</a></li>
+      <li><a href="#ready">Before we start</a></li>
+      <li><a href="#phases">Phases</a></li>
+      <li><a href="#review">Guidance for reviewers</a></li>
+      <li><a href="#record">What we record</a></li>
+      <li><a href="#data">Data handling</a></li>
+      <li><a href="#issues">When something breaks</a></li>
+      <li><a href="#limits">Known limits</a></li>
+      <li><a href="#exit">Exit criteria</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <section id="goal">
+      <h2>Goal and scope</h2>
+      <p>The tool has passed its acceptance checks on synthetic schemas. The pilot answers what those checks cannot: does it hold up on our schema, with our LLM, in the hands of the people who will use it?</p>
+      <div class="two">
+        <div>
+          <span class="tag in">In scope</span>
+          <ul>
+            <li>Building a complete dictionary for one production Assets schema.</li>
+            <li>One schema change, re-run through the tool, to test that accepted work carries over.</li>
+            <li>Logging every problem, including confusing steps.</li>
+            <li>Collecting reviewer judgement on the quality of the LLM's proposals.</li>
+          </ul>
+        </div>
+        <div>
+          <span class="tag out">Out of scope</span>
+          <ul>
+            <li>New features or changes to the agreed contract.</li>
+            <li>Generating RDF data, instance records or reports from the dictionary.</li>
+            <li>Other source systems besides Jira Assets.</li>
+            <li>Converting or reusing dictionaries saved by release candidate rc.1.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout key">
+        <p><strong>Ground rule.</strong> During the pilot only demonstrated defects get fixed. Ideas for new features go on a separate list for after v1.</p>
+      </div>
+    </section>
+
+    <section id="tool">
+      <h2>How the tool works</h2>
+      <p>The tool is one HTML page. It runs offline in Chrome or Edge, opened from a local file, and makes no network requests after it loads. Nothing we open or paste into it leaves the machine.</p>
+      <ol>
+        <li><strong>Open schema.</strong> Load the Jira Assets import schema (JSON). The page shows a summary and any flags.</li>
+        <li><strong>Build prompt, then copy.</strong> The page writes one or more prompts. A person pastes each one into the approved enterprise LLM.</li>
+        <li><strong>Paste reply, then check.</strong> The page checks the LLM's reply for structure, coverage, valid BFO/CCO terms and categories. A rejected reply produces a repair prompt for another round.</li>
+        <li><strong>Review.</strong> A named reviewer accepts or rejects each proposed mapping. Nothing is accepted automatically.</li>
+        <li><strong>Save SDD.</strong> Each save is a new file, <code>sdd-YYYYMMDDTHHMMSSZ.jsonld</code>.</li>
+        <li><strong>When the schema changes.</strong> Open the previous SDD and then the new schema. Only changed and added items go back to the LLM.</li>
+      </ol>
+      <p class="small">A reply that passes the checks is <em>validated</em>, not correct. Only the reviewer decides whether a mapping means the right thing.</p>
+    </section>
+
+    <section id="roles" class="wide">
+      <h2>Roles</h2>
+      <p style="max-width:70ch">One person may hold more than one role. Names are to be filled in at kickoff.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Role</th><th>Responsibilities</th><th>Name</th></tr></thead>
+          <tbody>
+            <tr><td>Registrar</td><td>Owns the v1 contract. Rules on anything contested, decides whether a reported problem is a defect, and makes the final v1 acceptance decision.</td><td>Aaron Damiano</td></tr>
+            <tr><td>Pilot lead</td><td>Runs the schedule, keeps the break-event log, and writes the pilot report.</td><td>TBD</td></tr>
+            <tr><td>Assets schema owner</td><td>Supplies the import-format schema JSON, explains what object types and attributes mean, and provides the changed schema for phase 3.</td><td>TBD</td></tr>
+            <tr><td>Reviewers (1–3)</td><td>Accept or reject each mapping under their own name. Need working knowledge of the domain; ontology experience helps.</td><td>TBD</td></tr>
+            <tr><td>Operator</td><td>Runs the page and carries prompts and replies between the page and the LLM.</td><td>TBD</td></tr>
+            <tr><td>IT / security</td><td>Approves running the HTML file offline and sending schema text to the enterprise LLM.</td><td>TBD</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="ready">
+      <h2>Before we start</h2>
+      <p>The pilot starts when every item below is done. The first item is the one most likely to take time.</p>
+      <ul class="checks">
+        <li><span><strong>The schema in import format.</strong> We need the Jira Assets import schema JSON. Its <code>$schema</code> line ends in <code>versions/2021_09_15</code>, and it contains <code>schema → objectSchema → objectTypes</code>. A general Assets export or a Jira field list will not open. The file exists only if the schema is fed by an external import. Ask the owner of that integration, or fetch it from the imports API. If there is no external import, stop and tell the registrar: building this file is outside the pilot.</span></li>
+        <li><span><strong>Security approval</strong> to open a single local HTML file in Chrome or Edge. It needs no install and no server. Its content-security policy forbids network connections.</span></li>
+        <li><span><strong>LLM approval</strong> to send schema names and descriptions to the enterprise LLM. Prompts contain those, and only those, from our data.</span></li>
+        <li><span><strong>A verified copy of the page.</strong> Download it once, then check that its SHA-256 hash matches the release (see below).</span></li>
+        <li><span><strong>Named reviewers</strong>, each with time booked. A starting estimate is 2–4 hours per 100 mappings; adjust it after the dry run.</span></li>
+        <li><span><strong>A shared folder inside the enterprise</strong> for prompts, replies and saved SDDs, plus a copy of the break-event log template.</span></li>
+      </ul>
+      <h3>Getting and checking the page</h3>
+      <pre>Invoke-WebRequest https://skreen5hot.github.io/SemanticDataDictionary/ -OutFile sdd-rc2.html
+Get-FileHash .\sdd-rc2.html -Algorithm SHA256</pre>
+      <p class="small">The hash must equal the release build for <code>v1.0.0-rc.2</code>:</p>
+      <div class="hash">43d44939817601bfa879a2d353ec63272e8af1dfb8fcc1a3224a113cd7e524a9</div>
+      <p class="small">The page above can change in later releases. If it no longer matches, build this exact version from the repository instead: check out tag <code>v1.0.0-rc.2</code> and run <code>node tools/build-site.mjs</code>, which produces the same bytes. Then copy <code>sdd-rc2.html</code> to the pilot machine and open it from disk.</p>
+    </section>
+
+    <section id="phases">
+      <h2>Phases</h2>
+      <ol class="timeline">
+        <li class="phase"><div class="body">
+          <p class="when">Week 1</p>
+          <h3>Prepare</h3>
+          <ul>
+            <li>Kickoff: confirm roles, the schema and the timeline.</li>
+            <li>Complete every item in <a href="#ready">Before we start</a>.</li>
+            <li>Dry run with the synthetic IT-assets sample shipped with the tool, so everyone learns the steps before touching our schema.</li>
+            <li>Agree the LLM's batch size. The default prompt budget is 200,000 bytes; set it lower if our LLM has a smaller context window.</li>
+          </ul>
+          <p class="done"><strong>Done when</strong> the dry run produced a saved SDD and every prerequisite is checked off.</p>
+        </div></li>
+        <li class="phase"><div class="body">
+          <p class="when">Weeks 2–3</p>
+          <h3>First dictionary</h3>
+          <ul>
+            <li>Open the schema and record the summary line and every flag.</li>
+            <li>Relay each prompt batch to the LLM. Check each reply and use repair prompts until it validates. Log the number of rounds.</li>
+            <li>Reviewers accept or reject every mapping. Rejected items stay open and can be re-prompted later.</li>
+            <li>Save the SDD after each review session. A reload loses unsaved work.</li>
+          </ul>
+          <p class="done"><strong>Done when</strong> every item is accepted, or deliberately left open with a logged reason, and the final SDD is saved.</p>
+        </div></li>
+        <li class="phase"><div class="body">
+          <p class="when">Week 3–4</p>
+          <h3>Schema change</h3>
+          <ul>
+            <li>Take a real schema change, or a controlled copy of the schema with a few attributes added, changed and removed.</li>
+            <li>Open the saved SDD as the previous SDD, then the changed schema. Compare the page's unchanged, changed, added and removed lists with what actually changed.</li>
+            <li>Re-prompt only what the page sends. Confirm unchanged mappings keep their original acceptance.</li>
+          </ul>
+          <p class="done"><strong>Done when</strong> the merged SDD is saved and the change lists matched reality.</p>
+        </div></li>
+        <li class="phase"><div class="body">
+          <p class="when">Week 4</p>
+          <h3>Report</h3>
+          <ul>
+            <li>Compile the measures and the break-event log.</li>
+            <li>Collect each reviewer's assessment: would they rely on the dictionary, and what slowed them down?</li>
+            <li>Send the pilot report to the registrar with a recommendation (see <a href="#exit">Exit criteria</a>).</li>
+          </ul>
+          <p class="done"><strong>Done when</strong> the registrar has the report.</p>
+        </div></li>
+      </ol>
+    </section>
+
+    <section id="review">
+      <h2>Guidance for reviewers</h2>
+      <ul>
+        <li><strong>Validated is not correct.</strong> The checks prove the terms exist and fit their categories. Whether a mapping is right is your call.</li>
+        <li><strong>Record and referent are different.</strong> Each object type maps twice: once for the Assets record itself, an information artifact, and once for the real thing the record describes.</li>
+        <li><strong>Nesting is not parthood.</strong> Accept a containment relation only if one thing really is part of the other. A server inventory nested under a site is not proof of physical parthood.</li>
+        <li><strong>Be specific, or say you can't be.</strong> If no specific class fits an attribute, the LLM may leave it unclassified. The page then shows <code>iceClass — none asserted</code>. Accepting that is a valid decision. It says nothing more specific can be justified, not that the value is meaningless.</li>
+        <li><strong>When unsure, reject.</strong> A rejected item stays open, keeps its source reference, and can be re-prompted or revisited. Note why in the log.</li>
+        <li><strong>Watch the usual suspects.</strong> Check ownership relations (is "Owner" really "is used by"?), installation relations (is "Installed On" really "depends on"?) and classes that are too generic.</li>
+        <li><strong>Use null-equivalents</strong> to list the placeholder values our data uses for "no value", such as <code>N/A</code> or <code>-</code>.</li>
+      </ul>
+    </section>
+
+    <section id="record" class="wide">
+      <h2 style="max-width:70ch">What we record</h2>
+      <div class="two">
+        <div>
+          <h3>Measures</h3>
+          <ul>
+            <li>Schema size: object types, attributes, references, flags.</li>
+            <li>Prompt batches, and relay rounds per batch.</li>
+            <li>Share of replies validated on the first round.</li>
+            <li>Mappings accepted, accepted without a specific classification, rejected and left open.</li>
+            <li>Person-time per phase: operator and reviewers.</li>
+            <li>Schema change: items in each change list, and whether each list was right.</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Break-event log (one row per event)</h3>
+          <ul>
+            <li>Date, phase and step.</li>
+            <li>What happened, and what we expected.</li>
+            <li>Severity: <em>blocks the pilot</em>, <em>has a workaround</em> or <em>cosmetic / confusing</em>.</li>
+            <li>The error code and message shown, copied exactly.</li>
+            <li>The SHA-256 of the files involved: no content.</li>
+            <li>The workaround used, if any.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="data">
+      <h2>Data handling</h2>
+      <ul>
+        <li>The schema, prompts, LLM replies and saved SDDs stay inside the enterprise.</li>
+        <li>No outside service is involved. The page works without a network, and the LLM is our approved enterprise instance.</li>
+        <li>Anything shared outside the enterprise, for example a defect report to the tool's maintainers, contains error codes, counts, steps and file hashes only. It never contains schema text, names or descriptions.</li>
+        <li>Reviewer names are recorded as typed in each acceptance. The tool does not authenticate them, so agree up front who reviews under which name.</li>
+      </ul>
+    </section>
+
+    <section id="issues">
+      <h2>When something breaks</h2>
+      <ol>
+        <li>Log it in the break-event log straight away, including the exact message shown.</li>
+        <li>For anything that blocks, tell the pilot lead the same day. The pilot lead reports it to the registrar.</li>
+        <li>The maintainers reproduce it with a synthetic schema of the same shape, since our schema is never shared.</li>
+        <li>If the registrar rules it a defect, the fix ships as a new tagged release candidate. We re-verify its hash and continue.</li>
+        <li>Anything that is a missing feature, rather than a defect, goes on the after-v1 list.</li>
+      </ol>
+    </section>
+
+    <section id="limits">
+      <h2>Known limits</h2>
+      <p>These are deliberate in v1. They are not defects, but log any that cause real trouble.</p>
+      <ul>
+        <li>The allowed values of <code>select</code> attributes are not in the schema, so the tool cannot see them. It raises a flag instead.</li>
+        <li>IQL in reference mappings is not evaluated. No cardinality is recorded.</li>
+        <li>One object type mapped under two different containers is refused as a key collision.</li>
+        <li>A Jira <code>time</code> value is typed as a string. The schema format has no better fit.</li>
+        <li>Prompts and replies move by copy and paste, one batch at a time.</li>
+        <li>Dictionaries saved by release candidate rc.1 cannot be opened as the previous SDD. Start fresh with rc.2.</li>
+      </ul>
+    </section>
+
+    <section id="exit" class="wide">
+      <h2 style="max-width:70ch">Exit criteria</h2>
+      <p style="max-width:70ch">The pilot is complete when the first dictionary and the schema change are both saved, every blocking event is resolved or ruled on, and the report is with the registrar. The report recommends one of three outcomes. The registrar decides.</p>
+      <div class="outcomes">
+        <div class="outcome go"><h3>Accept v1</h3><p>The tool produced a dictionary our reviewers would rely on, the schema change behaved as expected, and no defect remains open.</p></div>
+        <div class="outcome fix"><h3>Fix, then accept</h3><p>Specific, demonstrated defects must be fixed first. They ship as a new release candidate and are re-checked on our schema before acceptance.</p></div>
+        <div class="outcome stop"><h3>Stop and reassess</h3><p>A problem goes beyond fixing defects, for example our schema cannot be obtained in import format. This goes back to the registrar as a scope decision.</p></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<footer>
+  Application: <a href="https://skreen5hot.github.io/SemanticDataDictionary/">skreen5hot.github.io/SemanticDataDictionary</a> ·
+  Source and specifications: <a href="https://github.com/Skreen5hot/SemanticDataDictionary">github.com/Skreen5hot/SemanticDataDictionary</a> (tag <code>v1.0.0-rc.2</code>)
+</footer>
+</html>

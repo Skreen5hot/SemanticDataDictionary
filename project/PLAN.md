@@ -100,6 +100,8 @@ Registrar-approved after the external ontological review (`review/register.md`, 
 
 ### 5. Enterprise pilot and registrar acceptance: NEXT (registrar)
 
+Pilot plan for the enterprise team: [`PILOT-PLAN.html`](PILOT-PLAN.html) (open it in a browser; a draft for team review).
+
 - **Deliverables:**
   - the release candidate run on the enterprise Jira Assets schema inside the enterprise: the offline page (or its
     saved copy), relayed by hand to the enterprise LLM;
