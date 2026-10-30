@@ -1,6 +1,6 @@
 # SDD enterprise pilot plan
 
-Semantic Data Dictionary, release candidate `v1.0.0-rc.2`. **Status:** draft for team review.
+Semantic Data Dictionary, release candidate `v1.0.0-rc.3`. **Status:** draft for team review.
 This Markdown file is the source of truth; [`PILOT-PLAN.html`](PILOT-PLAN.html) is the same plan styled for reading
 in a browser.
 
@@ -88,18 +88,18 @@ The pilot starts when every item below is done. The first item is the one most l
 ### Getting and checking the page
 
 ```powershell
-Invoke-WebRequest https://skreen5hot.github.io/SemanticDataDictionary/ -OutFile sdd-rc2.html
-Get-FileHash .\sdd-rc2.html -Algorithm SHA256
+Invoke-WebRequest https://skreen5hot.github.io/SemanticDataDictionary/ -OutFile sdd-rc3.html
+Get-FileHash .\sdd-rc3.html -Algorithm SHA256
 ```
 
-The hash must equal the release build for `v1.0.0-rc.2`:
+The hash must equal the release build for `v1.0.0-rc.3`:
 
 ```
-43d44939817601bfa879a2d353ec63272e8af1dfb8fcc1a3224a113cd7e524a9
+2792839479ade134796c1f8a94233ce60ae8aef4de9829cf30838c1983f9b744
 ```
 
 The page above can change in later releases. If it no longer matches, build this exact version from the repository
-instead: check out tag `v1.0.0-rc.2` and run `node tools/build-site.mjs`, which produces the same bytes in
+instead: check out tag `v1.0.0-rc.3` and run `node tools/build-site.mjs`, which produces the same bytes in
 `dist/index.html`. Then copy the file to the pilot machine and open it from disk.
 
 ## 5. Phases
@@ -155,6 +155,8 @@ instead: check out tag `v1.0.0-rc.2` and run `node tools/build-site.mjs`, which 
   be justified, not that the value is meaningless.
 - **When unsure, reject.** A rejected item stays open, keeps its source reference, and can be re-prompted or
   revisited. Note why in the log.
+- **Continuing an unfinished review.** Open the saved SDD as the previous SDD and then the same schema. Open items
+  are listed under Added and go back to the LLM.
 - **Watch the usual suspects.** Check ownership relations (is "Owner" really "is used by"?), installation relations
   (is "Installed On" really "depends on"?) and classes that are too generic.
 - **Use null-equivalents** to list the placeholder values our data uses for "no value", such as `N/A` or `-`.
@@ -205,7 +207,7 @@ These are deliberate in v1. They are not defects, but log any that cause real tr
 - One object type mapped under two different containers is refused as a key collision.
 - A Jira `time` value is typed as a string. The schema format has no better fit.
 - Prompts and replies move by copy and paste, one batch at a time.
-- Dictionaries saved by release candidate rc.1 cannot be opened as the previous SDD. Start fresh with rc.2.
+- Dictionaries saved by release candidate rc.1 cannot be opened as the previous SDD. Start fresh with rc.2 or later.
 
 ## 11. Exit criteria
 
@@ -222,4 +224,4 @@ registrar decides.
 ---
 
 Application: <https://skreen5hot.github.io/SemanticDataDictionary/> · Source and specifications:
-<https://github.com/Skreen5hot/SemanticDataDictionary> (tag `v1.0.0-rc.2`)
+<https://github.com/Skreen5hot/SemanticDataDictionary> (tag `v1.0.0-rc.3`)

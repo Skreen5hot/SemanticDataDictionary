@@ -109,14 +109,10 @@ Pilot plan for the enterprise team (draft for team review): [`PILOT-PLAN.md`](PI
   - break events logged;
   - fixes only for demonstrated defects.
 - **Completion condition:** the registrar's final acceptance of v1.
-- **Blockers:**
-  - **Likely blocker: the enterprise schema in import format.** The tool reads only the Jira Assets import schema
-    (`$schema` ending `versions/2021_09_15`). That file exists only if the schema is fed by an external import; a
-    general Assets export or Jira field list (such as the `fields.json` found so far) will not open. If no external
-    import exists, building the file is outside the pilot and returns to the registrar as a scope decision
-    (PILOT-PLAN.md §4, §11).
-  - The pilot needs the registrar's access to the enterprise environment.
-  - Not blocking: the open request to Ontology-Template (CCO hierarchy register); ADR-008 Option B is in place.
+- **Status:** Enterprise pilot run, including the schema-change test. Outcome: fix, then accept. One usability defect
+  fixed in `v1.0.0-rc.3`. v1 acceptance follows once rc.3 is verified.
+- **Blockers:** none. Not blocking: the open request to Ontology-Template (CCO hierarchy register); ADR-008 Option B
+  is in place.
 
 ### Checks to run before any commit to `spec/`, `fixtures/`, `src/` or `tools/`
 
