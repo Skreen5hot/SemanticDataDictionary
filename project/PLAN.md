@@ -98,7 +98,7 @@ cycles, architecture or scope unless a demonstrated blocker needs a registrar de
 Registrar-approved after the external ontological review (`review/register.md`, v0.5 entry): no `valueProperty`;
 `iceClass` is a permitted ICE class or `null`; `sddVersion` 2 with a clean break from v1.0.0-rc.1 (unchanged).
 
-### 5. Enterprise pilot and registrar acceptance: NEXT (registrar)
+### 5. Enterprise pilot and registrar acceptance: COMPLETE
 
 Pilot plan for the enterprise team (draft for team review): [`PILOT-PLAN.md`](PILOT-PLAN.md), the source of truth;
 [`PILOT-PLAN.html`](PILOT-PLAN.html) is the same plan styled for a browser.
@@ -108,9 +108,9 @@ Pilot plan for the enterprise team (draft for team review): [`PILOT-PLAN.md`](PI
     saved copy), relayed by hand to the enterprise LLM;
   - break events logged;
   - fixes only for demonstrated defects.
-- **Completion condition:** the registrar's final acceptance of v1.
+- **Completion condition (met, 2026-11-02):** the registrar's final acceptance of v1.
 - **Status:** Enterprise pilot run, including the schema-change test. Outcome: fix, then accept. One usability defect
-  fixed in `v1.0.0-rc.3`. v1 acceptance follows once rc.3 is verified.
+  fixed in `v1.0.0-rc.3`, verified inside the enterprise. The registrar accepted v1 on 2026-11-02; tagged `v1.0.0`.
 - **Blockers:** none. Not blocking: the open request to Ontology-Template (CCO hierarchy register); ADR-008 Option B
   is in place.
 

@@ -4,9 +4,8 @@ An edge-canonical service for building **Semantic Data Dictionaries**: machine-r
 existing data schema (object types, attributes, references) onto realist BFO / CCO terms — without restructuring the
 source system.
 
-**Status:** release candidate `v1.0.0-rc.3` (simplified attribute contract, spec v0.5): all seven v1 capabilities are
-built and independently verified, as a CLI and as an offline web page. The enterprise pilot and final v1 acceptance
-are next; see [`project/PLAN.md`](project/PLAN.md).
+**Status:** `v1.0.0` (spec v0.5): all seven v1 capabilities are built and independently verified, as a CLI and as an
+offline web page. The registrar accepted v1 after the enterprise pilot; see [`project/PLAN.md`](project/PLAN.md).
 
 ## Use the application
 
