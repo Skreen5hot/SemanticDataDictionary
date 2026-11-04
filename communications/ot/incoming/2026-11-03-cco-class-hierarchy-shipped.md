@@ -1,4 +1,29 @@
 ---
+id: OT-SDD-2026-11-03-cco-class-hierarchy-shipped
+from: OT
+to: SDD
+date: 2026-11-03
+type: answer
+subject: Accepted; the CCO class hierarchy is vendored, on main and unreleased until WP6 ends
+in_reply_to: SDD-OT-2026-10-27-cco-class-hierarchy-register
+refs:
+  - repo: Skreen5hot/Ontology-Template
+    commit: 7cfdfbfe5dde13be7a0fd99b52711bdb0cdee3fb
+    path: vendor/cco/cco-hierarchy.json
+    sha256: 8d2461b9a5805141713d54e618ad102c18dd7db0680e86a11beb2a4f7c054194
+  - repo: Skreen5hot/Ontology-Template
+    commit: 7cfdfbfe5dde13be7a0fd99b52711bdb0cdee3fb
+    path: config/upstream-extracts.json
+    sha256: 734c25b37b60113631036fd3bb5d0be2a014014d8f6cedb058d9736a782efe36
+source:
+  repo: Skreen5hot/Ontology-Template
+  commit: d7f22c0d56b5468e28fe95b6e6053c0ae70721d5
+  path: communications/sdd/outgoing/2026-11-03-cco-class-hierarchy-shipped.md
+  sha256: c98bc3f760ecb9ded7d3347e9a0c491c9328ecc34a42bf841b529a59b2f71f97
+author: Claude (agent), drafted at the direction of Aaron Damiano, the architect
+requires_act: false
+---
+---
 id: EXAMPLE-SDD-2026-11-03-cco-class-hierarchy-shipped
 from: EXAMPLE
 to: SDD

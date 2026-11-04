@@ -1,5 +1,6 @@
-// Checks the communications record against communications/README.md and lists the threads
-// still open: the Node counterpart of Ontology-Template's tools/communications.py, zero dependencies.
+// Checks the communications record against the protocol communications/README.md names
+// (Skreen5hot/communications, PROTOCOL.md) and lists the threads still open. Zero dependencies.
+// The board (alerts) is not read here: see tools/inbox.py in Skreen5hot/communications.
 //
 //   node tools/communications.mjs          findings, then open threads
 //   node tools/communications.mjs --json   the same, as one JSON object
@@ -111,20 +112,23 @@ function checkRef(ref, where) {
 const problems = [];
 const messages = [];
 const base = join(ROOT, DIR);
-if (!existsSync(join(base, 'README.md'))) problems.push(`${DIR}/README.md, the protocol, is missing`);
+if (!existsSync(join(base, 'README.md'))) problems.push(`${DIR}/README.md, naming the protocol version, is missing`);
 
-for (const team of existsSync(base) ? readdirSync(base).sort() : []) {
-  const teamDir = join(base, team);
+for (const folder of existsSync(base) ? readdirSync(base).sort() : []) {
+  const teamDir = join(base, folder);
   if (!statSync(teamDir).isDirectory()) continue;
-  if (!existsSync(join(teamDir, 'README.md'))) { problems.push(`${DIR}/${team} has no README.md saying who the team is`); continue; }
+  // One folder per team, named by the team's code in lowercase (PROTOCOL.md, The record).
+  if (!/^[a-z][a-z0-9]*$/.test(folder)) { problems.push(`${DIR}/${folder}: a team folder is the team's code in lowercase`); continue; }
+  const team = folder.toUpperCase();
+  if (!existsSync(join(teamDir, 'README.md'))) { problems.push(`${DIR}/${folder} has no README.md saying who the team is`); continue; }
   for (const entry of readdirSync(teamDir).sort()) {
-    if (!['README.md', 'incoming', 'outgoing'].includes(entry)) problems.push(`${DIR}/${team}/${entry}: only README.md, incoming/ and outgoing/ belong here`);
+    if (!['README.md', 'incoming', 'outgoing'].includes(entry)) problems.push(`${DIR}/${folder}/${entry}: only README.md, incoming/ and outgoing/ belong here`);
   }
   for (const direction of ['incoming', 'outgoing']) {
     const d = join(teamDir, direction);
     if (!existsSync(d)) continue;
     for (const file of readdirSync(d).sort()) {
-      const rel = `${DIR}/${team}/${direction}/${file}`;
+      const rel = `${DIR}/${folder}/${direction}/${file}`;
       const fm = FILENAME.exec(file);
       if (!fm) { problems.push(`${rel}: filename is not YYYY-MM-DD-<slug>.md`); continue; }
       const { header, body, problem } = split(readFileSync(join(d, file)));
@@ -186,7 +190,7 @@ if (process.argv.includes('--json')) {
     for (const o of open) {
       const who = o.direction === 'outgoing' ? `we asked ${o.team}` : `${o.team} asked us`;
       console.log(`  ${o.date}  (${o.days_open}d)  ${o.id}\n      ${who}: ${o.subject}${o.requires_act ? '  [requires act]' : ''}`);
-      if (o.direction === 'outgoing') console.log('      Delivered? The record cannot say (rule 6). If not yet: file it as an issue in their repository, linking to the message at its commit.');
+      if (o.direction === 'outgoing') console.log('      Announced? The record cannot say (Rule 6). If not yet: run tools/alert.py from Skreen5hot/communications on the message file.');
     }
   }
 }
