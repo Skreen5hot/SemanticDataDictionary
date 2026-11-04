@@ -1,123 +1,29 @@
 # Communications
 
-The record of what this repository has said to, and heard from, the teams it depends on
-or that depend on it. One folder per team; inside it, `incoming/` and `outgoing/`.
+This record follows the communications protocol, version 1.0:
+Skreen5hot/communications, PROTOCOL.md at c474e01954c9ec3ff206bbcb15938cc1d58d9ce5, sha256 d3d8a9fa83933529339146d5f7df5e21212248f70a5757a5c800bae429431176.
 
-```text
-communications/
-  README.md                 this protocol
-  <team>/README.md          who the team is and where its repository lives
-  <team>/incoming/          messages received, copied verbatim with their source
-  <team>/outgoing/          messages sent
-```
+That file is the authority; the rules are not copied here. Team codes are in `correspondents.yaml` in the same
+repository. This repository's code is **`SDD`**.
 
-The teams are the `correspondents` in `config/project.yaml`; a new project has none.
+## Teams
 
-`tools/communications.py` checks every message against this protocol and lists the
-threads still open. `tests/test_communications.py` runs the same checks on every push.
-Nothing here is published on the site.
+One folder per team, named by its code in lowercase, each with a `README.md` saying who the team is.
 
----
+| Folder | Code | Team | Repository |
+|---|---|---|---|
+| `ot/` | `OT` (alias `EXAMPLE`) | Ontology Template | `Skreen5hot/Ontology-Template` |
 
-## A message
+The Ontology Template's own record calls itself `EXAMPLE`, so its messages to us carry ids like `EXAMPLE-SDD-…`. Our
+copies use `OT` in our own header; the original below the header is unchanged.
 
-One Markdown file: a YAML header between `---` lines, then the body.
+## Here
 
-**Filename** — `YYYY-MM-DD-<slug>.md`, the date the message was sent or received, and a
-short lowercase slug (`a-z`, `0-9`, `-`). The folder says the team and the direction.
-
-**Header** -- a real example, from the Business Capability Ontology (`BCO`) to the
-Business Process Ontology (`BPO`).
-
-```yaml
----
-id: BCO-BPO-2026-10-23-vendoring-pin   # <FROM>-<TO>-<date>-<slug>; must match the path
-from: BCO
-to: BPO
-date: 2026-10-23                        # must match the filename
-type: request                           # request | finding | answer | notice | acknowledgment
-subject: One line, what this is about
-in_reply_to: null                       # the id of the message this answers, or null
-refs:                                   # what the message is about, bound by digest
-  - repo: Skreen5hot/BusinessProcessOntology
-    commit: 66131945b525c54f44e4962f32bb1f52dfa0cd12
-    path: ontology/apqc-ext.ttl
-    sha256: 1b9a9375cb7303003556004effd712b63913d6aa4935dbf604a653aec65cab4b
-author: Aaron Damiano                   # a person, or an agent named as an agent
-requires_act: false                     # true when only the architect can answer it
----
-```
-
-Incoming messages carry one more field, `source`, saying where the original lives:
-
-```yaml
-source:
-  repo: Skreen5hot/BusinessProcessOntology
-  commit: <the commit the original was read at>
-  path: <its path there>
-  sha256: <SHA-256 of the original file's bytes>
-```
-
-and the body below the header is that original, byte for byte. The checker recomputes the
-digest of the body and requires it to equal `source.sha256`, so a copy that has been
-"tidied" fails rather than quietly standing in for what was sent.
-
-## Rules
-
-1. **A committed message never changes.** A correction is a new message whose `in_reply_to`
-   names the one it corrects. The checker reads git history and refuses a message file
-   that more than one commit has touched.
-2. **Status is derived, not written.** A `request` or `finding` is *open* until a later
-   message answers it (`in_reply_to` its id) with type `answer` or `acknowledgment`. There
-   is no status field to forget to update; `python tools/communications.py` lists what is
-   open.
-3. **Every ref is digest-bound.** A path without a commit and a SHA-256 names whatever is
-   there today. A ref into this repository is recomputed from `git show <commit>:<path>`;
-   a ref into another repository is checked for shape here and can be verified there.
-4. **A message is not a decision.** It can ask for one (`requires_act: true`). The act
-   itself is the architect's and goes in `docs/decisions/`, citing the message by id.
-5. **Agents are named as agents.** A message drafted by an agent says so in `author`, and
-   whose direction it was drafted at.
-6. **Sending is outside the repository.** An outgoing message here is the record of what
-   was said; it reaches the other team however that team receives things (an issue, a
-   file in their repository, a conversation). The record does not claim delivery.
-
-## Adding a team
-
-Create `communications/<team>/README.md` naming the team and its repository, and add the
-team's code to `correspondents` in `config/project.yaml`. The checker refuses a message
-folder for a team it does not know.
-
----
-
-## This repository (SDD): adaptations, appended
-
-Everything above this section is a **verbatim copy** of the Ontology-Template protocol: `Skreen5hot/Ontology-Template`
-commit `114f28db82adf727f5e31aab4872ed56550e84af`, path `communications/README.md`, sha256
-`150a312b30990469e4e68222a9ea485d6766579900749bd7413f4e4dd2ff57a8`. The bytes above the `---` line preceding this
-heading equal that file. Where the protocol names Ontology-Template machinery, this repository substitutes:
-
-| Protocol says | Here |
-|---|---|
-| `config/project.yaml` → `code` | This repository's code is **`SDD`** |
-| `config/project.yaml` → `correspondents` | A team is known when `communications/<TEAM>/README.md` exists |
-| `python tools/communications.py` | `node tools/communications.mjs` (zero dependencies; same rules, same derived status) |
-| `tests/test_communications.py` on every push | Run `node tools/communications.mjs` before committing a message |
-| `docs/decisions/` | `project/DECISIONS.md` (ADRs) |
-
-| Team code | Team | Repository |
-|---|---|---|
-| `OT` | Ontology-Template maintainers | `Skreen5hot/Ontology-Template` |
-
-Ontology-Template's own `config/project.yaml` carries the template placeholder code `EXAMPLE` and an empty
-`correspondents` list by design. This record names it `OT`, and does not ask the template to register `SDD`, which
-would propagate into every project initialised from it.
-
-### Remembering to send (rule 6)
-
-The record never claims delivery, so **`node tools/communications.mjs` lists every open thread**: each `request` or
-`finding` with no `answer` or `acknowledgment` yet, oldest first, with how many days it has been open. An outgoing
-message you have not delivered yet shows up there until the other team replies. Run it at the start of a work
-session. To deliver, file the message as an issue in the other team's repository (or however they receive things),
-linking to the message file at its commit. When their reply arrives, copy it into `<TEAM>/incoming/` byte for byte
-with its `source` digest. That closes the thread.
+- **Checking the record:** `node tools/communications.mjs` checks every message against the protocol (paths, ids,
+  headers, `source` digests, Rule 1 history) and lists the threads still open (Rule 2). Run it before committing a
+  message.
+- **The board:** `tools/inbox.py` and `tools/alert.py` in Skreen5hot/communications. `CLAUDE.md` says when to run them.
+- **Decisions (Rule 4):** `project/DECISIONS.md`, citing the message by id.
+- **Before v1.0:** this record followed Ontology-Template's protocol (`communications/README.md` at
+  `114f28db82adf727f5e31aab4872ed56550e84af`, sha256 `150a312b30990469e4e68222a9ea485d6766579900749bd7413f4e4dd2ff57a8`),
+  with the team folder named `OT/`. It was renamed to `ot/` on adopting v1.0; no message's bytes changed.
