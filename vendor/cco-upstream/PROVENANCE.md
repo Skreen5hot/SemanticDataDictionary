@@ -1,7 +1,8 @@
 # Provenance: pinned CCO source (Option B, ADR-008)
 
 `CommonCoreOntologiesMerged.ttl` is the **same file Ontology-Template pins** for CCO, byte for byte. It is vendored
-so the class hierarchy can be derived offline. It is not a newer or different release.
+so object-property domain and range can be read offline. It is not a newer or different release. Until ADR-009 it
+also supplied the class hierarchy, which now comes from Ontology-Template's hierarchy registers.
 
 - **Upstream:** `CommonCoreOntology/CommonCoreOntologies`, commit `510dad76be0ef710b65a421075af912af25342b7`
   (release `v2.0-2024-11-06`), path `src/cco-merged/CommonCoreOntologiesMerged.ttl`.
@@ -16,7 +17,8 @@ so the class hierarchy can be derived offline. It is not a newer or different re
 ## How it is used
 
 `tools/turtle-subclass.mjs` (zero dependencies) reads the named `rdfs:subClassOf` edges. It was validated against an
-independent oracle, **rdflib 7.1.1**, with `tools/verify-hierarchy.py` on 2026-10-27: an exact match on both inputs.
+independent oracle, **rdflib 7.1.1**, with `tools/verify-hierarchy.py` on 2026-10-27: an exact match on both inputs. Since ADR-009 the builder uses only its `rdfs:domain` and `rdfs:range` edges; the
+subclass counts below are the ADR-008 record.
 
 | File | Named edges | Anonymous superclass expressions (counted, not followed) |
 |---|---|---|
@@ -25,6 +27,6 @@ independent oracle, **rdflib 7.1.1**, with `tools/verify-hierarchy.py` on 2026-1
 
 ## Retirement
 
-This is a stopgap pending request `SDD-OT-2026-10-27-cco-class-hierarchy-register`. When Ontology-Template ships a
-hierarchy register from the same pin, the two derivations are compared, then this directory is removed and the
-term list is rebuilt from Ontology-Template's artifact alone.
+The class hierarchy part is retired (ADR-009, 2026-11-04): Ontology-Template's hierarchy registers were compared
+with this derivation, matched exactly for every class, and replaced it. This directory remains for domain and range
+only. When Ontology-Template ships those in the same form, it is removed.

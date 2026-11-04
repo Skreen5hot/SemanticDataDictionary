@@ -145,11 +145,11 @@ Pilot plan for the enterprise team (draft for team review): [`PILOT-PLAN.md`](PI
 
 | Deliverable | Where | State |
 |---|---|---|
-| Pinned ontology artifacts | `vendor/ontology-template/` (Ontology-Template `114f28d`; every file hash-verified against its manifest) | Done |
+| Pinned ontology artifacts | `vendor/ontology-template/` (Ontology-Template `7cfdfbf`, re-pinned from `114f28d` by ADR-009; every file hash-verified against its manifest) | Done |
 | Permitted-term list | `ontology/term-list.json`, built by `tools/build-term-list.mjs` (deterministic; `--check` mode). 2,071 terms, 1,697 permitted; every class carries superclasses and BFO ancestors (ADR-008). `terms_sha256` `0965d5a4…1156f5` | Done |
-| CCO class hierarchy | `vendor/cco-upstream/` (same pin, hash-checked against Ontology-Template's register); reader validated against rdflib | Done (Option B) |
+| CCO class hierarchy | Ontology-Template's hierarchy registers (ADR-009), matched exactly against our earlier derivation; `vendor/cco-upstream/` kept only for domain and range | Done |
 | Atlassian JSON Schema | `vendor/atlassian/` (registrar-authorized) | Done |
-| Upstream request | `communications/ot/outgoing/2026-10-27-cco-class-hierarchy-register.md`; answer in `communications/ot/incoming/2026-11-03-cco-class-hierarchy-shipped.md` | Answered; whether to use it is the registrar's decision |
+| Upstream request | `communications/ot/outgoing/2026-10-27-cco-class-hierarchy-register.md`; answer in `communications/ot/incoming/2026-11-03-cco-class-hierarchy-shipped.md` | Answered; adopted (ADR-009) |
 | Atlassian format confirmed | `project/SOURCE-FORMAT.md`. 13 attribute types; ADR-002 corrected | Done |
 | Synthetic fixtures | `fixtures/jira-assets/`: main + externalId variant + 6 one-defect invalid fixtures, all checked against Atlassian's JSON Schema | Done |
 

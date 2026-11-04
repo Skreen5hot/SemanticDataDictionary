@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Conformance** | *The Falsifiable Spec v0.4*, method §4A form. Companion to [`sdd-service.md`](sdd-service.md) (`SDD`), which delegates its experience level here (NG-S0). Federated by weave record **WV-1** (§15). |
-| **Status** | v0.5 (2026-10-29, with SDD v0.5: an attribute mapping whose `iceClass` is `null` is shown with a fixed text; a version-1 previous SDD is refused; release candidate v1.0.0-rc.2). v0.4.1 (correction pass 2026-10-28: adopts SDD §11's normative citation rule; CAP-2 lifted by the registrar, Decision B). v0.4 (prop-002, merged 2026-10-28): v0.3 plus the dispositions of cycle-3 findings SDD-F50–F66. Supersedes v0.1 @ `b4aab5b` and v0.3 @ `5e5b4cc`. The page (`site/`, published by GitHub Pages) is built; every scene is executed by the independent harnesses H-O1 and H-O2, locally and on the reference runner (OO-1 closed). |
+| **Status** | v0.6 (2026-11-04, with SDD v0.6: the S-O6 witness SDD is re-issued for the new Ontology-Template pin; nothing on the page changes but the bundled term list's source metadata). v0.5 (2026-10-29, with SDD v0.5: an attribute mapping whose `iceClass` is `null` is shown with a fixed text; a version-1 previous SDD is refused; release candidate v1.0.0-rc.2). v0.4.1 (correction pass 2026-10-28: adopts SDD §11's normative citation rule; CAP-2 lifted by the registrar, Decision B). v0.4 (prop-002, merged 2026-10-28): v0.3 plus the dispositions of cycle-3 findings SDD-F50–F66. Supersedes v0.1 @ `b4aab5b` and v0.3 @ `5e5b4cc`. The page (`site/`, published by GitHub Pages) is built; every scene is executed by the independent harnesses H-O1 and H-O2, locally and on the reference runner (OO-1 closed). |
 | **Hash citation convention** | As SDD: 8-hex-character prefixes in prose; full values in the SDD §11 registry only. |
 | **Stable identifiers** | Promises PR-O\*; journeys J-O\*; surface capabilities CV-O\*; rules RV-O\*; scenes W-PRO\*, W-JO\*; seams S-O\* (shared with SDD); invariants V-O\*; envelopes E-O\*; non-promises NP-O\* (NP-O0 is the terminal declaration); harnesses H-O\*; open items OO-\*. |
 
@@ -167,7 +167,7 @@ also works from a saved local copy (E-O1). `harness/netguard.mjs` serves H-O2.
 | S-O3 | CV-O2 → SDD C-S6 | decisions | `{"by": "Aaron Damiano", "decisions": [{"key": "ot:Organization", "decision": "accept"}, {"key": "at:Organization/Name", "decision": "accept"}, {"key": "at:Organization/Cost Center", "decision": "accept"}], "nullEquivalents": {}}` | filled |
 | S-O4 | SDD C-S4 → rows | CheckReport | `minimal/bad-check-report.jsonld` (`87b5be26`) → the 2 rows of W-PRO5-N | filled |
 | S-O5 | SDD C-S1 → summary line | Inventory | `minimal/inventory.jsonld` (`902ab965`) → `1 object type · 2 attributes · 0 references · 0 flags` | filled |
-| S-O6 | SDD C-S6 → download | SemanticDataDictionary | `minimal/sdd.jsonld` (`45152cda`) → downloaded bytes, equal except `acceptance.at` | filled |
+| S-O6 | SDD C-S6 → download | SemanticDataDictionary | `minimal/sdd.jsonld` (`af4f8a78`) → downloaded bytes, equal except `acceptance.at` | filled |
 
 No pending rows, so CAP-1 is inactive.
 
@@ -251,7 +251,7 @@ Under H-O1 unless marked H-O2. Expected texts are exact except where masked.
 **Scene-validation precondition (P10.1):** every scene executed against the built page and CLI in a clean
 environment. *Status: met for every W-PRO\* and W-JO\* scene (H-O1 `harness/h-o1.mjs`, H-O2 `harness/h-o2.mjs`, on `ubuntu-24.04` and against the published page, 2026-10-28). V-O1–V-O3 (OO-2): met (2026-10-29), each 300/300 at n = 300 on `ubuntu-24.04` with fresh seed `rc-vo-12cbb83…` (Release verification run 40911400026), request log and `netguard.log` empty. Re-met for v0.5 at `1a45c57`: every scene, W-PRO1-Δ7 and W-PRO2-Δ3 included (Operator acceptance runs 40943966662 local and 40944067149 published page); V-O1–V-O3 each 300/300 with fresh seed `rc-vo-1a45c57…` (Release verification run 40943966670).*
 
-`Disposition: per method §6` · `Acceptance readiness: READY — §14 gates 1–6 hold for v0.5 (2026-10-29; review/register.md, release candidate v1.0.0-rc.2; v0.4.1 was READY as v1.0.0-rc.1)`
+`Disposition: per method §6` · `Acceptance readiness: PENDING for v0.6 — awaits the reference runs; §14 gates 1–6 held for v0.5 (2026-10-29; review/register.md, release candidate v1.0.0-rc.2; v0.4.1 was READY as v1.0.0-rc.1)`
 
 ## SDD-operator §15: Change discipline
 

@@ -11,7 +11,7 @@
   },
   "environment": {
     "termListSha256": "a9e01756d749655a53088833bb97612791caf9a19220065848c826f99985cd39",
-    "ontologyTemplateCommit": "114f28db82adf727f5e31aab4872ed56550e84af",
+    "ontologyTemplateCommit": "7cfdfbfe5dde13be7a0fd99b52711bdb0cdee3fb",
     "contextIri": "https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld"
   },
   "absenceKinds": [
