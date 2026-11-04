@@ -331,7 +331,7 @@ Every W-\* is executed against the implementation by the independent judge `tool
 container with networking disabled and the H-O2 network guard preloaded (H-S1; the Operator acceptance workflow on
 `ubuntu-24.04`), with an empty guard log. Re-met for v0.5 at `1a45c57` (Operator acceptance run 40943966662; Release verification run 40943966670).*
 
-`Disposition: per method §6` · `Acceptance readiness: PENDING for v0.6 — awaits the reference runs; §10 gates 1–7 held for v0.5 (2026-10-29; review/register.md, release candidate v1.0.0-rc.2; v0.4.1 was READY as v1.0.0-rc.1)`
+`Disposition: per method §6` · `Acceptance readiness: READY for v0.6 — §10 gates 1–7 hold on the reference runs (2026-11-04; review/register.md, release v1.1.0); v0.5 was READY as v1.0.0-rc.2, v0.4.1 as v1.0.0-rc.1`
 
 ## SDD §11: Change discipline
 

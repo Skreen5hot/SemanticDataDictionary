@@ -845,3 +845,26 @@ at `7cfdfbf` (on its `main`, not a release). The registrar decided to adopt them
   first run (W-PRO1-Δ6 (a) read three items as accepted under the v2 skeleton), then 28/28 on two reruns with no
   change. Recorded as an intermittent harness failure on a busy machine; the reference runs decide.
 - Readiness in both documents is PENDING for v0.6 until the reference runs.
+
+## v0.6 verified on the reference environment; release v1.1.0 (2026-11-04, appended; sections above unamended)
+
+All evidence is from commit `36a1f6f` on `ubuntu-24.04` (Node 22.23.4, Chromium 141.0.7390.37). Fresh seeds:
+`rc-36a1f6f…` (V-S), `rc-vo-36a1f6f…` (V-O).
+
+- **Release verification, run 41856247742 (both jobs green):**
+  - OS-1 independent judge: 74 checks, 0 failed.
+  - V-S1 217/217, V-S2 200/200, V-S3 100/100, V-S4 200/200, V-S5 100/100, V-S6 287/287; 10,754 CLI calls.
+  - E-S1 worst 243 ms (≤ 2 s), E-S2 worst 178 ms on 5,233 slots (≤ 5 s), E-S3 one batch of 71,027 bytes.
+  - **V-O1 300/300, V-O2 300/300, V-O3 300/300** (6,542 screen states, 2,479,261 text nodes, 89,280 item decisions,
+    2,193 saved mappings of which 235 with a null `iceClass`, 9,972 `iceClass — none asserted` lines grounded, 89
+    PR-O3(a) comparisons; 3,757 CLI calls; netguard log empty).
+- **Operator acceptance, runs 41856247826 (local) and 41856350573 (published page), both green:** CLI witnesses
+  115/115, `src/test/witnesses.mjs` 97/97, `src/test/schemas.mjs` 98/98, registry (161 rows), embedded digests (384),
+  oracles (oracle-b 8, oracle-n 9), citations (109); H-O2 3/3; H-O1 28/28 against `dist/` and 27/27 against the
+  published page (as before). W-PRO1-Δ6 (a), intermittent locally, passed in both. The published page's sha256
+  `c165149b…` equals the CI build's.
+- **SDD §10:** gates 1–7 hold. **SDD-operator §14:** gates 1–6 hold. **ACCEPT holds.**
+- Readiness in both documents is READY for v0.6. No blocking defect is open. Not blocking: GitHub's Node 20
+  deprecation warning (unchanged); domain and range still read from `vendor/cco-upstream/` until Ontology-Template
+  answers `SDD-OT-2026-11-04-domain-range-register`.
+- **Release `v1.1.0`** is tagged on the commit that records this entry; earlier tags are unchanged.

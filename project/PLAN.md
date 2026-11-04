@@ -111,6 +111,7 @@ Pilot plan for the enterprise team (draft for team review): [`PILOT-PLAN.md`](PI
 - **Completion condition (met, 2026-11-02):** the registrar's final acceptance of v1.
 - **Status:** Enterprise pilot run, including the schema-change test. Outcome: fix, then accept. One usability defect
   fixed in `v1.0.0-rc.3`, verified inside the enterprise. The registrar accepted v1 on 2026-11-02; tagged `v1.0.0`.
+  On 2026-11-04, `v1.1.0`: the class hierarchy comes from Ontology-Template (ADR-009), verified on the reference runs.
 - **Blockers:** none. Not blocking: the open request to Ontology-Template (CCO hierarchy register); ADR-008 Option B
   is in place.
 
