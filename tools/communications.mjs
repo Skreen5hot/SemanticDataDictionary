@@ -131,7 +131,13 @@ for (const folder of existsSync(base) ? readdirSync(base).sort() : []) {
       const rel = `${DIR}/${folder}/${direction}/${file}`;
       const fm = FILENAME.exec(file);
       if (!fm) { problems.push(`${rel}: filename is not YYYY-MM-DD-<slug>.md`); continue; }
-      const { header, body, problem } = split(readFileSync(join(d, file)));
+      // Rule 7: digests are of committed bytes. A committed message is read with `git show`;
+      // one not yet committed is read from disk, and a committed one changed on disk is a change (Rule 1).
+      const onDisk = readFileSync(join(d, file));
+      let committed = null;
+      try { committed = git('show', `HEAD:${rel}`); } catch { /* not committed yet */ }
+      if (committed && !committed.equals(onDisk)) problems.push(`${rel}: differs on disk from its committed bytes; a committed message never changes`);
+      const { header, body, problem } = split(committed ?? onDisk);
       if (problem) { problems.push(`${rel} ${problem}`); continue; }
       const h = header;
       for (const f of REQUIRED) if (!(f in h)) problems.push(`${rel}: header lacks ${f}`);
@@ -154,14 +160,41 @@ for (const folder of existsSync(base) ? readdirSync(base).sort() : []) {
           if (h.source.sha256 && sha256(body) !== h.source.sha256) problems.push(`${rel}: body hashes to ${sha256(body)}, not source.sha256 ${h.source.sha256}`);
         }
       } else if (h.source) problems.push(`${rel}: an outgoing message has a source; it is the original`);
+      // Rule 1 (v1.1): follow renames, and count the byte versions the message has had. A move with
+      // its bytes unchanged keeps the same blob; any commit that sets different bytes is a change.
       try {
-        const commits = git('log', '--format=%H', '--', rel).toString().trim().split('\n').filter(Boolean);
-        if (commits.length > 1) problems.push(`${rel}: touched by ${commits.length} commits; a committed message never changes`);
+        const raw = git('log', '--follow', '-M', '--raw', '--no-abbrev', '--format=', '--', rel).toString();
+        const blobs = new Set();
+        for (const line of raw.split('\n')) {
+          const m = /^:\d+ \d+ [0-9a-f]+ ([0-9a-f]+) [A-Z]/.exec(line);
+          if (m && !/^0+$/.test(m[1])) blobs.add(m[1]);
+        }
+        if (blobs.size > 1) problems.push(`${rel}: its bytes were set by more than one commit (${blobs.size} versions, following renames); a committed message never changes`);
       } catch { /* not in git yet */ }
       messages.push({ path: rel, direction, team, header: h });
     }
   }
 }
+
+// Rule 1 (v1.1): a message is never deleted. A file deleted from incoming/ or outgoing/ (a move
+// shows as a rename, not a deletion) is a finding if it was a message: it had a header with an id.
+// A file that was never a message may be removed. That includes another team's original placed
+// here without our header: if its bytes are the source of a message still in the record, the
+// message was never this file, and nothing was lost (d21b25f removed one such upload).
+const recordedOriginals = new Set(messages.map((m) => m.header.source?.sha256).filter(Boolean));
+try {
+  const log = git('log', '-M', '--diff-filter=D', '--name-only', '--format=@%H', '--', `${DIR}/`).toString();
+  let commit = null;
+  for (const line of log.split('\n')) {
+    if (line.startsWith('@')) { commit = line.slice(1); continue; }
+    if (!/^communications\/[^/]+\/(incoming|outgoing)\/[^/]+$/i.test(line)) continue;
+    let bytes = null;
+    try { bytes = git('show', `${commit}^:${line}`); } catch { continue; }
+    if (recordedOriginals.has(sha256(bytes))) continue;
+    const was = split(bytes);
+    if (!was.problem && was.header?.id) problems.push(`${line}: message ${was.header.id} was deleted in ${commit.slice(0, 7)}; a message is never deleted`);
+  }
+} catch { /* no history */ }
 
 const ids = new Map(messages.map((m) => [m.header.id, m]));
 for (const m of messages) {

@@ -10,3 +10,4 @@ review/proposals/**/files/**  -text
 schemas/**  -text
 tools/oracle/**  -text
 review/core-v0/evidence/**  -text
+communications/**  -text
