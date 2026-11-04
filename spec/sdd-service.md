@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | **Conformance** | Authored under *The Falsifiable Spec, Method Specification v0.4* (Specification-Refinement-System). Document pair: this file (`SDD`, substrate, method §4 form) and [`sdd-operator.md`](sdd-operator.md) (`SDD-operator`, experience companion, method §4A form), federated by weave record **WV-1** (housed in SDD-operator §15). |
-| **Status** | v0.5 (2026-10-29, registrar-approved contract change after the external ontological review: attribute mappings no longer carry `valueProperty`; `iceClass` is a permitted ICE class or `null`; `sddVersion` 2; release candidate v1.0.0-rc.2. Version-1 artifacts, release candidate v1.0.0-rc.1, are historical; review/register.md). v0.4.1 (targeted correction pass, 2026-10-28: SDD-F67–F70 corrected, SDD-F71 gaps triaged into existing rules; CAP-2 lifted by the registrar, Decision B, on independent verification; registrar Decision C). v0.4 (prop-002, merged 2026-10-28 with registrar Decision A): v0.3 plus the dispositions of cycle-3 findings SDD-F50–F66. Supersedes v0.1 @ `b4aab5b` (cycle 2: joint D-1) and v0.3 @ `5e5b4cc` (cycle 3: joint D-2). C-S1–C-S7 built (`src/`); every C-S* witness passes under an independent judge; SDD-F72 added (term-list change never carried silently). |
-| **Governing decisions** | [`../project/DECISIONS.md`](../project/DECISIONS.md) ADR-001 to ADR-008. SDD v2.0 ([`../SDD-V2.0-SPEC.md`](../SDD-V2.0-SPEC.md)) is rationale only. Findings and dispositions are in `../review/register.md`. |
+| **Status** | v0.6 (2026-11-04, registrar-approved re-pin, ADR-009: the class hierarchy comes from Ontology-Template's hierarchy registers and the Ontology-Template pin is `7cfdfbf`, so every SDD's `ontologyTemplateCommit` and the SDD shapes change; terms and `terms_sha256` are unchanged; 10 witness files re-issued, their v0.5 bytes retained under `superseded/v5/`). v0.5 (2026-10-29, registrar-approved contract change after the external ontological review: attribute mappings no longer carry `valueProperty`; `iceClass` is a permitted ICE class or `null`; `sddVersion` 2; release candidate v1.0.0-rc.2. Version-1 artifacts, release candidate v1.0.0-rc.1, are historical; review/register.md). v0.4.1 (targeted correction pass, 2026-10-28: SDD-F67–F70 corrected, SDD-F71 gaps triaged into existing rules; CAP-2 lifted by the registrar, Decision B, on independent verification; registrar Decision C). v0.4 (prop-002, merged 2026-10-28 with registrar Decision A): v0.3 plus the dispositions of cycle-3 findings SDD-F50–F66. Supersedes v0.1 @ `b4aab5b` (cycle 2: joint D-1) and v0.3 @ `5e5b4cc` (cycle 3: joint D-2). C-S1–C-S7 built (`src/`); every C-S* witness passes under an independent judge; SDD-F72 added (term-list change never carried silently). |
+| **Governing decisions** | [`../project/DECISIONS.md`](../project/DECISIONS.md) ADR-001 to ADR-009. SDD v2.0 ([`../SDD-V2.0-SPEC.md`](../SDD-V2.0-SPEC.md)) is rationale only. Findings and dispositions are in `../review/register.md`. |
 | **Registrar / authority** | Aaron Damiano (author of record). |
 | **Normative language** | BCP 14 keywords (MUST, MUST NOT, SHOULD, MAY …) per RFC 2119 / RFC 8174, uppercase only. |
 | **Hash citation convention** | Prose cites a governed file's sha256 by its **first 8 hex characters only**. The full value appears once, in the §11 registry, which is authoritative. |
@@ -45,7 +45,7 @@ real by SDD-operator W-JO1–W-JO4 under H-O1. Every file a chain names is in th
 (W-CS1-N). (2) C-S2 → `minimal/skeleton.jsonld` **`07eb4b7d`** (W-CS2-N). (3) C-S3 with the inventory → one batch,
 `minimal/prompt.txt` **`8b6516fc`**, round **1** (W-CS3-N). (4) *Relay:* the paste is `minimal/proposal-pasted.txt` **`06d648cb`**.
 (5) C-S4 on (skeleton, prompt, paste) → `minimal/check-report.jsonld` **`f3d22d7f`**, `status: validated` (W-CS4-N).
-(6) C-S6 with decisions *accept ×3* by "Aaron Damiano" → `minimal/sdd.jsonld` **`45152cda`** (`acceptance.at` masked)
+(6) C-S6 with decisions *accept ×3* by "Aaron Damiano" → `minimal/sdd.jsonld` **`af4f8a78`** (`acceptance.at` masked)
 (W-CS6-N). **Whole-journey outcome:** an SDD whose 3 mappings each carry their source element, its item hash, and
 the prompt, proposal and report hashes of steps 3–5.
 
@@ -55,13 +55,13 @@ the prompt, proposal and report hashes of steps 3–5.
 its prompt → `minimal/repair-prompt.txt` **`7ff61a46`**, round **2**, the same 3 DATA lines plus an ERRORS block holding
 those 2 errors (W-CS5-N). (7) The relay returns the complete corrected set, `minimal/proposal-pasted.txt`. (8) C-S4 on
 (skeleton, repair prompt, paste) → `minimal/check-report-round2.jsonld` **`3d61ba4c`**, validated, round 2. (9) C-S6 →
-`minimal/sdd-round2.jsonld` **`6e7e864d`**. Outcome: identical to W-JS1's SDD except, in every mapping's `provenance`,
+`minimal/sdd-round2.jsonld` **`1e86807a`**. Outcome: identical to W-JS1's SDD except, in every mapping's `provenance`,
 `round` (2), `promptSha256` and `checkReportSha256`. `proposalSha256` is the same (the same paste). The round-1
 failure leaves no trace in the mappings.
 
 **J-S3: schema changed.** Chain example **W-JS3**: (1) inputs: **`minimal/sdd.jsonld`** (W-JS1) and
 `minimal-organization-v2.json`, where Cost Center's description reads "Finance code". (2) C-S7 →
-`minimal/inventory-v2.jsonld` **`0ea0045b`** and `minimal/rerun-plan.jsonld` **`f7699cbb`**: unchanged
+`minimal/inventory-v2.jsonld` **`0ea0045b`** and `minimal/rerun-plan.jsonld` **`ead15b2e`**: unchanged
 `["at:Organization/Name", "ot:Organization"]`, changed `["at:Organization/Cost Center"]`, added `[]`, removed `[]`
 (W-CS7-N). (3) C-S2 → `minimal/skeleton-v2.jsonld`. (4) The person forms `minimal/keys-rerun.json` from the plan's `changed` ∪
 `added` (sorted): `["at:Organization/Cost Center"]`. C-S3 with skeleton₂, inventory₂ and `--keys keys-rerun.json` →
@@ -199,7 +199,7 @@ text and pasted bytes. All are **events**, immutable once written; a new round w
 - **R-S2: Source keys.** Object type: `ot:` + esc(externalId if present, else name). Attribute: `at:` + esc(attribute externalId) if present, else `at:` + esc(owning type name) + `/` + esc(attribute name). Containment slot: `ct:` + the contained type's key. esc is RFC 6901 escaping. `source.identification` is `"externalId"` (every item has one), `"name"` (none does) or `"mixed"`. Two items yielding the same key is E-SRC-KEY-COLLISION (R-S3); this includes two containment slots for one type, so a type mapped under two containers is refused (registrar Decision C: a v1 limitation; the key format is unchanged). Witnesses: W-CS1-N, W-CS1-Δ5, W-CS1-Δ6, W-CS1-Δ11, W-CS1-Δ13; V-S2.
 - **R-S3: Source validation.** C-S1 MUST validate against the vendored Atlassian schema and report each failure as E-SRC-SHAPE `{pointer, keyword, detail}`. `detail` is the missing property (`required`) or the offending value (`enum`). Umbrella `if`/`then` failures are not reported; their nested cause is. C-S1 MUST then check what that schema cannot express: E-SRC-REF-TARGET, E-SRC-MAP-TYPE, E-SRC-MAP-ATTR (an attribute neither on the type nor on an ancestor), E-SRC-DUP-TYPE, E-SRC-DUP-ATTR, E-SRC-KEY-COLLISION. Errors are reported in that order, in document order within a code; any E-SRC-SHAPE error stops the later checks, and a key already reported as a duplicate is not reported again as a collision (SDD-F71 #6, #7). An inventory with errors MUST have empty `objectTypes` and `attributes`, and C-S2 MUST refuse it (E-SKEL-ERRORED). Witnesses: W-CS1-Δ1–Δ4, W-CS1-Δ7–Δ11, W-CS2-Δ3.
 - **R-S4: Hierarchy is not containment.** A `children` edge MUST become `parent` on the child type and nothing else. A mapping selector nested under another mapped type's selector MUST produce FL-CONTAINMENT and a `containment` slot. A selector is nested under another when it begins with that selector followed by `.`; the longest such selector names the container, and the type's own mappings are not candidates (SDD-F71 #2). A mapping that uses an attribute defined only on an ancestor MUST produce FL-INHERITED-USE; that attribute keeps one slot, at its defining type. Witnesses: W-CS1-Δ6, W-CS2-Δ1.
-- **R-S5: Categories.** `recordClass` and `iceClass` MUST be `cco:ont00000958` (Information Content Entity) or ICE-descended (named ancestry, ADR-008), else E-CHK-CATEGORY. **`iceClass` MAY instead be JSON `null`** (v0.5): the mapping asserts no specific ICE classification. It does not deny that the value is information content or that it has a bearer, and it is not an absence of the mapping: an accepted mapping with a `null` `iceClass` is decided, while an undecided key is listed in `open`. A `null` `iceClass` is exempt from R-S7, from this rule's category check and from both warnings below. `recordClass`, `referentClass` and `relation` are never `null`. A `referentClass` that is ICE-descended is validated with **W-CHK-ICE-REFERENT**: some records are about information, and that judgment is the person's. **W-CHK-GENERIC** is raised for any `recordClass`, `referentClass` or `iceClass` that is in the BFO namespace or is exactly `cco:ont00000958`. When both warnings apply (a `referentClass` of exactly `cco:ont00000958`), both are raised, W-CHK-GENERIC first. Witnesses: W-CS4-Δ1, W-CS4-Δ8, W-CS4-Δ10, W-CS4-Δ11, W-CS4-Δ17, W-CS4-Δ19, W-CS6-Δ11.
+- **R-S5: Categories.** `recordClass` and `iceClass` MUST be `cco:ont00000958` (Information Content Entity) or ICE-descended (named ancestry, ADR-008, ADR-009), else E-CHK-CATEGORY. **`iceClass` MAY instead be JSON `null`** (v0.5): the mapping asserts no specific ICE classification. It does not deny that the value is information content or that it has a bearer, and it is not an absence of the mapping: an accepted mapping with a `null` `iceClass` is decided, while an undecided key is listed in `open`. A `null` `iceClass` is exempt from R-S7, from this rule's category check and from both warnings below. `recordClass`, `referentClass` and `relation` are never `null`. A `referentClass` that is ICE-descended is validated with **W-CHK-ICE-REFERENT**: some records are about information, and that judgment is the person's. **W-CHK-GENERIC** is raised for any `recordClass`, `referentClass` or `iceClass` that is in the BFO namespace or is exactly `cco:ont00000958`. When both warnings apply (a `referentClass` of exactly `cco:ont00000958`), both are raised, W-CHK-GENERIC first. Witnesses: W-CS4-Δ1, W-CS4-Δ8, W-CS4-Δ10, W-CS4-Δ11, W-CS4-Δ17, W-CS4-Δ19, W-CS6-Δ11.
 - **R-S6: Coverage.** The proposal's mapping keys MUST equal the prompt's DATA keys, each exactly once (E-CHK-MISSING, E-CHK-DUPLICATE, E-CHK-UNKNOWN-KEY). Witnesses: W-CS4-Δ1, W-CS4-Δ2; V-S3.
 - **R-S7: Terms.** Every CURIE MUST be in the cited term list (E-CHK-TERM), `permitted`, and of the field's kind: class for `recordClass`, `referentClass`, `iceClass`; object property for `relation`, or `sdd:NoRelation` in containment slots only (E-CHK-KIND). A `null` `iceClass` names no CURIE and is exempt (R-S5). Witnesses: W-CS4-Δ3, W-CS4-Δ4, W-CS4-Δ19; V-S6.
 - **R-S8: Domain and range.** A relation's named `rdfs:domain` and `rdfs:range` come from the term list (built from the pins, OS-2); anonymous domain or range expressions are not evaluated (NG-S9). The owner (contained) type's `referentClass` MUST be or descend from **every** named domain, and the target (container) type's from every named range (E-CHK-RANGE). `sdd:NoRelation` is exempt. If either connected type's `referentClass` is not given, as a permitted class, by the same proposal (`sdd check` takes no previous SDD; SDD-F71 #18), C-S4 raises the warning **W-CHK-RANGE-UNRESOLVED** and performs no range check for that field, whether or not the relation declares a domain or range. Witnesses: W-CS4-Δ5, W-CS4-Δ15, W-CS4-Δ16.
@@ -267,15 +267,15 @@ Full hashes of every file named here are in the §11 registry.
 | S-S3 | terms → prompt, check | term list | `ontology/term-list.json`, `terms_sha256` `a9e01756` | filled |
 | S-S4 | check → repair | rejected CheckReport | `minimal/bad-check-report.jsonld` (`87b5be26`) | filled |
 | S-S5 | check → accept | validated CheckReport | `minimal/check-report.jsonld` (`f3d22d7f`) | filled |
-| S-S6 | rerun → the person (forms the `--keys` list) and accept (`--previous` merge, R-S17) | RerunPlan | `minimal/rerun-plan.jsonld` (`f7699cbb`) | filled |
-| S-S7 | accept → rerun; → consumers | SemanticDataDictionary | `minimal/sdd.jsonld` (`45152cda`) | filled |
+| S-S6 | rerun → the person (forms the `--keys` list) and accept (`--previous` merge, R-S17) | RerunPlan | `minimal/rerun-plan.jsonld` (`ead15b2e`) | filled |
+| S-S7 | accept → rerun; → consumers | SemanticDataDictionary | `minimal/sdd.jsonld` (`af4f8a78`) | filled |
 | S-S8 | prompt → person, check | PromptSet | `minimal/prompt-set.jsonld` | filled |
 | **S-O1** *(cross-document, mirrored in SDD-operator §8)* | SDD C-S3/C-S5 → copy control → clipboard | prompt bytes | `minimal/prompt.txt` → clipboard bytes with sha256 `8b6516fc` | filled |
 | **S-O2** | paste box → SDD C-S4 | pasted bytes | `minimal/proposal-pasted.txt` → C-S4 input with sha256 `06d648cb` | filled |
 | **S-O3** | CV-O2 → SDD C-S6 | decisions | `{"by": "Aaron Damiano", "decisions": [{"key": "ot:Organization", "decision": "accept"}, {"key": "at:Organization/Name", "decision": "accept"}, {"key": "at:Organization/Cost Center", "decision": "accept"}], "nullEquivalents": {}}` | filled |
 | **S-O4** | SDD C-S4 → rows | CheckReport | `minimal/bad-check-report.jsonld` (`87b5be26`) → the 2 rows of W-PRO5-N | filled |
 | **S-O5** | SDD C-S1 → summary line | Inventory | `minimal/inventory.jsonld` (`902ab965`) → `1 object type · 2 attributes · 0 references · 0 flags` | filled |
-| **S-O6** | SDD C-S6 → download | SemanticDataDictionary | `minimal/sdd.jsonld` (`45152cda`) → downloaded bytes, equal except `acceptance.at` | filled |
+| **S-O6** | SDD C-S6 → download | SemanticDataDictionary | `minimal/sdd.jsonld` (`af4f8a78`) → downloaded bytes, equal except `acceptance.at` | filled |
 
 ## SDD §7: Invariants & properties
 
@@ -331,7 +331,7 @@ Every W-\* is executed against the implementation by the independent judge `tool
 container with networking disabled and the H-O2 network guard preloaded (H-S1; the Operator acceptance workflow on
 `ubuntu-24.04`), with an empty guard log. Re-met for v0.5 at `1a45c57` (Operator acceptance run 40943966662; Release verification run 40943966670).*
 
-`Disposition: per method §6` · `Acceptance readiness: READY — §10 gates 1–7 hold for v0.5 (2026-10-29; review/register.md, release candidate v1.0.0-rc.2; v0.4.1 was READY as v1.0.0-rc.1)`
+`Disposition: per method §6` · `Acceptance readiness: PENDING for v0.6 — awaits the reference runs; §10 gates 1–7 held for v0.5 (2026-10-29; review/register.md, release candidate v1.0.0-rc.2; v0.4.1 was READY as v1.0.0-rc.1)`
 
 ## SDD §11: Change discipline
 
@@ -368,8 +368,8 @@ prop-001 are retained under `fixtures/witnesses/superseded/v1/` with their v1 ha
 | `fixtures/witnesses/full/proposal-batch2.txt` | 5 | `d3edfea3ea23878a2d385f9150a1e601d306dde6cb9cb20e173c6a09841ec7cf` | W-CS4-Δ16 |
 | `fixtures/witnesses/full/proposal-range.txt` | 5 | `48e6a87a58524462018106bef4daa0774dc21ce7c001df81e508e3a712cd6746` | W-CS4-Δ5 |
 | `fixtures/witnesses/full/proposal-valid.txt` | 5 | `7b4b05f4f928da115bb3732f9bd339033ffda6199852d911e5321635791f81c2` | W-CS4-Δ15 |
-| `fixtures/witnesses/full/rerun-plan-switch.jsonld` | 5 | `b4f08f43f4bbdad920e98cceb5c1b65ef19615689d391fd519595ecafa07403f` | W-CS7-Δ2 |
-| `fixtures/witnesses/full/sdd.jsonld` | 5 | `cf84971a0613e6ca421d4ac01e0e7243ca873f96709ce89812e0e4bdc7b9d88e` | W-CS7-Δ2 |
+| `fixtures/witnesses/full/rerun-plan-switch.jsonld` | 6 | `e597128643c318b38f2580e0c52b896c7ac4519e1cfbffa3b43bd4ad8e9abd86` | W-CS7-Δ2 |
+| `fixtures/witnesses/full/sdd.jsonld` | 6 | `57e1478315a20680d3b4bceb70df8e4749500f503bf827ed0ade7d456fbeedc9` | W-CS7-Δ2 |
 | `fixtures/witnesses/full/skeleton.jsonld` | 5 | `b407ce87e8d5aceccdf12688e4a4b8da018836206da9768599e5503eac3de29e` | W-CS1-Δ6, W-CS4-Δ5, W-CS4-Δ15 |
 | `fixtures/witnesses/hostile/inventory.jsonld` | 4 | `45287065c3675e5486cfb47e7c3efd40acde59f619a4c19ce8818bc78eac0b89` | W-CS3-Δ6 |
 | `fixtures/witnesses/hostile/placeholders-inventory.jsonld` | 4.1 | `afe3f6e3c3ff35aada713c600070bab33a66ce3a3c23d2ed337ddef45e82961b` | W-CS3-Δ7 |
@@ -398,14 +398,14 @@ prop-001 are retained under `fixtures/witnesses/superseded/v1/` with their v1 ha
 | `fixtures/witnesses/minimal/proposal-pasted.txt` | 5 | `06d648cb1c0f63ba5d05a8eb3e7b5d68c5db872cd0689819d2f815e3d72ad5e5` | S-O2, W-CS4-N, W-JO1, W-JO2, W-JO4, W-JS1, W-JS2, W-PRO1-Δ2, W-PRO4-Δ2, W-PRO4-Δ3, W-PRO5-Δ1 |
 | `fixtures/witnesses/minimal/proposal-rerun.txt` | 5 | `416aeadc872678b06c015f74a4e10850c31032df39d42e54563efd1d521b9b25` | W-JS3, W-PRO1-Δ6 |
 | `fixtures/witnesses/minimal/repair-prompt.txt` | 5 | `7ff61a4699815602eeaa5ca58cfb125a4d59f8524009b29ef0afd58e65406b88` | W-CS5-N, W-JO2, W-JS2, W-PRO5-N |
-| `fixtures/witnesses/minimal/rerun-plan-removed.jsonld` | 5 | `c0343df287a4c74fda1f1017fc8335cf301db96c49e544dc91e6f763d5abb682` | W-CS7-Δ1 |
-| `fixtures/witnesses/minimal/rerun-plan.jsonld` | 5 | `f7699cbbde38645e3206273fcdbaa360981ff6437d0c3e783401c63d1533ff74` | S-S6, W-CS7-N, W-JS3 |
-| `fixtures/witnesses/minimal/sdd-j4.jsonld` | 5 | `7777266d64305941b98e7de0aef58f9f10a3e3148c8c654468990f795bb1ac16` | W-JS4 |
-| `fixtures/witnesses/minimal/sdd-null.jsonld` | 5 | `654d7293777c799d09d54dacbbc6307e3a1ca13732fcf4a6e4fa2abb603a9142` | W-CS6-Δ11, W-PRO1-Δ7 |
-| `fixtures/witnesses/minimal/sdd-partial.jsonld` | 5 | `3e163e8ce204c232102cbaf060d61f159f6328b7c0b90ff42bffa062b869126f` | W-CS6-Δ2, W-JS4, W-PRO1-Δ5 |
-| `fixtures/witnesses/minimal/sdd-round2.jsonld` | 5 | `6e7e864d3a20665624e3b8e1773d7e0ad76da48ece3e5a80b046c455090d0570` | W-CS6-Δ7, W-CS6-Δ9, W-JO2, W-JS2 |
-| `fixtures/witnesses/minimal/sdd-v2.jsonld` | 5 | `63242d5b3f015c4452b8a9327b816350ddde088947324fc553875d8c10ef9a0e` | W-JS3, W-PRO1-Δ6 |
-| `fixtures/witnesses/minimal/sdd.jsonld` | 5 | `45152cda6876435d3cb92c25d1e936d4c83236c074180cd35fd1b695074ba666` | OS-1, S-O6, S-S7, W-CS6-N, W-CS6-Δ10, W-CS6-Δ12, W-CS7-N, W-CS7-Δ1, W-CS7-Δ3, W-CS7-Δ4, W-JO1, W-JO3, W-JS1, W-JS3, W-PRO1-N, W-PRO1-Δ6, W-PRO2-Δ3 |
+| `fixtures/witnesses/minimal/rerun-plan-removed.jsonld` | 6 | `aa7826b7f08136fae8f6a91be2be25b10f05acc5072cde19271e934a89644cdd` | W-CS7-Δ1 |
+| `fixtures/witnesses/minimal/rerun-plan.jsonld` | 6 | `ead15b2e59ec5c39c6ed58a0d473406634d101aa7c2f40e5294694427ed0f3ff` | S-S6, W-CS7-N, W-JS3 |
+| `fixtures/witnesses/minimal/sdd-j4.jsonld` | 6 | `b38b6e4d5d21a2896910c58ffdfef20f899e24302c09264fc2198e509445229b` | W-JS4 |
+| `fixtures/witnesses/minimal/sdd-null.jsonld` | 6 | `42d84556bcb7d6bfd0fafbda449cbca78167d82ebb4790d14cb4501ca6d44a00` | W-CS6-Δ11, W-PRO1-Δ7 |
+| `fixtures/witnesses/minimal/sdd-partial.jsonld` | 6 | `4a57e8b60a3dfe1b79e9ac9ce95e02e49fb18e4509688d7a9cb1b980fd365068` | W-CS6-Δ2, W-JS4, W-PRO1-Δ5 |
+| `fixtures/witnesses/minimal/sdd-round2.jsonld` | 6 | `1e86807a226da1d545cf545ac388acba7f298f91cf852cf4fc83df26a081b98a` | W-CS6-Δ7, W-CS6-Δ9, W-JO2, W-JS2 |
+| `fixtures/witnesses/minimal/sdd-v2.jsonld` | 6 | `7db016c19ec3c119c8ee98a5da778c0def31fa3a08896c00be84743ebeb4cd33` | W-JS3, W-PRO1-Δ6 |
+| `fixtures/witnesses/minimal/sdd.jsonld` | 6 | `af4f8a782d7c478e752955ed72887c01d7cc4b01d0feb3f0504934af058819c1` | OS-1, S-O6, S-S7, W-CS6-N, W-CS6-Δ10, W-CS6-Δ12, W-CS7-N, W-CS7-Δ1, W-CS7-Δ3, W-CS7-Δ4, W-JO1, W-JO3, W-JS1, W-JS3, W-PRO1-N, W-PRO1-Δ6, W-PRO2-Δ3 |
 | `fixtures/witnesses/minimal/skeleton-v2.jsonld` | 5 | `8cf448e5bc6d6d9bab2b2b1925063e12502498913b76f90d0c4506239d0b9874` | W-CS6-Δ8, W-JS3 |
 | `fixtures/witnesses/minimal/skeleton.jsonld` | 5 | `07eb4b7dc38cbd90c65556dc906545c68d98ef929e7579507d7bf69ecb81f140` | S-S2, W-CS2-N, W-CS3-N, W-CS4-Δ18, W-JS1 |
 | `schemas/check-report-v1.schema.json` | 4.1 | `e1605720e831110077265fd20ccdf2732e0f1c152d5972ce18114b9f2377f7f9` | OS-1 |
@@ -497,6 +497,16 @@ prop-001 are retained under `fixtures/witnesses/superseded/v1/` with their v1 ha
 | `fixtures/witnesses/superseded/v4/minimal/sdd.jsonld` | v0.4.1 | `d311d909a03fe3bb193dd60f51c6086127c18fc86764420de4004fc3ce4e07f3` |
 | `fixtures/witnesses/superseded/v4/minimal/skeleton-v2.jsonld` | v0.4.1 | `60411c630940a686335e005622284427b07384650c4668721216a392d5196bef` |
 | `fixtures/witnesses/superseded/v4/minimal/skeleton.jsonld` | v0.4.1 | `e990dbb36831aa769a09a7d5df64d396698511482c3ba849064353500ff9de57` |
+| `fixtures/witnesses/superseded/v5/full/rerun-plan-switch.jsonld` | v0.5 | `b4f08f43f4bbdad920e98cceb5c1b65ef19615689d391fd519595ecafa07403f` |
+| `fixtures/witnesses/superseded/v5/full/sdd.jsonld` | v0.5 | `cf84971a0613e6ca421d4ac01e0e7243ca873f96709ce89812e0e4bdc7b9d88e` |
+| `fixtures/witnesses/superseded/v5/minimal/rerun-plan-removed.jsonld` | v0.5 | `c0343df287a4c74fda1f1017fc8335cf301db96c49e544dc91e6f763d5abb682` |
+| `fixtures/witnesses/superseded/v5/minimal/rerun-plan.jsonld` | v0.5 | `f7699cbbde38645e3206273fcdbaa360981ff6437d0c3e783401c63d1533ff74` |
+| `fixtures/witnesses/superseded/v5/minimal/sdd-j4.jsonld` | v0.5 | `7777266d64305941b98e7de0aef58f9f10a3e3148c8c654468990f795bb1ac16` |
+| `fixtures/witnesses/superseded/v5/minimal/sdd-null.jsonld` | v0.5 | `654d7293777c799d09d54dacbbc6307e3a1ca13732fcf4a6e4fa2abb603a9142` |
+| `fixtures/witnesses/superseded/v5/minimal/sdd-partial.jsonld` | v0.5 | `3e163e8ce204c232102cbaf060d61f159f6328b7c0b90ff42bffa062b869126f` |
+| `fixtures/witnesses/superseded/v5/minimal/sdd-round2.jsonld` | v0.5 | `6e7e864d3a20665624e3b8e1773d7e0ad76da48ece3e5a80b046c455090d0570` |
+| `fixtures/witnesses/superseded/v5/minimal/sdd-v2.jsonld` | v0.5 | `63242d5b3f015c4452b8a9327b816350ddde088947324fc553875d8c10ef9a0e` |
+| `fixtures/witnesses/superseded/v5/minimal/sdd.jsonld` | v0.5 | `45152cda6876435d3cb92c25d1e936d4c83236c074180cd35fd1b695074ba666` |
 
 **Supersession.** Changing any governed file is a supersession event. The superseded file is retained, and every
 citer named in the reciprocal table below and in the "Cited by" column MUST be re-accepted before this document

@@ -14,17 +14,18 @@ const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const VENDOR = join(ROOT, 'vendor', 'ontology-template');
 const OUT = join(ROOT, 'ontology', 'term-list.json');
 
-// Class hierarchy sources (ADR-008). BFO's comes from Ontology-Template's full BFO extract; CCO's from
-// the pinned upstream file vendored under vendor/cco-upstream/ (Option B), whose expected sha256 is
-// read from Ontology-Template's CCO register, never hard-coded here.
-const HIERARCHY_FILES = {
+// Class hierarchy (ADR-009): Ontology-Template's hierarchy register for each source, whose sha256 is read from its
+// manifest (upstream-extracts.json `hierarchy_sha256`). Named domain and range (SDD OS-2, R-S8) are not in those
+// registers, so they are still read from the Turtle: BFO's full extract, and for CCO the pinned upstream file vendored
+// under vendor/cco-upstream/ (ADR-008), whose expected sha256 is read from Ontology-Template's CCO register.
+const DOMAIN_RANGE_FILES = {
   bfo: { path: 'vendor/ontology-template/bfo-core-extract.ttl', expected: (m) => m.extract_sha256 },
   cco: { path: 'vendor/cco-upstream/CommonCoreOntologiesMerged.ttl', expected: (m, reg) => reg.files[0].sha256 },
 };
 const BFO_NS = 'http://purl.obolibrary.org/obo/BFO_';
 
 // Recorded in vendor/ontology-template/PROVENANCE.md; changing it is a re-pin (ADR-005).
-const ONTOLOGY_TEMPLATE_COMMIT = '114f28db82adf727f5e31aab4872ed56550e84af';
+const ONTOLOGY_TEMPLATE_COMMIT = '7cfdfbfe5dde13be7a0fd99b52711bdb0cdee3fb';
 
 const OWL = 'http://www.w3.org/2002/07/owl#';
 const PREFIXES = {
@@ -79,18 +80,35 @@ for (const id of Object.keys(manifest).sort()) {
     console.error(`REFUSED: ${file} names ${reg.release}@${reg.commit}, manifest says ${m.release}@${m.commit}`);
     process.exit(2);
   }
-  const h = HIERARCHY_FILES[id];
-  const hBytes = readFileSync(join(ROOT, h.path));
+  const hFile = m.hierarchy.split('/').pop();
+  const hBytes = readFileSync(join(VENDOR, hFile));
   const hActual = sha256(hBytes);
-  if (hActual !== h.expected(m, reg)) {
-    console.error(`REFUSED: ${h.path} sha256 ${hActual} does not match the pinned ${h.expected(m, reg)}`);
+  if (hActual !== m.hierarchy_sha256) {
+    console.error(`REFUSED: ${hFile} sha256 ${hActual} does not match Ontology-Template's manifest ${m.hierarchy_sha256}`);
     process.exit(2);
   }
-  const parsed = namedSubclassEdges(hBytes.toString('utf8'));
-  for (const [s, o] of parsed.edges) {
-    if (!superOf.has(s)) superOf.set(s, new Set());
-    superOf.get(s).add(o);
+  const hier = JSON.parse(hBytes.toString('utf8'));
+  if (hier.commit !== m.commit || hier.release !== m.release) {
+    console.error(`REFUSED: ${hFile} names ${hier.release}@${hier.commit}, manifest says ${m.release}@${m.commit}`);
+    process.exit(2);
   }
+  // `outside_namespace` holds classes a source's file declares outside its own namespace that no other pinned
+  // source lists (for CCO, obo:BFO_0000144), so every chain closes.
+  let hEdges = 0;
+  for (const part of [hier.classes, hier.outside_namespace]) {
+    for (const [s, v] of Object.entries(part)) {
+      if (!superOf.has(s)) superOf.set(s, new Set());
+      for (const o of v.superclasses) { superOf.get(s).add(o); hEdges++; }
+    }
+  }
+  const dr = DOMAIN_RANGE_FILES[id];
+  const drBytes = readFileSync(join(ROOT, dr.path));
+  const drActual = sha256(drBytes);
+  if (drActual !== dr.expected(m, reg)) {
+    console.error(`REFUSED: ${dr.path} sha256 ${drActual} does not match the pinned ${dr.expected(m, reg)}`);
+    process.exit(2);
+  }
+  const parsed = namedSubclassEdges(drBytes.toString('utf8'));
   for (const [map, list] of [[domainOf, parsed.domain], [rangeOf, parsed.range]]) {
     for (const [s, o] of list) {
       if (!map.has(s)) map.set(s, new Set());
@@ -106,10 +124,16 @@ for (const id of Object.keys(manifest).sort()) {
     register: `vendor/ontology-template/${file}`,
     register_sha256: actual,
     hierarchy_from: {
-      path: h.path,
+      path: `vendor/ontology-template/${hFile}`,
       sha256: hActual,
-      named_subclass_edges: parsed.edges.length,
-      anonymous_superclass_expressions_dropped: parsed.anonymousObjects,
+      classes: Object.keys(hier.classes).length,
+      outside_namespace: Object.keys(hier.outside_namespace).length,
+      named_subclass_edges: hEdges,
+      anonymous_superclass_axioms_dropped: hier.dropped_anonymous_superclass_axioms,
+    },
+    domain_range_from: {
+      path: dr.path,
+      sha256: drActual,
       named_domain_edges: parsed.domain.length,
       named_range_edges: parsed.range.length,
       anonymous_domain_or_range_expressions_dropped: parsed.anonymousDomain + parsed.anonymousRange,
@@ -165,7 +189,7 @@ for (const t of terms) counts[t.kind] = (counts[t.kind] ?? 0) + 1;
 
 const out = {
   description:
-    'Every term described by the BFO and CCO pins in Skreen5hot/Ontology-Template, with the subset a v1 mapping may use (permitted). Classes carry their named direct superclasses and BFO ancestors (ADR-008); object properties carry their named rdfs:domain and rdfs:range (SDD OS-2). Generated by tools/build-term-list.mjs; do not edit.',
+    'Every term described by the BFO and CCO pins in Skreen5hot/Ontology-Template, with the subset a v1 mapping may use (permitted). Classes carry their named direct superclasses, from the Ontology-Template hierarchy registers, and BFO ancestors (ADR-009); object properties carry their named rdfs:domain and rdfs:range (SDD OS-2). Generated by tools/build-term-list.mjs; do not edit.',
   ontology_template_commit: ONTOLOGY_TEMPLATE_COMMIT,
   sources,
   permitted_kinds: [...PERMITTED_KINDS].sort(),

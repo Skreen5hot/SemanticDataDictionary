@@ -823,3 +823,25 @@ All evidence is from commit `1a45c57` on `ubuntu-24.04` (runner image 20261026.3
   rc.1); G2 still never reached the carried path with a null mapping (W-PRO1-Δ6 (b) and W-JS3 cover carrying).
 - **Release candidate `v1.0.0-rc.2`** is tagged on the commit that records this entry; `v1.0.0-rc.1` is unchanged.
   This is not final v1 acceptance: Milestone 5 (enterprise pilot) and the registrar's acceptance remain.
+
+## v0.6: class hierarchy from Ontology-Template, re-pin to `7cfdfbf` (ADR-009) (2026-11-04, appended; sections above unamended)
+
+Ontology-Template answered `SDD-OT-2026-10-27-cco-class-hierarchy-register` with hierarchy registers for BFO and CCO
+at `7cfdfbf` (on its `main`, not a release). The registrar decided to adopt them and re-pin (ADR-009).
+
+- **Comparison, before switching.** All files fetched at `7cfdfbf` match the digests in Ontology-Template's answer and
+  manifest. For every class (1,385 CCO, 36 BFO) the named direct superclasses equal ADR-008's derivation, and every
+  class's `bfo_ancestors` are unchanged. The registers and BFO files are byte-identical to the ones pinned at
+  `114f28d`. `terms_sha256` stays `a9e01756`.
+- **Gap found:** the hierarchy registers carry no `rdfs:domain` or `rdfs:range`, which OS-2 and R-S8 need for 161 object
+  properties. `vendor/cco-upstream/` stays for those; a request to Ontology-Template follows.
+- **Contract effect (v0.6):** `ontologyTemplateCommit` becomes `7cfdfbf…` in every new SDD and in
+  `shapes/sdd-v2.shacl.ttl`. Re-issued by prop-003's reference generator (unchanged; it reads the pin from the term
+  list): 7 SDD witnesses and the 3 rerun plans that hash them. Their v0.5 bytes are retained under
+  `fixtures/witnesses/superseded/v5/` (prop-004's registry aid). `src/core` reproduces every re-issued file (115/115).
+- **Local verification (Windows, Node 24):** CLI judge 115/115; `src/test/witnesses.mjs` 97/97; `src/test/schemas.mjs`
+  98/98 corruptions rejected; `src/test/site.mjs` 29/29; registry (161 rows), embedded digests (384), citations
+  (109); oracles agree (oracle-b 8, oracle-n 9); OS-1 judge 74/74; term list `--check` current. H-O1: 27/28 on the
+  first run (W-PRO1-Δ6 (a) read three items as accepted under the v2 skeleton), then 28/28 on two reruns with no
+  change. Recorded as an intermittent harness failure on a busy machine; the reference runs decide.
+- Readiness in both documents is PENDING for v0.6 until the reference runs.

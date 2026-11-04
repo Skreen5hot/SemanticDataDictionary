@@ -204,6 +204,8 @@ not wait** for the answer.
 - **Retirement:** when Ontology-Template ships its register, compare the two derivations, then delete
   `vendor/cco-upstream/` and rebuild from Ontology-Template alone. Until then this is a **second derivation path**
   from the same pin, recorded here as a known deviation from ADR-005's single-source intent.
+- **Partly retired by ADR-009** (2026-11-04): the class hierarchy now comes from Ontology-Template.
+  `vendor/cco-upstream/` remains only for object-property domain and range.
 
 ---
 
@@ -228,3 +230,36 @@ not wait** for the answer.
    semantic statement in the SDD traces back to the source element it came from.
 4. **Scope is fixed at the seven agreed capabilities** (C1 parse, C2 skeleton, C3 prompt, C4 check, C5 repair
    prompt, C6 accept, C7 re-run on schema change). Anything else is a non-goal for v1, or needs a new ADR.
+
+---
+
+## ADR-009: Class hierarchy from Ontology-Template's hierarchy registers; re-pin to `7cfdfbf`
+
+**Date:** 2026-11-04 · **Status:** Accepted (registrar)
+**Answers:** `OT-SDD-2026-11-03-cco-class-hierarchy-shipped` (`communications/ot/incoming/`), the answer to
+`SDD-OT-2026-10-27-cco-class-hierarchy-register`. Partly retires ADR-008.
+
+**Decision.** The term list takes every class's named direct superclasses from Ontology-Template's hierarchy
+registers (`vendor/ontology-template/bfo-hierarchy.json`, `cco-hierarchy.json`), each checked against the
+`hierarchy_sha256` in Ontology-Template's manifest. The Ontology-Template pin moves from `114f28d` to
+`7cfdfbfe5dde13be7a0fd99b52711bdb0cdee3fb`, the commit that ships them. We asked for this register; using it is how
+we validate it.
+
+**Comparison (before switching).** For all 1,385 CCO and 36 BFO classes the two derivations give the same named
+direct superclasses, and every class gets the same `bfo_ancestors`. `terms_sha256` is unchanged (`a9e01756`). The
+counts differ only in scope: ADR-008 parsed every subject in CCO's merged file (36 beyond the register, including
+`obo:BFO_0000144`, which Ontology-Template records under `outside_namespace`).
+
+**Consequences.**
+- `ontologyTemplateCommit` in every new SDD is `7cfdfbf…`; `shapes/sdd-v2.shacl.ttl` pins it. The 7 SDD witnesses
+  and the 3 rerun plans that hash them are re-issued by prop-003's reference generator; their v0.5 bytes are retained
+  under `fixtures/witnesses/superseded/v5/` (spec v0.6). Carrying (R-S17) is keyed on `termListSha256`, which is
+  unchanged, so SDDs accepted under the old pin still carry on a rerun.
+- The registers, BFO extract and disjointness file are byte-identical at both commits; `upstream-sources.yaml`,
+  `upstream-extracts.json` and `NOTICE.md` changed only to declare the hierarchies.
+- **The pin is not an Ontology-Template release.** Ontology-Template releases nothing until its WP6 ends; `7cfdfbf` is
+  on its `main`. The pin is by commit and digest, so it cannot drift. Re-pin to the release that carries it when
+  there is one.
+- **Still a second derivation path, for domain and range only.** Named `rdfs:domain` and `rdfs:range` (OS-2, R-S8) are
+  not in the hierarchy registers, so they are still read from `vendor/cco-upstream/` (CCO) and the BFO extract. A
+  request to Ontology-Template asks for them in the same form. When it ships, `vendor/cco-upstream/` is deleted.

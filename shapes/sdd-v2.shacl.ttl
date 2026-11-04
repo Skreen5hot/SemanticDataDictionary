@@ -8,7 +8,7 @@
 # JSON arrays without @list are unordered sets, and JSON nulls and empty arrays produce no triple.
 #
 # Term closure (R-S5, R-S7, V-S6) is stated against the bundled term list pinned in sddsh:EnvironmentShape
-# (terms_sha256 a9e01756, Ontology-Template 114f28db):
+# (terms_sha256 a9e01756, Ontology-Template 7cfdfbfe):
 #   sddsh:InformationContentEntityClass = cco:ont00000958 and its permitted named descendants (130),
 #   sddsh:PermittedClass = every permitted class (1421),
 #   sddsh:PermittedObjectProperty = every permitted object property (265).
@@ -83,7 +83,7 @@ sddsh:EnvironmentShape
   a sh:NodeShape ;
   sh:closed true ;
   sh:property [ sh:path sdd:termListSha256 ; sh:minCount 1 ; sh:maxCount 1 ; sh:hasValue "a9e01756d749655a53088833bb97612791caf9a19220065848c826f99985cd39" ] ;
-  sh:property [ sh:path sdd:ontologyTemplateCommit ; sh:minCount 1 ; sh:maxCount 1 ; sh:hasValue "114f28db82adf727f5e31aab4872ed56550e84af" ] ;
+  sh:property [ sh:path sdd:ontologyTemplateCommit ; sh:minCount 1 ; sh:maxCount 1 ; sh:hasValue "7cfdfbfe5dde13be7a0fd99b52711bdb0cdee3fb" ] ;
   sh:property [ sh:path sdd:contextIri ; sh:minCount 1 ; sh:maxCount 1 ; sh:nodeKind sh:IRI ; sh:hasValue <https://skreen5hot.github.io/SemanticDataDictionary/context/sdd-v1.jsonld> ] ;
 .
 
