@@ -1,7 +1,7 @@
 # Communications
 
-This record follows the communications protocol, version 1.1:
-Skreen5hot/communications, PROTOCOL.md at 7f994a91f40d763aacfc53bd9fafa89ef89dac16, sha256 fb3a06309eb5ecd5920a7737789df524000e5447f86c008ec16fee6203d9d74d.
+This record follows the communications protocol, version 1.2:
+Skreen5hot/communications, PROTOCOL.md at 3a3a1ec7f9518bb061139e26def6d30dab7709ff, sha256 7d406a8e7fa959297d006ded9f43fdf9792b176c9db2345d0a07778a3b74d46d.
 
 That file is the authority; the rules are not copied here. Team codes are in `correspondents.yaml` in the same
 repository. This repository's code is **`SDD`**.
@@ -12,6 +12,7 @@ One folder per team, named by its code in lowercase, each with a `README.md` say
 
 | Folder | Code | Team | Repository |
 |---|---|---|---|
+| `eps/` | `EPS` | Edge Project Store | `Skreen5hot/edge-project-store` |
 | `ot/` | `OT` (alias `EXAMPLE`) | Ontology Template | `Skreen5hot/Ontology-Template` |
 
 The Ontology Template's own record calls itself `EXAMPLE`, so its messages to us carry ids like `EXAMPLE-SDD-…`. Our
@@ -31,3 +32,6 @@ copies use `OT` in our own header; the original below the header is unchanged.
   `d3d8a9fa83933529339146d5f7df5e21212248f70a5757a5c800bae429431176`). Adopting v1.1 added `communications/** -text`
   to `.gitattributes` (Rule 7) and taught `tools/communications.mjs` to follow renames (Rule 1); no message's bytes
   changed.
+- **Before v1.2:** this record followed v1.1 (`PROTOCOL.md` at `7f994a91f40d763aacfc53bd9fafa89ef89dac16`, sha256
+  `fb3a06309eb5ecd5920a7737789df524000e5447f86c008ec16fee6203d9d74d`). v1.2 changed only how teams register on the
+  board; nothing in this record or its tools changed.
