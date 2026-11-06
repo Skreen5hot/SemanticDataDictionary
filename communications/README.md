@@ -12,6 +12,7 @@ One folder per team, named by its code in lowercase, each with a `README.md` say
 
 | Folder | Code | Team | Repository |
 |---|---|---|---|
+| `eps/` | `EPS` | Edge Project Store | `Skreen5hot/edge-project-store` |
 | `ot/` | `OT` (alias `EXAMPLE`) | Ontology Template | `Skreen5hot/Ontology-Template` |
 
 The Ontology Template's own record calls itself `EXAMPLE`, so its messages to us carry ids like `EXAMPLE-SDD-…`. Our
