@@ -263,3 +263,39 @@ counts differ only in scope: ADR-008 parsed every subject in CCO's merged file (
 - **Still a second derivation path, for domain and range only.** Named `rdfs:domain` and `rdfs:range` (OS-2, R-S8) are
   not in the hierarchy registers, so they are still read from `vendor/cco-upstream/` (CCO) and the BFO extract. A
   request to Ontology-Template asks for them in the same form. When it ships, `vendor/cco-upstream/` is deleted.
+
+## ADR-010: Project mode (SDD v1.2), on the EPS v0.2 contract
+
+**Date:** 2026-11-06 · **Status:** Accepted in direction (registrar); implementation authorized on revision 2 of
+prop-005
+**Answers:** `EPS-SDD-2026-11-06-m3-proposal-request` (`communications/eps/incoming/`). The proposal is
+[`../review/proposals/prop-005/prop-005.md`](../review/proposals/prop-005/prop-005.md).
+
+**Decision.** SDD v1.2 works on project folders kept by the edge-project-store contract (EPS v0.2), as EPS
+milestone M3. The registrar approved A1–A5 and O1–O4 of prop-005, and required six targeted revisions, made in its
+revision 2 (§12 there):
+
+- **A1–A2:** SDD's input is a normalized schema from the Schema service. Until that exists, a Jira Assets import
+  schema in `source/` is read by SDD's stopgap reader. SDD never writes `normalized/`. Build order: SDD, EPS, the
+  normalizer, RML, BIBS 2.0.
+- **A3:** SDD's output is the SDD, unchanged in format (`sddVersion` 2). RML joins it to the normalized schema by
+  key, and verifies that pair itself.
+- **A4:** project mode only, with single files as the fallback when folder access is unavailable.
+- **A5:** each repository is self-contained. SDD vendors the EPS module at a verified, pinned commit.
+- **Ownership:**
+  - SDD owns semantic interpretation and the person's decisions;
+  - the Schema service owns normalized structure, source identities and datatypes (O1);
+  - RML owns the projection into RDF;
+  - EPS owns storage, lineage, integrity, revisions and conflict detection, not pipeline process or semantic
+    compatibility.
+- **O2:** keys are the Schema service's to define: deterministic, unique, source-scoped, stable. SDD consumes them
+  verbatim.
+- **O3:** prompts, replies and check reports are not committed as artifacts.
+- **O4:** on the stopgap, SDD cites the source file directly.
+
+**Consequences.**
+- A rerun cites the previous SDD as `history`. An acceptance is carried only when nothing it depends on changed
+  (prop-005 §2.1, R1–R6). R3–R6 are new rules in R-S17, made in spec v0.7 with re-issued witnesses.
+- No change to the EPS v0.2 contract is requested or authorized. Any contract or architecture change found during
+  implementation returns to the registrar.
+- The normalized-schema reader gets its own conformance check once the Schema service's contract exists (M3-9).
