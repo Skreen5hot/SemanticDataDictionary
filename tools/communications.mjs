@@ -171,12 +171,15 @@ for (const folder of existsSync(base) ? readdirSync(base).sort() : []) {
       } else if (h.source) problems.push(`${rel}: an outgoing message has a source; it is the original`);
       // Rule 1 (v1.1): follow renames, and count the byte versions the message has had. A move with
       // its bytes unchanged keeps the same blob; any commit that sets different bytes is a change.
+      // `git log --follow` also reports a *copy* (status C: a new file resembling one that still exists)
+      // as if it were earlier history. A copy is where this file's own history starts, so stop there.
       try {
         const raw = git('log', '--follow', '-M', '--raw', '--no-abbrev', '--format=', '--', rel).toString();
         const blobs = new Set();
         for (const line of raw.split('\n')) {
-          const m = /^:\d+ \d+ [0-9a-f]+ ([0-9a-f]+) [A-Z]/.exec(line);
+          const m = /^:\d+ \d+ [0-9a-f]+ ([0-9a-f]+) ([A-Z])/.exec(line);
           if (m && !/^0+$/.test(m[1])) blobs.add(m[1]);
+          if (m && m[2] === 'C') break;
         }
         if (blobs.size > 1) problems.push(`${rel}: its bytes were set by more than one commit (${blobs.size} versions, following renames); a committed message never changes`);
       } catch { /* not in git yet */ }
