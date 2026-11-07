@@ -31,9 +31,17 @@ const git = (...args) => execFileSync('git', args, { cwd: ROOT, encoding: 'buffe
 
 // The header subset the protocol uses: scalars, `key:` followed by a list of flat maps (refs),
 // or by a flat map (source). Inline `# comments` are stripped outside quotes.
+// Plain (unquoted) YAML scalars may not contain ": ", start with an indicator character, or end with ":".
+// Real YAML parsers (tools/alert.py) refuse such a header, so it is noted here (see yamlProblems below).
+let plainProblems = [];
 function scalar(raw) {
   let v = raw.trim();
-  if (!v.startsWith('"') && !v.startsWith("'")) v = v.replace(/\s+#.*$/, '').trim();
+  if (!v.startsWith('"') && !v.startsWith("'")) {
+    v = v.replace(/\s+#.*$/, '').trim();
+    if (/: /.test(v) || /^[-?:,\[\]{}#&*!|>%@`]/.test(v) && !/^(\[\]|-\s)/.test(v) || /:$/.test(v)) {
+      plainProblems.push(`the unquoted value ${JSON.stringify(v)} is not valid YAML; quote it`);
+    }
+  }
   if (v === 'null' || v === '~' || v === '') return null;
   if (v === 'true') return true;
   if (v === 'false') return false;
@@ -84,9 +92,10 @@ function split(bytes) {
   const end = s.indexOf('\n---\n', 3);
   if (end < 0) return { problem: "has no closing '---' header line" };
   try {
+    plainProblems = [];
     const header = parseHeader(s.slice(4, end + 1));
     const bodyStart = Buffer.byteLength(s.slice(0, end + 5), 'utf8');
-    return { header, body: bytes.subarray(bodyStart) };
+    return { header, body: bytes.subarray(bodyStart), yamlProblems: plainProblems };
   } catch (e) {
     return { problem: `header is not readable: ${e.message}` };
   }
@@ -137,7 +146,7 @@ for (const folder of existsSync(base) ? readdirSync(base).sort() : []) {
       let committed = null;
       try { committed = git('show', `HEAD:${rel}`); } catch { /* not committed yet */ }
       if (committed && !committed.equals(onDisk)) problems.push(`${rel}: differs on disk from its committed bytes; a committed message never changes`);
-      const { header, body, problem } = split(committed ?? onDisk);
+      const { header, body, problem, yamlProblems } = split(committed ?? onDisk);
       if (problem) { problems.push(`${rel} ${problem}`); continue; }
       const h = header;
       for (const f of REQUIRED) if (!(f in h)) problems.push(`${rel}: header lacks ${f}`);
@@ -171,7 +180,7 @@ for (const folder of existsSync(base) ? readdirSync(base).sort() : []) {
         }
         if (blobs.size > 1) problems.push(`${rel}: its bytes were set by more than one commit (${blobs.size} versions, following renames); a committed message never changes`);
       } catch { /* not in git yet */ }
-      messages.push({ path: rel, direction, team, header: h });
+      messages.push({ path: rel, direction, team, header: h, yamlProblems });
     }
   }
 }
@@ -197,6 +206,14 @@ try {
 } catch { /* no history */ }
 
 const ids = new Map(messages.map((m) => [m.header.id, m]));
+
+// A header other tools cannot parse is a finding, unless a later message corrects it (Rule 1: a correction is a
+// new message whose in_reply_to names the message it corrects; the committed bytes never change).
+for (const m of messages) {
+  if (!m.yamlProblems?.length) continue;
+  const corrected = messages.some((c) => c.header.in_reply_to === m.header.id && c.header.from === m.header.from);
+  if (!corrected) for (const y of new Set(m.yamlProblems)) problems.push(`${m.path}: ${y}`);
+}
 for (const m of messages) {
   const r = m.header.in_reply_to;
   if (!r) continue;
